@@ -1,0 +1,26 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Auth0 New Admin Invited FOLLOWED BY Tenant Member Account Deletion
+description: |-
+  ## Goal
+  A user was invited as admin and shortly after deleted tenant member accounts. This may indicate account takeover attempts.
+
+  ## Strategy
+  Monitor logs for the specific sequence of events described.
+
+  ## Triage and Response
+  1. Identify the user and the sequence of actions.
+  2. Verify if the actions are authorized and business-justified.
+  3. If unauthorized, revert changes and suspend the user.
+enabled: true
+severity: High
+query_text: |-
+  %ingest.source_type:auth0
+  type:s OR type:f
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- high_severity_alerts
+tags:
+- Auth0
+- panther_migration

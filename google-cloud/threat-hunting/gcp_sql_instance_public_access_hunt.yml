@@ -1,0 +1,9 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: GCP SQL Instance Public Access
+description: |-
+  Detects when a Cloud SQL instance is configured with a public IP.
+query_text: "%ingest.source_type:google_cloud_audit\nprotoPayload.methodName:\"cloudsql.instances.update\"\nprotoPayload.request.body.settings.ipConfiguration.ipv4Enabled:true "
+tags:
+- google_cloud
+- sql
+- exposure

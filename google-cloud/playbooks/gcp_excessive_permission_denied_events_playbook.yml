@@ -1,0 +1,10 @@
+name: GCP Excessive Permission Denied Events Playbook
+description: Detect excessive `PermissionDenied` events within an hour timeframe from a user. This can indicate reconnaissance activities where an actor is probing for available resources and permissions.
+severity: Low
+steps:
+- name: Investigation
+  description: Monitor GCP Cloud Audit logs for `PermissionDenied` events (`status_code = 7`) within a one-hour window. Capture relevant details such as the principal IP, user, and target resource to assess potential threats. If more than 5 such events are detected from the same user across different applications and event types within an hour, trigger an alert.
+- name: Triage
+  description: Investigate the detected event to determine if it was authorized. Review the principal IPs, users, and other details to ensure that no unauthorized reconnaissance activities have occurred. Ensure that all access policies comply with company policies.
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

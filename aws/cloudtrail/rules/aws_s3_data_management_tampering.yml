@@ -1,0 +1,69 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: AWS S3 Data Management Tampering
+enabled: true
+description: |-
+  ## Goal
+  Detects when a user tampers with S3 data management in Amazon Web Services.
+
+  References:
+  * https://github.com/elastic/detection-rules/pull/1145/files
+  * https://docs.aws.amazon.com/AmazonS3/latest/API/API_Operations.html
+  * https://docs.aws.amazon.com/AmazonS3/latest/API/API_PutBucketLogging.html
+  * https://docs.aws.amazon.com/AmazonS3/latest/API/API_PutBucketWebsite.html
+  * https://docs.aws.amazon.com/AmazonS3/latest/API/API_PutBucketEncryption.html
+  * https://docs.aws.amazon.com/AmazonS3/latest/userguide/setting-repl-config-perm-overview.html
+  * https://docs.aws.amazon.com/AmazonS3/latest/API/API_RestoreObject.html
+
+  False Positives:
+  * A S3 configuration change may be done by a system or network administrator. Verify whether the user identity, user agent, and/or hostname should be making changes in your environment. S3 configuration change from unfamiliar users or hosts should be investigated. If known behavior is causing false positives, it can be exempted from the rule.
+
+  ## Strategy
+  Detects when a user tampers with S3 data management in Amazon Web Services.
+
+  References:
+  * https://github.com/elastic/detection-rules/pull/1145/files
+  * https://docs.aws.amazon.com/AmazonS3/latest/API/API_Operations.html
+  * https://docs.aws.amazon.com/AmazonS3/latest/API/API_PutBucketLogging.html
+  * https://docs.aws.amazon.com/AmazonS3/latest/API/API_PutBucketWebsite.html
+  * https://docs.aws.amazon.com/AmazonS3/latest/API/API_PutBucketEncryption.html
+  * https://docs.aws.amazon.com/AmazonS3/latest/userguide/setting-repl-config-perm-overview.html
+  * https://docs.aws.amazon.com/AmazonS3/latest/API/API_RestoreObject.html
+
+  False Positives:
+  * A S3 configuration change may be done by a system or network administrator. Verify whether the user identity, user agent, and/or hostname should be making changes in your environment. S3 configuration change from unfamiliar users or hosts should be investigated. If known behavior is causing false positives, it can be exempted from the rule.
+
+  ## Triage and Response
+  Investigate and remediate as appropriate.
+severity: Low
+query_text: |-
+  %ingest.source_type="aws:cloudtrail"
+  eventSource="s3.amazonaws.com"
+  eventName=(
+  PutBucketLogging
+  PutBucketWebsite
+  PutEncryptionConfiguration
+  PutLifecycleConfiguration
+  PutReplicationConfiguration
+  ReplicateObject
+  RestoreObject
+  )
+  | stats
+  min(@scnr.datetime) as firstTime,
+  max(@scnr.datetime) as lastTime,
+  count() as eventCount
+  by
+  userIdentity.arn,
+  eventSource,
+  eventName,
+  awsRegion
+time_range_s: 300
+run_frequency_s: 60
+event_sink_keys:
+- low_severity_alerts
+tags:
+- source.cloudtrail
+- tactics.ta0005.defense_evasion
+- tactics.ta0040.impact
+- techniques.t1562.impair_defenses
+- techniques.t1565.data_manipulation
+- techniques.t1578.modify_cloud_compute_infrastructure

@@ -1,0 +1,10 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Google Workspace User Unsuspended
+description: |-
+  Identifies when a user account is unsuspended in Google Workspace.
+query_text: |-
+  %ingest.source_type:google_workspace
+  action:UNSUSPEND_USER
+tags:
+- google_workspace
+- converted_yaral

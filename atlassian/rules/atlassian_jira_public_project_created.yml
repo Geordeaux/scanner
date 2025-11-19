@@ -1,0 +1,34 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Atlassian Jira Public Project Created
+description: |-
+  ## Goal
+  Detects when a Jira project is created with public access (anonymous access allowed).
+  Public projects expose internal data to the internet, leading to data leakage.
+
+  ## Strategy
+  1. Determine if this was authorized.
+  2. Check if any sensitive data has already been added to the project.
+
+  ## Triage and Response
+  1. Identify the user (`attributes.actor.email`) who created the project.
+  2. Identify the project name and key.
+  1. Immediately change the permission scheme to restrict access (remove anonymous access).
+  2. If unauthorized, delete the project or archive it.
+  3. Educate the user on data security policies.
+enabled: true
+severity: Critical
+query_text: |-
+  %ingest.source_type:atlassian
+  attributes.action:project_created
+  attributes.context.attributes.permissionScheme:"Default Permission Scheme"
+  attributes.context.attributes.projectTypeKey:software
+  | groupbycount(attributes.actor.email)
+  | where @q.count > 0
+time_range_s: 300
+run_frequency_s: 60
+event_sink_keys:
+- critical_severity_alerts
+tags:
+- tactics.ta0001.initial_access
+- techniques.t1190.exploit_public_facing_application
+- source.atlassian

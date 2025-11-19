@@ -1,0 +1,10 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS.Administrative.IAM.User.Created
+description: |-
+  Identifies when an Administrative IAM user is creates. This could indicate a potential security breach.
+query_text: |-
+  %ingest.source_type:aws:cloudtrail
+  eventName:CreateUser OR eventName:AttachUserPolicy
+tags:
+- Beta
+- panther_migration

@@ -1,0 +1,14 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS IAM Roles Anywhere trust anchor created
+description: |-
+  Detect when a trust anchor for IAM Roles Anywhere is created.
+query_text: |-
+  %ingest.source_type:"aws:cloudtrail"
+  eventName:CreateTrustAnchor
+  eventSource:rolesanywhere.amazonaws.com
+  | groupbycount(userIdentity.arn)
+  | where @q.count > 0
+tags:
+- techniques.t1098.account_manipulation
+- source.cloudtrail
+- tactics.ta0003.persistence

@@ -1,0 +1,22 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: GCP GCE Image Open To Public
+description: |-
+  Detect when a GCP Compute Image is made publicly accessible by adding `allAuthenticatedUsers` to its IAM policy. This can indicate an attempt to exfiltrate data or make sensitive information available to unauthorized users.
+query_text: |-
+  %ingest.source_type:gcp_audit
+  metadata.event_type:"USER_RESOURCE_UPDATE_PERMISSIONS"
+  metadata.log_type:"GCP_CLOUDAUDIT"
+  metadata.vendor_name:"Google Cloud Platform"
+  metadata.product_event_type:"beta.compute.images.setIamPolicy"
+  target.application:"compute.googleapis.com"
+  security_result.action:"ALLOW"
+  target.resource.attribute.labels.value:"allAuthenticatedUsers"
+  target.resource.resource_subtype:"gce_image"
+tags:
+- source.gcp
+- gcp_audit
+- gcp
+- iam_policy
+- iam_policy_violation
+- techniques.t1537.transfer_data_to_cloud_account
+- tactics.ta0010.exfiltration

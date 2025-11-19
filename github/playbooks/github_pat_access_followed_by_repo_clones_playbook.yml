@@ -1,0 +1,16 @@
+name: GitHub Access Granted To PAT Followed By Multiple Repo Clones Playbook
+description: Detect when a user grants access to a GitHub Personal Access Token (PAT) and then clones multiple repositories in a short period. This can be indicative of an adversary attempting to steal repository contents using automated scripts or offensive tools.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor GitHub audit logs for events related to granting a PAT and cloning repositories by the same user. Within the lookback window, flag users with a high number of clone events shortly after a PAT access grant.
+- name: Triage
+  description: '1. Identify the user and the repositories that were cloned.
+
+    2. Confirm whether the PAT grant and subsequent cloning activity were expected and authorized.
+
+    3. Review source IP, geo, and device information for anomalies.
+
+    4. If suspicious, revoke the PAT, rotate credentials, and review additional activity by the user.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

@@ -1,0 +1,14 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS Detective Graph deleted
+description: |-
+  Detect when a user deletes a behavior graph in Amazon Detective.
+query_text: |-
+  %ingest.source_type:"aws:cloudtrail"
+  eventSource:detective.amazonaws.com
+  eventName:DeleteGraph
+  | groupbycount(userIdentity.arn)
+  | where @q.count > 0
+tags:
+- techniques.t1562.impair_defenses
+- source.cloudtrail
+- tactics.ta0005.defense_evasion

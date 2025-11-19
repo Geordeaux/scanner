@@ -1,0 +1,40 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Auth0 Client Grant Created or Updated
+description: |-
+  ## Goal
+  Detects when a client grant is created or updated in Auth0. This indicates that
+  an application has been granted new permissions (scopes) to access an API.
+  Unauthorized changes could lead to privilege escalation.
+
+  ## Strategy
+  1. Determine if the scope expansion was authorized (e.g., new feature deployment).
+  2. Verify if the scopes granted are excessive (e.g., `read:users`, `update:roles` to a public client).
+  3. Check if the user has a history of making such changes.
+
+  ## Triage and Response
+  1. Identify the user (`data.user_id`) who performed the action.
+  2. Identify the client (application) receiving the grant and the scopes granted.
+  3. Check the timestamp and source IP.
+  1. If unauthorized, revoke the client grant immediately.
+  2. Rotate the credentials of the user who made the change.
+  3. Audit the application's usage of the new scopes during the exposure window.
+enabled: true
+severity: Critical
+query_text: |-
+  %ingest.source_type:auth0
+  data.type:sapi
+  (
+  (data.description:"Create a client grant") or
+  (data.description:"Update a client grant")
+  )
+  data.details.request.path:/api/v2/client-grants
+  | groupbycount(data.user_id)
+  | where @q.count > 0
+time_range_s: 300
+run_frequency_s: 60
+event_sink_keys:
+- critical_severity_alerts
+tags:
+- tactics.ta0004.privilege_escalation
+- techniques.t1098.account_manipulation
+- source.auth0

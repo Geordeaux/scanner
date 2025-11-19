@@ -1,0 +1,54 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: AWS User Creates Permanent Access Key
+enabled: true
+severity: Medium
+description: |-
+  ## Goal
+  Detects when an AWS IAM user creates an AWS Access Key for programmatic calls. This could indicate an attempt to gain unauthorized or persistent access.
+
+  ## Strategy
+  Monitor AWS CloudTrail events for the creation of access keys (`CreateAccessKey`). Capture relevant details such as the user, IP address, and location to assess potential threats.
+
+  ## Triage and Response
+  Investigate the detected access key creation event to determine if it was authorized. Review the user agent, principal IPs, and other details to assess potential threats. Ensure that all users have proper access controls and that no unauthorized access keys exist.
+query_text: |-
+  %ingest.source_type="aws:cloudtrail"
+  metadata.vendor_name:AMAZON
+  metadata.product_name:"AWS CloudTrail"
+  metadata.product_event_type:CreateAccessKey
+  security_result.action:ALLOW
+  | groupbycount(
+  additional.fields.recipientAccountId,
+  principal.user.user_display_name,
+  principal.ip
+  )
+  | where @q.count > 0
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- medium_severity_alerts
+tags:
+- source.aws
+- domain.cloud
+- domain.iam
+- tactics.ta0005.defense_evasion
+- tactics.ta0003.persistence
+- tactics.ta0004.privilege_escalation
+- tactics.ta0001.initial_access
+- techniques.t1078.valid_accounts
+- techniques.t1078.004.valid_accounts_cloud_accounts
+- use_case.aws_iam_access_keys
+context_fields:
+- recipientAccountId
+- awsRegion
+- eventSource
+- eventName
+- eventTime
+- sourceIPAddress
+- userAgent
+- userIdentity.type
+- userIdentity.arn
+- userIdentity.accountId
+- requestParameters.userName
+- responseElements.accessKey.accessKeyId
+- additionalEventData

@@ -1,0 +1,25 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS New MFA Method Registered For User
+description: |-
+  Detects the registration of a new Multi-Factor Authentication (MFA) method for an AWS IAM user, which could indicate an attempt to add unauthorized or unexpected MFA methods.
+query_text: |-
+  %ingest.source_type="aws:cloudtrail"
+  metadata.vendor_name:AMAZON
+  metadata.product_name:"AWS CloudTrail"
+  (
+  metadata.product_event_type:CreateVirtualMFADevice or
+  metadata.product_event_type:EnableMFADevice
+  )
+  security_result.action:ALLOW
+  | groupbycount(
+  additional.fields.recipientAccountId,
+  principal.user.user_display_name
+  )
+  | where @q.count > 0
+tags:
+- source.aws
+- domain.iam
+- techniques.t1556.modify_authentication_process
+- tactics.ta0006.credential_access
+- tactics.ta0005.defense_evasion
+- tactics.ta0003.persistence

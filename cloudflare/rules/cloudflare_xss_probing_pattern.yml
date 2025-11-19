@@ -1,0 +1,31 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Cloudflare XSS Probing Pattern
+description: |-
+  ## Goal
+  Detect XSS (Cross-Site Scripting) probing patterns in web requests,
+  which may indicate attack attempts against web applications.
+
+  ## Strategy
+  Monitor for XSS payloads in request parameters.
+
+  ## Triage and Response
+  1. Identify the target URL and parameter.
+  2. Check if the WAF blocked the request.
+  3. If not, patch the application vulnerability.
+enabled: true
+severity: Medium
+query_text: |-
+  %ingest.source_type:cloudflare
+  ClientRequestMethod:(POST PUT)
+  ClientRequestURI:('alert(' 'alert%28' 'String.fromCharCode(' 'expression(alert')
+  | groupbycount(ClientIP)
+  | where @q.count > 0
+time_range_s: 300
+run_frequency_s: 60
+event_sink_keys:
+- medium_severity_alerts
+tags:
+- tactics.ta0001.initial_access
+- techniques.t1190.exploit_public_facing_application
+- techniques.t1133.external_remote_services
+- source.cloudflare

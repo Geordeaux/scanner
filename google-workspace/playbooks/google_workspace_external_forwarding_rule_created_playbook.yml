@@ -1,0 +1,14 @@
+name: Google Workspace External Forwarding Rule Created Playbook
+description: Detects the creation of email forwarding rules to external domains.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor Google Workspace Gmail audit logs for `create_forwarding_rule`. Attackers often set up forwarding rules to exfiltrate sensitive emails.
+- name: Triage
+  description: '1. Identify the user and the destination email.
+
+    2. Verify if the forwarding is authorized.
+
+    3. Remove the rule and investigate the user account if unauthorized.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

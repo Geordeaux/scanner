@@ -1,0 +1,27 @@
+name: AWS SAML Identity Provider Changes Playbook
+description: Detect create, update, or delete events of a SAML provider in AWS. These
+  actions can indicate potential security issues related to unauthorized access and
+  manipulation of authentication mechanisms.
+severity: Medium
+steps:
+- name: Investigation
+  description: 'Monitor AWS CloudTrail events for specific actions related to SAML
+    identity providers:
+
+    * `CreateSAMLProvider`
+
+    * `UpdateSAMLProvider`
+
+    * `DeleteSAMLProvider`'
+- name: Triage
+  description: '* Confirm whether the SAML IdP change is part of an approved change
+    request.
+
+    * Review the new or updated SAML metadata, audience, and attribute mappings for
+    correctness and least privilege.
+
+    * Verify that the IdP is trusted and that no unexpected third-party or test IdPs
+    have been added.
+
+    * Review recent activity by the same principal for other IAM / federation configuration
+    changes.'

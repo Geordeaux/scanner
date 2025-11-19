@@ -1,0 +1,10 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: GitHub Enterprise Audit Log Stream Destroyed
+description: |-
+  Detects when a GitHub audit log stream is destroyed. An adversary may attempt to destroy audit logs to erase their tracks.
+query_text: |-
+  %ingest.source_type:github
+  action:audit_log_streaming.destroy
+tags:
+- github
+- converted_yaral

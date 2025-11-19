@@ -1,0 +1,19 @@
+name: Google Workspace user assigned administrative role Playbook
+description: Detect when a user is added to an administrator role on Google Workspace.
+severity: Low
+steps:
+- name: Investigation
+  description: 'Monitor Google Workspace logs to detect role assignment events where the role has the suffix "_ADMIN_ROLE."
+
+
+    ## Triage and response
+
+    1. Verify with the Google admin if the user should legitimately be given the admin role.
+
+    2. If the user was not legitimately added, investigate activity from the IP address that made the role addition.
+
+    3. Review activity around the Google Workspace admin who made the change and the newly added admin.'
+- name: Triage
+  description: ''
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

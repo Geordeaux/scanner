@@ -1,0 +1,15 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: 'TTB Hunt: AWS CloudTrail TTB High Diversity Anomaly'
+description: |-
+  Hunt for users with high diversity in AWS Services (eventSource) and API Actions (eventName).
+query_text: |-
+  %ingest.source_type="aws:cloudtrail"
+  | stats
+    distinct_count(eventSource) as terrain_score,
+    distinct_count(eventName) as behavior_score
+    by userIdentity.arn
+  | sort -terrain_score, -behavior_score
+tags:
+- source.cloudtrail
+- ttb.anomaly
+- defense_evasion

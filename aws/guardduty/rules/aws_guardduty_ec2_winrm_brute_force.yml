@@ -1,0 +1,28 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: AWS GuardDuty EC2 WinRM Brute Force
+description: |-
+  ## Goal
+  Detects brute force attacks against the Windows Remote Management (WinRM) service on EC2 instances.
+
+  ## Strategy
+  Monitor GuardDuty findings for `UnauthorizedAccess:EC2/WinRMBruteForce`.
+
+  ## Triage and Response
+  1. Identify the instance and the source IP.
+  2. Block the attacking IP.
+  3. Check if any login was successful.
+  4. Ensure WinRM is not exposed to the public internet.
+enabled: true
+severity: High
+query_text: "%ingest.source_type:aws_guardduty\nmetadata.product_event_type:\"UnauthorizedAccess:EC2/WinRMBruteForce\" "
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- high_severity_alerts
+tags:
+- guardduty
+- aws
+- ec2
+- brute_force
+- windows

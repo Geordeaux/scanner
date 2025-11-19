@@ -1,0 +1,10 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS GuardDuty S3 Anomalous Exfiltration
+description: |-
+  Detects anomalous data exfiltration from an S3 bucket.
+query_text: "%ingest.source_type:aws_guardduty\nmetadata.product_event_type:\"Exfiltration:S3/AnomalousBehavior\" "
+tags:
+- guardduty
+- aws
+- s3
+- exfiltration

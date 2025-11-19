@@ -1,0 +1,14 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS EventBridge rule disabled or deleted
+description: |-
+  Detect attempts to evade defenses by deleting or disabling EventBridge rules.
+query_text: |-
+  %ingest.source_type:"aws:cloudtrail"
+  eventSource:events.amazonaws.com
+  eventName:(DeleteRule DisableRule)
+  | groupbycount(userIdentity.arn, requestParameters.name)
+  | where @q.count > 0
+tags:
+- techniques.t1562.impair_defenses
+- source.cloudtrail
+- tactics.ta0005.defense_evasion

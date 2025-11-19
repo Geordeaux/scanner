@@ -1,0 +1,14 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS EBS Snapshot Made Public
+description: |-
+  Detect when an EBS snapshot is made public.
+query_text: |-
+  %ingest.source_type:"aws:cloudtrail"
+  eventName:ModifySnapshotAttribute
+  requestParameters.createVolumePermission.add.items.group:"all"
+  | groupbycount(userIdentity.arn)
+  | where @q.count > 0
+tags:
+- techniques.t1537.transfer_data_to_cloud_account
+- source.cloudtrail
+- tactics.ta0010.exfiltration

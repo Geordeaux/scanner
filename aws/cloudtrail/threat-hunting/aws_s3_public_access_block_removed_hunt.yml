@@ -1,0 +1,54 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS S3 Public Access Block Removed
+description: |-
+  Detect when the S3 Public Access Block configuration is removed from an S3 bucket or an AWS account. This could indicate an attempt to impair defenses by making resources open to unauthorized users.
+query_text: |-
+  %ingest.source_type="aws:cloudtrail"
+  eventSource:(
+  "s3.amazonaws.com"
+  "s3control.amazonaws.com"
+  )
+  eventName:(
+  DeletePublicAccessBlock
+  PutPublicAccessBlock
+  DeleteBucketPublicAccessBlock
+  PutBucketPublicAccessBlock
+  DeleteAccountPublicAccessBlock
+  PutAccountPublicAccessBlock
+  )
+  not errorCode:*
+  (
+  eventName:(
+  DeletePublicAccessBlock
+  DeleteBucketPublicAccessBlock
+  DeleteAccountPublicAccessBlock
+  )
+  or
+  (
+  eventName:(
+  PutPublicAccessBlock
+  PutBucketPublicAccessBlock
+  PutAccountPublicAccessBlock
+  )
+  (
+  requestParameters.PublicAccessBlockConfiguration.BlockPublicAcls:"false"
+  or requestParameters.PublicAccessBlockConfiguration.IgnorePublicAcls:"false"
+  or requestParameters.PublicAccessBlockConfiguration.BlockPublicPolicy:"false"
+  or requestParameters.PublicAccessBlockConfiguration.RestrictPublicBuckets:"false"
+  )
+  )
+  )
+  | groupbycount(
+  recipientAccountId,
+  userIdentity.arn,
+  awsRegion
+  )
+  | where @q.count > 0
+tags:
+- source.aws
+- domain.cloud
+- domain.s3
+- tactics.ta0005.defense_evasion
+- techniques.t1562.impair_defenses
+- use_case.aws_s3
+- use_case.public_access_block

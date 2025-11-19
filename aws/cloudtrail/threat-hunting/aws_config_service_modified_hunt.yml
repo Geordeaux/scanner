@@ -1,0 +1,30 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS Config Service Modified
+description: |-
+  Detect when AWS Config recorders or delivery channels are stopped, deleted, or modified. These actions may indicate an attempt to disable or impair configuration auditing and security monitoring.
+query_text: |-
+  %ingest.source_type="aws:cloudtrail"
+  eventSource="config.amazonaws.com"
+  eventName:(
+  "StopConfigurationRecorder"
+  "DeleteConfigurationRecorder"
+  "DeleteDeliveryChannel"
+  "PutDeliveryChannel"
+  "PutConfigurationRecorder"
+  )
+  | groupbycount(
+  recipientAccountId,
+  requestParameters.configurationRecorder.name,
+  userIdentity.arn,
+  awsRegion
+  )
+  | where @q.count > 0
+tags:
+- source.aws
+- domain.cloud
+- domain.config
+- domain.logging
+- tactics.ta0005.defence_evasion
+- techniques.t1562.008.impair_defences_disable_cloud_logs
+- use_case.aws_config
+- use_case.logging_integrity

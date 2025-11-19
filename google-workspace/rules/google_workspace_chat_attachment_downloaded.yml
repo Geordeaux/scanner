@@ -1,0 +1,25 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Google Workspace Chat Attachment Downloaded
+description: |-
+  ## Goal
+  Detects downloads of attachments from Google Chat.
+
+  ## Strategy
+  Monitor Google Workspace Chat audit logs for `download_attachment`. Large volumes of downloads may indicate data exfiltration via Chat.
+
+  ## Triage and Response
+  1. Identify the user and the file.
+  2. Verify if the download is business-related.
+  3. Investigate further if the file is sensitive.
+enabled: true
+severity: Low
+query_text: "%ingest.source_type:google_workspace\naction:download_attachment "
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- low_severity_alerts
+tags:
+- google_workspace
+- chat
+- exfiltration

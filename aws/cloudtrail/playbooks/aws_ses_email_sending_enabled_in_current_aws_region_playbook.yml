@@ -1,0 +1,17 @@
+name: AWS SES email sending enabled in current AWS region Playbook
+description: Detect when email sending is enabled in your Amazon SES account for the
+  current AWS region.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor CloudTrail for events indicating email sending has been enabled
+    in Amazon SES. Attackers often target SES for phishing, using API calls to enable
+    email sending.
+- name: Triage
+  description: "1. Determine if the API call should have been made by the user from\
+    \ this IP address.\n2. If the action is legitimate, consider adding the user to\
+    \ a suppression list.\n3. If the action is suspicious:\n   * Contact the user\
+    \ to verify if they made the API call.\n   * Check the User Investigation dashboard\
+    \ for other actions taken by the user.\n   * Review the IP Investigation dashboard\
+    \ for additional traffic from the IP.\n4. If findings suggest an attack, initiate\
+    \ your company's incident response process and investigation."

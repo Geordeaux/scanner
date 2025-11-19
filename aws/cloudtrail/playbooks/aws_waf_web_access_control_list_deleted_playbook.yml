@@ -1,0 +1,13 @@
+name: AWS WAF web access control list deleted Playbook
+description: Detect when an AWS Web Application Firewall (WAF) Access Control List
+  (ACL) is deleted.
+severity: Medium
+steps:
+- name: Investigation
+  description: The rule monitors AWS WAF logs and detects when the event name is "DeleteWebACL."
+- name: Triage
+  description: '1. Determine if the user''s identity is expected to perform the "DeleteWebACL"
+    API call on the account.
+
+    2. If the API call was not made by the user, rotate the user credentials and investigate
+    what other APIs were successfully accessed.'

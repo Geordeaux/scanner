@@ -1,0 +1,9 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Cloudflare SSO Configuration Modified
+description: |-
+  Detects modifications to the Single Sign-On (SSO) configuration.
+query_text: "%ingest.source_type:cloudflare\nAction:sso_update OR Action:sso_delete "
+tags:
+- cloudflare
+- iam
+- sso

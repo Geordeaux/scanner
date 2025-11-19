@@ -1,0 +1,26 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: GitHub High Number Of Non Public GitHub Repositories Downloaded
+description: |-
+  ## Goal
+  Detects when a user downloads a high number of non-public GitHub repositories. An adversary may attempt to steal the contents of several GitHub repositories after compromising a user account.
+
+  ## Strategy
+  Monitor GitHub audit logs for specific event types.
+
+  ## Triage and Response
+  1. Identify the actor and the target resource.
+  2. Verify if the action was authorized.
+  3. If unauthorized, revert the change and rotate credentials.
+enabled: true
+severity: High
+query_text: |-
+  %ingest.source_type:github
+  action:repo.download_zip
+time_range_s: 1800
+run_frequency_s: 300
+event_sink_keys:
+- high_severity_alerts
+tags:
+- github
+- converted_yaral

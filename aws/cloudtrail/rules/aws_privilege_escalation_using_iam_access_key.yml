@@ -1,0 +1,60 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: AWS Privilege Escalation Using IAM Access Key
+description: |-
+  ## Goal
+  Detect when a user creates a new IAM access key for another IAM user, which can be used for privilege escalation by unauthorized users.
+
+  ## Strategy
+  Monitor AWS CloudTrail management events where:
+  * An IAM access key is created via `CreateAccessKey`, and
+  * The key is created for an explicit target IAM user (not the caller), as indicated by a populated target user field.
+
+  Because direct cross-event joins are not supported, this rule focuses on the risky pattern of a principal creating access keys for other users. These events are often associated with delegated administration or potential abuse.
+
+  ## Triage and Response
+  * Confirm:
+    * Who created the access key (`principal.user.user_display_name`).
+    * Which IAM user the key was created for (`target.user.userid` or `target.resource.name`).
+  * Validate:
+    * Whether this cross-user key creation is expected (e.g., break-glass, controlled admin workflow).
+  * If suspicious:
+    * Disable or delete the access key.
+    * Review additional activity from the creator and the target user.
+    * Assess for broader account compromise or privilege escalation.
+enabled: true
+severity: Low
+query_text: |-
+  %ingest.source_type="aws:cloudtrail"
+  metadata.vendor_name:AMAZON
+  metadata.product_name:"AWS CloudTrail"
+  metadata.product_event_type:"CreateAccessKey"
+  security_result.action:"ALLOW"
+  target.user.userid:*
+  | groupbycount(
+  principal.user.user_display_name,
+  target.user.userid,
+  principal.ip
+  )
+  | where @q.count > 0
+time_range_s: 3600
+run_frequency_s: 3600
+event_sink_keys:
+- low_severity_alerts
+tags:
+- source.aws
+- domain.iam
+- domain.cloud
+- tactics.ta0003.persistence
+- techniques.t1136.account_creation
+- use_case.iam_privilege_escalation
+context_fields:
+- network.http.user_agent
+- principal.ip
+- principal.ip_geo_artifact.location.country_or_region
+- principal.ip_geo_artifact.location.state
+- principal.user.user_display_name
+- additional.fields["accessKeyId"]
+- target.user.userid
+- target.resource.name
+- target.resource.product_object_id
+- metadata.product_event_type

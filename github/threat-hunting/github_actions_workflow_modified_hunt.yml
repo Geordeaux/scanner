@@ -1,0 +1,9 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: GitHub Actions Workflow Modified
+description: |-
+  Detects modifications to GitHub Actions workflow files.
+query_text: "%ingest.source_type:github\naction:push\nfile_path:\".github/workflows/*\" "
+tags:
+- github
+- actions
+- supply_chain

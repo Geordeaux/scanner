@@ -1,0 +1,8 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS SSO Access Token Retrieved by Unauthenticated IP
+description: "When using AWS in an enterprise environment, best practices dictate to use a single sign-on service for identity and access management. AWS SSO is a popular solution, integrating with third-party providers such as Okta and allowing to centrally manage roles and permissions in multiple AWS accounts.\n\nIn this post, we demonstrate that AWS SSO is vulnerable by design to device code authentication phishing \u2013 just like any identity provider implementing OpenID Connect device code authentication. This technique was first demonstrated by Dr. Nestori Syynimaa for Azure AD. The feature provides a powerful phishing vector for attackers, rendering ineffective controls such as MFA (including Yubikeys) or IP allow-listing at the IdP level."
+query_text: |-
+  %ingest.source_type:aws:cloudtrail
+  eventSource:sso.amazonaws.com
+tags:
+- panther_migration

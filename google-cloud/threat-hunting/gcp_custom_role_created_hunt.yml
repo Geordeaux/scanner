@@ -1,0 +1,9 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: GCP Custom Role Created
+description: |-
+  Detects the creation of a custom IAM role.
+query_text: "%ingest.source_type:google_cloud_audit\nprotoPayload.methodName:\"google.iam.admin.v1.CreateRole\" "
+tags:
+- google_cloud
+- iam
+- persistence

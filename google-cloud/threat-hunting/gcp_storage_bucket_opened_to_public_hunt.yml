@@ -1,0 +1,18 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: GCP Storage Bucket Opened To Public
+description: |-
+  Detect when Google Cloud Storage buckets are opened to the public by adding `allUsers` or `allAuthenticatedUsers` to the access policy. This behavior may indicate a misconfiguration that could lead to unauthorized data exposure.
+query_text: |-
+  %ingest.source_type:gcp
+  protoPayload.methodName:storage.setIamPermissions
+  protoPayload.request.policy.bindings.members:(allUsers allAuthenticatedUsers)
+  (not protoPayload.status.message:ERROR)
+  | groupbycount(project_id, bucket_name, protoPayload.authenticationInfo.principalEmail)
+  | where @q.count > 0
+tags:
+- source.gcp
+- gcp
+- gcp_audit
+- storage_bucket_opened_to_public
+- techniques.t1562.impair_defenses
+- tactics.ta0005.defense_evasion

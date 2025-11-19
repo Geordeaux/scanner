@@ -1,0 +1,26 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: GitHub Personal Access Token Auto Approve Policy Modified
+description: |-
+  ## Goal
+  Detects when changes are made to a GitHub organization's fine-grained Personal Access Token approval policy.
+
+  ## Strategy
+  Monitor GitHub audit logs for specific event types.
+
+  ## Triage and Response
+  1. Identify the actor and the target resource.
+  2. Verify if the action was authorized.
+  3. If unauthorized, revert the change and rotate credentials.
+enabled: true
+severity: Medium
+query_text: |-
+  %ingest.source_type:github
+  action:auto_approve_personal_access_token_requests.disable OR action:auto_approve_personal_access_token_requests.enable OR action:forbid_auto_approve_personal_access_token_requests.disable OR action:forbid_auto_approve_personal_access_token_requests.enable
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- medium_severity_alerts
+tags:
+- github
+- converted_yaral

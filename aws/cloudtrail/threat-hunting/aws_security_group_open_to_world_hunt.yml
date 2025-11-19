@@ -1,0 +1,29 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS Security Group Open To The World
+description: |-
+  Detect when an AWS security group is opened to the world (`0.0.0.0/0` or `::/0`). This can indicate potential security issues related to unauthorized access and exposure of resources.
+query_text: |-
+  %ingest.source_type="aws:cloudtrail"
+  eventSource:"ec2.amazonaws.com"
+  eventName:AuthorizeSecurityGroupIngress
+  not errorCode:*
+  (
+  requestParameters.ipPermissions.items.ipRanges.items.cidrIp:"0.0.0.0/0"
+  or requestParameters.ipPermissions.items.ipv6Ranges.items.cidrIpv6:"::/0"
+  )
+  | groupbycount(
+  recipientAccountId,
+  requestParameters.groupId,
+  userIdentity.arn,
+  awsRegion
+  )
+  | where @q.count > 0
+tags:
+- source.aws
+- domain.cloud
+- domain.network
+- domain.ec2
+- tactics.ta0005.defense_evasion
+- techniques.t1562.impair_defenses
+- use_case.aws_security_group
+- exposure.open_to_internet

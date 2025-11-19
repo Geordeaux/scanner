@@ -1,0 +1,28 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: IAM User Activity with No MFA Session
+description: |-
+  ## Goal
+  Identifies IAM user activity where the user is not MFA authenticated.
+  Adversaries often target IAM users with weak or no MFA protection to gain unauthorized access.
+
+  ## Strategy
+  Identifies IAM user activity where the user is not MFA authenticated.
+  Adversaries often target IAM users with weak or no MFA protection to gain unauthorized access.
+
+  ## Triage and Response
+  Investigate and remediate as appropriate.
+enabled: true
+severity: Medium
+query_text: |-
+  %ingest.source_type:aws:cloudtrail
+  userIdentity.type:"IAMUser"
+  userIdentity.sessionContext.attributes.mfaAuthenticated:"false"
+  NOT userAgent:("cloudformation.amazonaws.com" OR "application-autoscaling.amazonaws.com" OR "AWS Internal")
+time_range_s: 3600
+run_frequency_s: 60
+event_sink_keys:
+- medium_severity_alerts
+tags:
+- tactics.ta0005.defense_evasion
+- techniques.t1078.004.cloud_accounts
+- source.aws.cloudtrail

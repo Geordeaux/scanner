@@ -1,0 +1,10 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS GuardDuty IAM User Tor Access
+description: |-
+  Detects AWS API calls made by an IAM user from a Tor exit node.
+query_text: "%ingest.source_type:aws_guardduty\nmetadata.product_event_type:\"UnauthorizedAccess:IAMUser/TorIPCaller\" "
+tags:
+- guardduty
+- aws
+- iam
+- tor

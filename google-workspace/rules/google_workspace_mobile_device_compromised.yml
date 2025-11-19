@@ -1,0 +1,25 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Google Workspace Mobile Device Compromised
+description: |-
+  ## Goal
+  Detects indications of a compromised mobile device managed by Google Workspace.
+
+  ## Strategy
+  Monitor Google Workspace mobile audit logs for events indicating device compromise (e.g., jailbroken/rooted device detection).
+
+  ## Triage and Response
+  1. Identify the user and the device.
+  2. Block the device from accessing corporate data.
+  3. Wipe the device if necessary.
+enabled: true
+severity: High
+query_text: "%ingest.source_type:google_workspace\naction:device_compromised "
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- high_severity_alerts
+tags:
+- google_workspace
+- mobile
+- endpoint

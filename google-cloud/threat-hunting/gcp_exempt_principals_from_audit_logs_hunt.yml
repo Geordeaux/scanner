@@ -1,0 +1,20 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: GCP Exempt Principals From Audit Log
+description: |-
+  Detect when GCP Cloud Audit logs are exempted for principals in all services at the project or organization level. This can indicate an attempt to evade monitoring and auditing by disabling audit logging for specific users or groups.
+query_text: |-
+  %ingest.source_type:gcp_audit
+  metadata.event_type:USER_RESOURCE_UPDATE_PERMISSIONS
+  metadata.log_type:GCP_CLOUDAUDIT
+  metadata.product_event_type:SetIamPolicy
+  security_result.action:ALLOW
+  target.application:cloudresourcemanager.googleapis.com
+  target.resource.attribute.labels.service_data_policy_delta_audit_config_delta_exempted_member_action:ADD
+  target.resource.attribute.labels.service_data_policy_delta_audit_config_delta_exempted_member_service:allServices
+tags:
+- source.gcp
+- gcp_audit
+- cloud_audit
+- audit_log_exemption
+- techniques.t1562.impair_defenses_disable_cloud_logs
+- tactics.ta0005.defense_evasion

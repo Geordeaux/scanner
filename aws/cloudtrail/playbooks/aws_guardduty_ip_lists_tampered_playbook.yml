@@ -1,0 +1,34 @@
+name: AWS GuardDuty Trusted Or Threat IP Lists Tampered Playbook
+description: Detects when an Amazon GuardDuty detector's trusted IP sets or threat
+  intelligence IP sets are deleted or deactivated. This may indicate an attempt to
+  impair defences by weakening GuardDuty's detection capability.
+severity: High
+steps:
+- name: Investigation
+  description: 'Monitor AWS CloudTrail management events from `guardduty.amazonaws.com`
+    and alert on:
+
+    * `DeleteIPSet`
+
+    * `DeleteThreatIntelSet`
+
+    * `UpdateIPSet` with `activate=false`
+
+    * `UpdateThreatIntelSet` with `activate=false`
+
+
+    These actions should be rare, tightly controlled, and usually associated with
+    planned changes to GuardDuty configuration. Any unplanned change warrants immediate
+    investigation.'
+- name: Triage
+  description: "* Identify who initiated the change (IAM user or role), from where\
+    \ (IP, user agent), and in which account and region.\n* Determine whether there\
+    \ is an approved change, maintenance window, or documented configuration update\
+    \ that explains the IP set or threat intel set change.\n* If there is no valid\
+    \ justification:\n  * Treat as a high-severity incident (potential defence evasion\
+    \ / logging impairment).\n  * Confirm whether other GuardDuty configuration has\
+    \ been modified (detectors, publishing destinations, findings export).\n  * Restore\
+    \ the trusted or threat intel IP set configuration as appropriate (from infrastructure-as-code,\
+    \ backup, or documentation).\n  * Review recent CloudTrail activity for the same\
+    \ principal and account, focusing on GuardDuty, CloudTrail, Config, IAM, networking,\
+    \ and logging controls.\n  * Escalate according to the incident response process."

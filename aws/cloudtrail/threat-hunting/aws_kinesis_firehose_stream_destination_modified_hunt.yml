@@ -1,0 +1,15 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS Kinesis Firehose stream destination modified
+description: |-
+  Detects when an AWS Kinesis Firehose Destination is modified.
+query_text: |-
+  %ingest.source_type:"aws:cloudtrail"
+  eventSource:firehose.amazonaws.com
+  eventName:UpdateDestination
+  (not userAgent:(cloudformation.amazonaws.com APN\\/*))
+  | groupbycount(requestParameters.deliveryStreamName)
+  | where @q.count > 0
+tags:
+- source.cloudtrail
+- techniques.t1562.impair_defenses
+- tactics.ta0005.defense_evasion

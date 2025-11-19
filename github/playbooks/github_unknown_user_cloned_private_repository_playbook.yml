@@ -1,0 +1,18 @@
+name: GitHub unknown user cloned private repository Playbook
+description: Detect when an unknown actor clones a GitHub repository.
+severity: Medium
+steps:
+- name: Investigation
+  description: 'This rule monitors GitHub audit logs for repository clones where the actor is unspecified.
+
+
+    ## Triage and response
+
+
+    1. Check if the IP address associated with the clone action belongs to a known corporate device.
+
+    2. If the action cannot be traced back to an internal user, initiate your organization''s incident response process and conduct an investigation.'
+- name: Triage
+  description: ''
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

@@ -1,0 +1,20 @@
+name: Google Compute Engine network route created or modified Playbook
+description: Detect when a firewall rule is created or modified.
+severity: Informational
+steps:
+- name: Investigation
+  description: 'Monitor GCE activity audit logs to identify invocations of the following methods:
+
+
+    * beta.compute.routes.insert
+
+    * beta.compute.routes.patch
+
+
+    ## Triage and response
+
+    Ensure the GCE network route is configured correctly and confirm the user''s intention to modify the firewall.'
+- name: Triage
+  description: ''
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

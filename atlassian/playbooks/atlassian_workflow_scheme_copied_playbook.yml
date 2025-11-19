@@ -1,0 +1,18 @@
+name: Atlassian Workflow Scheme Copied Playbook
+description: |-
+  Response steps for when a workflow scheme is copied.
+  This could indicate data exfiltration or preparation for unauthorized changes.
+severity: Medium
+steps:
+  - name: Triage
+    description: |-
+      1. Identify the user (`attributes.actor.email`) who copied the scheme.
+      2. Identify the scheme copied.
+  - name: Investigation
+    description: |-
+      1. Determine if this was authorized.
+      2. Check if the copied scheme is being modified or applied to other projects.
+  - name: Remediation
+    description: |-
+      1. If unauthorized, delete the copied scheme.
+      2. Investigate the actor's account.

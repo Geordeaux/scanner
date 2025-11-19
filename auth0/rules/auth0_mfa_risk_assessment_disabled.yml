@@ -1,0 +1,35 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Auth0 MFA Risk Assessment Disabled
+description: |-
+  ## Goal
+  Detect when MFA risk assessment is disabled in Auth0. This can weaken
+  security controls by reducing adaptive authentication capabilities.
+
+  ## Strategy
+  1. Determine if this was authorized.
+  2. Check if other security settings were modified.
+
+  ## Triage and Response
+  1. Identify the user (`data.user_id`) who disabled the setting.
+  2. Check the timestamp and source IP.
+  1. If unauthorized, re-enable risk assessment immediately.
+  2. Investigate the user account.
+  3. Review logins that occurred while the setting was disabled.
+enabled: true
+severity: High
+query_text: |-
+  %ingest.source_type:auth0
+  data.description:'Updates risk assessment configs'
+  data.details.request.path:/api/v2/risk-assessment/config
+  data.details.request.body.AfterAuthentication:false
+  data.details.request.channel:'https://manage.auth0.com'
+  | groupbycount(data.user_id)
+  | where @q.count > 0
+time_range_s: 300
+run_frequency_s: 60
+event_sink_keys:
+- high_severity_alerts
+tags:
+- tactics.ta0005.defense_evasion
+- techniques.t1562.impair_defenses
+- source.auth0

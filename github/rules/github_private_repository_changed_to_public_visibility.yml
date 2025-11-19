@@ -1,0 +1,30 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: GitHub private repository changed to public visibility
+description: |-
+  ## Goal
+  Detect when a GitHub repository changes its visibility to public.
+
+  ## Strategy
+  This rule monitors GitHub audit logs for changes from private to public visibility. Private repositories often contain sensitive information and should only be made public with organizational approval.
+
+  ## Triage and response
+  1. Verify if the change made by the actor is authorized.
+  2. If the change is unauthorized or unexpected, initiate your organization's incident response process and conduct an investigation.
+enabled: true
+severity: High
+query_text: |-
+  %ingest.source_type:github
+  action:repo.access
+  previous_visibility:private
+  visibility:public
+  | groupbycount(repo)
+  | where @q.count > 0
+time_range_s: 300
+run_frequency_s: 60
+event_sink_keys:
+- high_severity_alerts
+tags:
+- source.github-telemetry
+- tactics.ta0009.collection
+- source.github
+- techniques.t1213.data_from_information_repositories

@@ -1,0 +1,10 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Hunt - Atlassian Admin Impersonation
+description: |-
+  Hunt for administrators logging in as other users.
+query_text: |-
+  %ingest.source_type:atlassian
+  attributes.action:user_logged_in_as_user
+tags:
+- hunt
+- source.atlassian

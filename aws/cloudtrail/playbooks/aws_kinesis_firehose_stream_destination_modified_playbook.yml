@@ -1,0 +1,13 @@
+name: AWS Kinesis Firehose stream destination modified Playbook
+description: Detects when an AWS Kinesis Firehose Destination is modified.
+severity: Medium
+steps:
+- name: Investigation
+  description: The rule monitors AWS Kinesis Firehose logs and detects when the event
+    name is "UpdateDestination."
+- name: Triage
+  description: "1. Determine if the user identity is expected to perform the \"UpdateDestination\"\
+    \ API call on the account.\n2. If the API call was not made by the user, rotate\
+    \ the user credentials and investigate other successfully accessed APIs.\n   *\
+    \ Rotate the credentials.\n   * Investigate if the same credentials made other\
+    \ unauthorized API calls."

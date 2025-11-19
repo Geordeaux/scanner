@@ -1,0 +1,15 @@
+name: AWS GuardDuty Cryptocurrency Activity Detected Playbook
+description: Detects when Amazon GuardDuty identifies cryptocurrency-related activity in Amazon EC2, AWS Lambda, or Amazon EKS runtimes. This could indicate an attempt to hijack resources for mining cryptocurrencies.
+severity: High
+steps:
+- name: Investigation
+  description: 'Monitor GuardDuty findings for the detection of cryptocurrency activities (for example, finding types containing `CryptoCurrency`, `CryptoMinerExecuted`, or `BitcoinDomainRequest`). Capture relevant details such as the principal IP, user, and location to assess potential threats.
+
+
+    ## Triage and response
+
+    Investigate the detected cryptocurrency activity to determine if it was authorized. Review the user agent, principal IPs, and other details to assess potential threats. Ensure that no unauthorized resource hijacking is occurring.'
+- name: Triage
+  description: ''
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

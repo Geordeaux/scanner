@@ -1,0 +1,34 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Cloudflare Unexpected POST Requests
+description: |-
+  ## Goal
+  Detect POST or PUT requests to URIs that typically don't accept
+  POST/PUT requests, which may indicate file upload attempts, web
+  shell activity, or other malicious file operations.
+
+  ## Strategy
+  Monitor Cloudflare logs for this specific threat type. Correlate with origin server logs.
+
+  ## Triage and Response
+  1. Validate the finding in the Cloudflare dashboard.
+  2. Identify the source IP and user agent.
+  3. Check if the request was blocked or allowed.
+  4. If allowed and malicious, update WAF rules to block.
+enabled: true
+severity: Medium
+query_text: |-
+  %ingest.source_type:cloudflare
+  ClientRequestMethod:(POST PUT)
+  ClientRequestURI:(.jpg .jpeg .gif .png .icon .ico .xml .swf .svg .ppt .pttx .doc .docx .rtf .pdf .tif .zip .mov)
+  | groupbycount(ClientIP)
+  | where @q.count > 0
+time_range_s: 300
+run_frequency_s: 60
+event_sink_keys:
+- medium_severity_alerts
+tags:
+- tactics.ta0003.persistence
+- tactics.ta0011.command_and_control
+- techniques.t1505.server_software_component
+- techniques.t1071.application_layer_protocol
+- source.cloudflare

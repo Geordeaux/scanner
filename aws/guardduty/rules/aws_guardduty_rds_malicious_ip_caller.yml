@@ -1,0 +1,27 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: AWS GuardDuty RDS Malicious IP Caller
+description: |-
+  ## Goal
+  Detects RDS API calls originating from known malicious IP addresses.
+
+  ## Strategy
+  Monitor GuardDuty findings for `UnauthorizedAccess:RDS/MaliciousIPCaller`. This indicates that an RDS database is being accessed by an IP address included in a threat intelligence list.
+
+  ## Triage and Response
+  1. Identify the affected RDS instance and the source IP.
+  2. Check if the database is publicly accessible.
+  3. Restrict access using Security Groups to only allowed IPs.
+  4. Investigate database logs for any unauthorized queries.
+enabled: true
+severity: High
+query_text: "%ingest.source_type:aws_guardduty\nmetadata.product_event_type:\"UnauthorizedAccess:RDS/MaliciousIPCaller\" "
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- high_severity_alerts
+tags:
+- guardduty
+- aws
+- rds
+- compromise

@@ -1,0 +1,18 @@
+name: Atlassian Project Roles Changed Playbook
+description: |-
+  Response steps for when project roles are changed.
+  Changes to roles can affect access control within projects.
+severity: Medium
+steps:
+  - name: Triage
+    description: |-
+      1. Identify the user (`attributes.actor.email`) who changed the roles.
+      2. Identify the project and the roles affected.
+  - name: Investigation
+    description: |-
+      1. Determine if this was authorized.
+      2. Verify if the changes grant excessive permissions.
+  - name: Remediation
+    description: |-
+      1. If unauthorized, revert the role changes.
+      2. Investigate the actor's account.

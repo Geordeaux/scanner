@@ -1,0 +1,14 @@
+name: GitHub Deploy Key Created Playbook
+description: Detects the creation of a deploy key.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor GitHub audit logs for `repo.create_deploy_key`. Deploy keys grant read/write access to repositories and can be used for persistence.
+- name: Triage
+  description: '1. Identify the repository and the key title.
+
+    2. Verify if the key is needed for a deployment system.
+
+    3. Delete the key if unauthorized.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

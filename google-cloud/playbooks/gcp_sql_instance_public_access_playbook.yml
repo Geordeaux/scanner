@@ -1,0 +1,14 @@
+name: GCP SQL Instance Public Access Playbook
+description: Detects when a Cloud SQL instance is configured with a public IP.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor Google Cloud audit logs for `cloudsql.instances.update` where `ipConfiguration.ipv4Enabled` is set to true or authorized networks are modified to allow `0.0.0.0/0`.
+- name: Triage
+  description: '1. Identify the user and the SQL instance.
+
+    2. Verify if public access is required.
+
+    3. Disable public IP or restrict authorized networks immediately.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

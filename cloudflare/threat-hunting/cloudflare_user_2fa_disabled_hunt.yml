@@ -1,0 +1,9 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Cloudflare User 2FA Disabled
+description: |-
+  Detects when Two-Factor Authentication (2FA) is disabled for a user.
+query_text: "%ingest.source_type:cloudflare\nAction:user_2fa_disable "
+tags:
+- cloudflare
+- iam
+- account_security

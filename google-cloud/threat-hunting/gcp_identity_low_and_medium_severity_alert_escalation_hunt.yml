@@ -1,0 +1,20 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: GCP Identity Low And Medium Severity Alert Escalation
+description: |-
+  Detect when a Google Cloud identity experiences a low severity event followed by a medium severity event within 24 hours. This can indicate potential security escalation attempts, such as an attacker first probing the system and then escalating their access.
+query_text: |-
+  %ingest.source_type:gcp_scc_threat
+  metadata.product_name:"Security Command Center"
+  security_result.severity:(LOW MEDIUM)
+  | groupbycount(principal.user.email_addresses, security_result.severity)
+  | where @q.count > 1
+tags:
+- source.gcp
+- gcp_scc_threat
+- gcp
+- identity_alert_escalation
+- techniques.t1078.valid_accounts
+- tactics.ta0001.initial_access
+- tactics.ta0003.persistence
+- tactics.ta0004.privilege_escalation
+- tactics.ta0005.defense_evasion

@@ -1,0 +1,14 @@
+name: Cloudflare L7 DDoS Detected Playbook
+description: Detect a Layer 7 Distributed Denial of Service (DDoS) attack from Cloudflare firewall logs.
+severity: Medium
+steps:
+- name: Investigation
+  description: Monitor for spikes in traffic volume or request rate.
+- name: Triage
+  description: '1. Confirm if the traffic is legitimate or an attack.
+
+    2. If attack, ensure Cloudflare DDoS protection is mitigating.
+
+    3. Contact Cloudflare support if the attack persists.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

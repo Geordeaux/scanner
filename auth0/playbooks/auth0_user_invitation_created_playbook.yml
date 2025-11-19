@@ -1,0 +1,18 @@
+name: Auth0 User Invitation Created Playbook
+description: |-
+  Response steps for when a user invitation is created.
+  Monitor to prevent unauthorized access.
+severity: Informational
+steps:
+  - name: Triage
+    description: |-
+      1. Identify the user (`data.user_id`) who created the invitation.
+      2. Identify the invitee email.
+  - name: Investigation
+    description: |-
+      1. Determine if this invitation was authorized.
+      2. Check if the invitee is an external domain.
+  - name: Remediation
+    description: |-
+      1. If unauthorized, revoke the invitation.
+      2. Investigate the user account.

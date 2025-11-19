@@ -1,0 +1,18 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: GCP Multiple KMS Keys Disabled Or Destroyed
+description: |-
+  Detect when multiple KMS crypto key versions are disabled or destroyed from GCP Cloud KMS. This behavior may indicate an attempt to compromise data integrity or availability, which could be malicious.
+query_text: |-
+  %ingest.source_type:gcp
+  protoPayload.serviceName:cloudkms.googleapis.com
+  protoPayload.methodName:(google.cloud.kms.v1.KeyManagementService.DestroyCryptoKeyVersion google.cloud.kms.v1.KeyManagementService.UpdateCryptoKeyVersion)
+  | groupbycount(project_id, protoPayload.authenticationInfo.principalEmail)
+  | where @q.count >= 10
+tags:
+- source.gcp
+- gcp
+- gcp_kms
+- gcp_audit
+- multiple_kms_keys_disabled_or_destroyed
+- techniques.t1485.data_destruction
+- tactics.ta0040.impact

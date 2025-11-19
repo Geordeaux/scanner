@@ -1,0 +1,14 @@
+name: Cloudflare Global API Key Viewed Playbook
+description: Detects when a user views their Global API Key.
+severity: Medium
+steps:
+- name: Investigation
+  description: Monitor Cloudflare Audit Logs for `user_view_api_key`. The Global API Key has full access to the account and should rarely be viewed or used.
+- name: Triage
+  description: '1. Identify the user.
+
+    2. Confirm if they needed the key for a legitimate integration.
+
+    3. Recommend using API Tokens with scoped permissions instead.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

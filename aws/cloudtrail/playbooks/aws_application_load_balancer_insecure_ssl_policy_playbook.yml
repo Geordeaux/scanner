@@ -1,0 +1,30 @@
+name: AWS Application Load Balancer Insecure SSL Policy Playbook
+description: Detect configuration of insecure SSL policies on AWS Application Load
+  Balancers (ALBs).
+severity: Low
+steps:
+- name: Investigation
+  description: 'Monitor AWS CloudTrail management events for:
+
+    * `ModifyListener`
+
+    * `CreateListener`
+
+
+    where the `requestParameters.sslPolicy` is set to one of a set of known weak or
+    legacy SSL policies. These configurations may:
+
+    * Permit deprecated ciphers or protocol versions, or
+
+    * Degrade the overall cryptographic strength of TLS connections terminated at
+    the ALB.'
+- name: Triage
+  description: '* Confirm whether the SSL policy change was requested as part of a
+    documented change or rollback.
+
+    * Validate that the chosen SSL policy aligns with internal cryptographic standards
+    and regulatory requirements.
+
+    * Where unjustified, plan a change to update the listener to a modern, secure
+    TLS policy and assess whether any sensitive data may have been exposed under weaker
+    settings.'

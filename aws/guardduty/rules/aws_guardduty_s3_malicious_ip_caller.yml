@@ -1,0 +1,29 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: AWS GuardDuty S3 Malicious IP Caller
+description: |-
+  ## Goal
+  Detects S3 API calls originating from known malicious IP addresses.
+
+  ## Strategy
+  Monitor GuardDuty findings for `UnauthorizedAccess:S3/MaliciousIPCaller.Custom` or `UnauthorizedAccess:S3/MaliciousIPCaller`. This indicates that an S3 bucket is being accessed by an IP address included in a threat intelligence list.
+
+  ## Triage and Response
+  1. Identify the affected S3 bucket and the source IP.
+  2. Check the operation performed (e.g., GetObject, ListBucket).
+  3. If data was accessed, determine the sensitivity of the data.
+  4. Block the malicious IP via bucket policy or AWS WAF.
+enabled: true
+severity: High
+query_text: |-
+  %ingest.source_type:aws_guardduty
+  metadata.product_event_type:/UnauthorizedAccess:S3\/MaliciousIPCaller/
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- high_severity_alerts
+tags:
+- guardduty
+- aws
+- s3
+- compromise

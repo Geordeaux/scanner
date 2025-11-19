@@ -1,0 +1,9 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: GitHub IP Allow List Entry Created
+description: |-
+  Detects the addition of a new IP address to the allow list.
+query_text: "%ingest.source_type:github\naction:ip_allow_list_entry.create "
+tags:
+- github
+- network_security
+- configuration

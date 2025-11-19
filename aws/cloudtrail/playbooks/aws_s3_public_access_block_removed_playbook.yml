@@ -1,0 +1,25 @@
+name: AWS S3 Public Access Block Removed Playbook
+description: Detect when the S3 Public Access Block configuration is removed from
+  an S3 bucket or an AWS account. This could indicate an attempt to impair defenses
+  by making resources open to unauthorized users.
+severity: High
+steps:
+- name: Investigation
+  description: "Monitor AWS CloudTrail management events from:\n* `s3.amazonaws.com`\n\
+    * `s3control.amazonaws.com`\n\nfor the following API calls:\n* `DeletePublicAccessBlock`\
+    \ (account- or bucket-level)\n* `PutPublicAccessBlock` (account- or bucket-level)\n\
+    \nFlag events where:\n* Public Access Block is deleted, or\n* Public Access Block\
+    \ is modified so that any of the following are set to `false`:\n  * `BlockPublicAcls`\n\
+    \  * `IgnorePublicAcls`\n  * `BlockPublicPolicy`\n  * `RestrictPublicBuckets`"
+- name: Triage
+  description: '* Confirm whether relaxing or removing Public Access Block is part
+    of an approved change (for example, a temporary test bucket).
+
+    * Identify all affected accounts/buckets and review their contents for sensitivity
+    and exposure risk.
+
+    * If unapproved, immediately re-enable strict Public Access Block and consider
+    enabling S3 Block Public Access at the org/root account level.
+
+    * Review other recent configuration changes and access by the same principal for
+    additional misconfigurations or malicious activity.'

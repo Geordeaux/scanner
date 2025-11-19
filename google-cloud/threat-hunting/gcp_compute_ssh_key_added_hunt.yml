@@ -1,0 +1,9 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: GCP Compute SSH Key Added
+description: |-
+  Detects the addition of SSH keys to project or instance metadata.
+query_text: "%ingest.source_type:google_cloud_audit\nprotoPayload.methodName:(\"v1.compute.projects.setCommonInstanceMetadata\" OR \"v1.compute.instances.setMetadata\")\nprotoPayload.request.items.key:\"ssh-keys\" "
+tags:
+- google_cloud
+- compute
+- persistence

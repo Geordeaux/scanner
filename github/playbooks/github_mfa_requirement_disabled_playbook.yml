@@ -1,0 +1,12 @@
+name: GitHub MFA requirement disabled Playbook
+description: Detect when GitHub multi-factor authentication (MFA) requirements have been disabled.
+severity: High
+steps:
+- name: Investigation
+  description: This rule monitors GitHub audit logs for instances when MFA requirements are disabled, allowing members to access an enterprise or organization without two-factor authentication. This action could enable attackers to maintain persistent access to compromised accounts.
+- name: Triage
+  description: '1. Determine if the change made by the actor is authorized.
+
+    2. If the change is unauthorized or unexpected, initiate your organization''s incident response process and investigate.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

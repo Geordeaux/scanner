@@ -1,0 +1,20 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Auth0 Client Grant Created or Updated
+description: |-
+  Detects when a client grant is created or updated in Auth0. This indicates that
+  an application has been granted new permissions (scopes) to access an API.
+  Unauthorized changes could lead to privilege escalation.
+query_text: |-
+  %ingest.source_type:auth0
+  data.type:sapi
+  (
+  (data.description:"Create a client grant") or
+  (data.description:"Update a client grant")
+  )
+  data.details.request.path:/api/v2/client-grants
+  | groupbycount(data.user_id)
+  | where @q.count > 0
+tags:
+- tactics.ta0004.privilege_escalation
+- techniques.t1098.account_manipulation
+- source.auth0

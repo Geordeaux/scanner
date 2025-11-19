@@ -1,0 +1,14 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: GCP Excessive Permission Denied Events
+description: |-
+  Detect excessive `PermissionDenied` events within an hour timeframe from a user. This can indicate reconnaissance activities where an actor is probing for available resources and permissions.
+query_text: |-
+  %ingest.source_type:gcp_audit
+  metadata.log_type:GCP_CLOUDAUDIT
+  security_result.action:BLOCK
+  security_result.severity:ERROR
+  security_result.detection_fields.status_code:7
+tags:
+- source.gcp
+- techniques.t1580.cloud_infrastructure_discovery
+- tactics.ta0007.discovery

@@ -1,0 +1,26 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: GitHub Two-Factor Authentication Requirement Disabled
+description: |-
+  ## Goal
+  Detects when two-factor authentication requirements are disabled for a GitHub enterprise or organization.
+
+  ## Strategy
+  Monitor GitHub audit logs for specific event types.
+
+  ## Triage and Response
+  1. Identify the actor and the target resource.
+  2. Verify if the action was authorized.
+  3. If unauthorized, revert the change and rotate credentials.
+enabled: true
+severity: High
+query_text: |-
+  %ingest.source_type:github
+  action:business.disable_two_factor_requirement OR action:org.disable_two_factor_requirement
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- high_severity_alerts
+tags:
+- github
+- converted_yaral

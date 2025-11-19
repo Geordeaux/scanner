@@ -1,0 +1,18 @@
+name: Atlassian API Token Activity Playbook
+description: |-
+  Response steps for API token creation or revocation.
+  Unexpected token activity can indicate persistence.
+severity: Medium
+steps:
+  - name: Triage
+    description: |-
+      1. Identify the user (`attributes.actor.email`) who performed the action.
+      2. Check if a token was created or revoked.
+  - name: Investigation
+    description: |-
+      1. Verify if the user authorized this token creation.
+      2. Check if the token is being used from unusual IPs.
+  - name: Remediation
+    description: |-
+      1. If unauthorized, revoke the token immediately.
+      2. Rotate the user's credentials.

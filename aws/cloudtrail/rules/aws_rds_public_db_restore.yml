@@ -1,0 +1,48 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Restore Public AWS RDS Instance
+enabled: true
+description: |-
+  ## Goal
+  Detects the recovery of a new public database instance from a snapshot. It may be a part of data exfiltration.
+
+  References:
+  * https://github.com/RhinoSecurityLabs/pacu/blob/866376cd711666c775bbfcde0524c817f2c5b181/pacu/modules/rds__explore_snapshots/main.py
+
+  False Positives:
+  * Unknown
+
+  ## Strategy
+  Detects the recovery of a new public database instance from a snapshot. It may be a part of data exfiltration.
+
+  References:
+  * https://github.com/RhinoSecurityLabs/pacu/blob/866376cd711666c775bbfcde0524c817f2c5b181/pacu/modules/rds__explore_snapshots/main.py
+
+  False Positives:
+  * Unknown
+
+  ## Triage and Response
+  Investigate and remediate as appropriate.
+severity: High
+query_text: |-
+  %ingest.source_type="aws:cloudtrail"
+  eventSource="rds.amazonaws.com"
+  eventName="RestoreDBInstanceFromDBSnapshot"
+  responseElements.publiclyAccessible=true
+  | stats
+  min(@scnr.datetime) as firstTime,
+  max(@scnr.datetime) as lastTime,
+  count() as eventCount
+  by
+  userIdentity.arn,
+  eventSource,
+  eventName,
+  awsRegion
+time_range_s: 300
+run_frequency_s: 60
+event_sink_keys:
+- high_severity_alerts
+tags:
+- tactics.ta0010.exfiltration
+- techniques.t1078.valid_accounts
+- techniques.t1567.exfiltration_over_web_service
+- source.cloudtrail

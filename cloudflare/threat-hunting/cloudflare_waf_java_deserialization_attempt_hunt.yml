@@ -1,0 +1,10 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Cloudflare WAF Java Deserialization Attempt
+description: |-
+  Detects Java Deserialization attempts blocked by Cloudflare WAF.
+query_text: "%ingest.source_type:cloudflare\nWAFAction:block\nRuleId:100045 OR RuleId:100046 "
+tags:
+- cloudflare
+- waf
+- rce
+- java

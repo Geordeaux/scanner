@@ -1,0 +1,26 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Google Workspace New Trusted Domain Added
+description: |-
+  ## Goal
+  Identifies when a domain is added to the list of trusted domains in Google Workspace. An adversary may attempt to manipulate sharing settings for trusted domains to gain unauthorized access to sensitive files and folders within an organization.
+
+  ## Strategy
+  Monitor Google Workspace audit logs for specific administrative or user actions.
+
+  ## Triage and Response
+  1. Identify the user and the action.
+  2. Verify if the action was authorized.
+  3. If unauthorized, revert the change and reset user credentials.
+enabled: true
+severity: High
+query_text: |-
+  %ingest.source_type:google_workspace
+  action:ADD_TRUSTED_DOMAINS
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- high_severity_alerts
+tags:
+- google_workspace
+- converted_yaral

@@ -1,0 +1,19 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: GCP Security Command Center Service Disabled
+description: |-
+  Detect when GCP Security Command Center services are disabled. This behavior may indicate an attempt to evade security monitoring and defense mechanisms, which could be malicious.
+query_text: |-
+  %ingest.source_type:gcp
+  protoPayload.serviceName:securitycenter.googleapis.com
+  protoPayload.methodName:google.cloud.securitycenter.settings*.Update*
+  protoPayload.request:*DISABLED*
+  | groupbycount(project_id, protoPayload.authenticationInfo.principalEmail)
+  | where @q.count > 0
+tags:
+- source.gcp
+- gcp
+- gcp_securitycenter
+- gcp_audit
+- security_command_center_disabled
+- techniques.t1562.impair_defenses
+- tactics.ta0005.defense_evasion

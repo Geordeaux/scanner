@@ -1,0 +1,25 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Google Workspace Admin Suspended User
+description: |-
+  ## Goal
+  Detects when an administrator suspends a user account.
+
+  ## Strategy
+  Monitor Google Workspace Admin audit logs for `suspend_user`. This rule helps track administrative actions and potential insider threats or response actions.
+
+  ## Triage and Response
+  1. Identify the admin and the suspended user.
+  2. Verify the reason for suspension.
+  3. Ensure proper documentation of the incident.
+enabled: true
+severity: Medium
+query_text: "%ingest.source_type:google_workspace\naction:suspend_user "
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- medium_severity_alerts
+tags:
+- google_workspace
+- admin
+- impact

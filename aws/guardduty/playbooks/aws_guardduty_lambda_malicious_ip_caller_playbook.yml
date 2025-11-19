@@ -1,0 +1,16 @@
+name: AWS GuardDuty Lambda Malicious IP Caller Playbook
+description: Detects when a Lambda function is communicating with a known malicious IP address.
+severity: Critical
+steps:
+- name: Investigation
+  description: Monitor GuardDuty findings for `UnauthorizedAccess:Lambda/MaliciousIPCaller`. This suggests the Lambda function code may be compromised or malicious.
+- name: Triage
+  description: '1. Identify the Lambda function.
+
+    2. Review the function code and dependencies.
+
+    3. Revoke the function''s IAM role credentials if necessary.
+
+    4. Redeploy a known good version of the function.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

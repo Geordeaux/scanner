@@ -1,0 +1,15 @@
+name: Google Cloud Storage Bucket contents downloaded without authentication Playbook
+description: Detect unauthenticated access to an object in a GCS bucket.
+severity: Informational
+steps:
+- name: Investigation
+  description: 'Monitor the GCS bucket for get requests made by unauthenticated users.
+
+
+    ## Triage and response
+
+    Investigate the logs to determine if the accessed bucket should be accessible to unauthenticated users.'
+- name: Triage
+  description: ''
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

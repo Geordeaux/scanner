@@ -1,0 +1,20 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Auth0 Email Provider Updated
+description: |-
+  Detects when the email provider settings are updated in Auth0. Attackers may
+  modify these settings to intercept password reset emails or other sensitive
+  communications, leading to account takeover.
+query_text: |-
+  %ingest.source_type:auth0
+  data.type:sapi
+  (
+  (data.description:"Update email provider") or
+  (data.description:"Delete email provider")
+  )
+  data.details.request.path:/api/v2/emails/provider
+  | groupbycount(data.user_id)
+  | where @q.count > 0
+tags:
+- tactics.ta0003.persistence
+- techniques.t1556.modify_authentication_process
+- source.auth0

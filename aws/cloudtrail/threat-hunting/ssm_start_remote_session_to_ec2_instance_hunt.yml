@@ -1,0 +1,15 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: SSM Start Remote Session to EC2 Instance
+description: |-
+  This hunting query identifies when a user starts a remote session to an EC2 instance using the AWS Systems Manager (SSM) service. The `StartSession` API call allows users to connect to an EC2 instance using the SSM service. Multiple `StartSession` requests to the same EC2 instance may indicate an adversary attempting to gain access to the instance for malicious purposes.
+query_text: |-
+  %ingest.source_type="aws:cloudtrail"
+  eventSource="ssm.amazonaws.com"
+  eventName="StartSession"
+  | groupbycount(requestParameters, userIdentity.arn)
+  | where @q.count > 0
+tags:
+- source.aws
+- domain.cloud
+- tactics.ta0008.lateral_movement
+- techniques.t1021.remote_services

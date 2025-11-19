@@ -1,0 +1,14 @@
+name: Google Workspace Data Export Initiated (Takeout) Playbook
+description: Detects when a user initiates a Google Takeout data export.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor Google Workspace audit logs for `takeout_initiated`. Takeout allows users to export their entire Google account data, representing a significant exfiltration risk.
+- name: Triage
+  description: '1. Identify the user.
+
+    2. Verify if the export is authorized (e.g., departing employee).
+
+    3. Suspend the user and cancel the export if unauthorized.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

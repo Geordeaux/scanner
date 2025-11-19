@@ -1,0 +1,14 @@
+name: GitHub Enterprise Or Organization Recovery Codes Activity Playbook
+description: Detects when the Single Sign-On (SSO) recovery codes are accessed for a GitHub enterprise or organization. An adversary may attempt to access or steal SSO recovery codes in order to maintain access to their target's GitHub environment.
+severity: Medium
+steps:
+- name: Investigation
+  description: Monitor for generation or usage of recovery codes.
+- name: Triage
+  description: '1. Identify the user.
+
+    2. Verify if the user is locked out or if this is an account takeover.
+
+    3. Rotate credentials if suspicious.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

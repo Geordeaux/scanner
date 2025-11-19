@@ -1,0 +1,14 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: GitHub SSH certificate requirement disabled
+description: |-
+  Detect when the GitHub SSH certificate requirement has been disabled.
+query_text: |-
+  %ingest.source_type:github
+  action:ssh_certificate_requirement.disable
+  | groupbycount(actor)
+  | where @q.count > 0
+tags:
+- source.github-telemetry
+- techniques.t1562.impair_defenses
+- source.github
+- tactics.ta0005.defense_evasion

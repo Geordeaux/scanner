@@ -1,0 +1,25 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Cloudflare Security Level Lowered
+description: |-
+  ## Goal
+  Detects when the Cloudflare Security Level is lowered (e.g., from 'High' to 'Essentially Off').
+
+  ## Strategy
+  Monitor Cloudflare Audit Logs for changes to the `security_level` setting.
+
+  ## Triage and Response
+  1. Identify the user and the new level.
+  2. If unauthorized, restore the previous security level.
+  3. Investigate why the protection was lowered.
+enabled: true
+severity: Medium
+query_text: "%ingest.source_type:cloudflare\nAction:zone_setting_edit\nNewValue:\"essentially_off\" OR NewValue:\"low\" "
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- medium_severity_alerts
+tags:
+- cloudflare
+- configuration
+- security_posture

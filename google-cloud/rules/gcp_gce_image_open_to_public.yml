@@ -1,0 +1,76 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+
+name: GCP GCE Image Open To Public
+description: |-
+  ## Goal
+  Detect when a GCP Compute Image is made publicly accessible by adding `allAuthenticatedUsers` to its IAM policy. This can indicate an attempt to exfiltrate data or make sensitive information available to unauthorized users.
+
+  ## Strategy
+  Monitor GCP Cloud Audit logs for events where the IAM policy of a Compute Image is updated to include `allAuthenticatedUsers`. Capture relevant details such as the principal IP, user, and target resource to assess potential threats. Set a high risk score to indicate the severity of this event.
+
+  ## Triage and Response
+  Investigate the detected event to determine if it was authorized. Review the principal IPs, users, and other details to ensure that no unauthorized actions have been taken. Ensure that all IAM policies are compliant with company policies.
+
+enabled: true
+severity: High
+
+query_text: |-
+  %ingest.source_type:gcp_audit
+  metadata.event_type:"USER_RESOURCE_UPDATE_PERMISSIONS"
+  metadata.log_type:"GCP_CLOUDAUDIT"
+  metadata.vendor_name:"Google Cloud Platform"
+  metadata.product_event_type:"beta.compute.images.setIamPolicy"
+  target.application:"compute.googleapis.com"
+  security_result.action:"ALLOW"
+  target.resource.attribute.labels.value:"allAuthenticatedUsers"
+  target.resource.resource_subtype:"gce_image"
+
+time_range_s: 3600
+run_frequency_s: 300
+
+event_sink_keys:
+  - high_severity_alerts
+
+tags:
+  - source.gcp
+  - gcp_audit
+  - gcp
+  - iam_policy
+  - iam_policy_violation
+  - techniques.t1537.transfer_data_to_cloud_account
+  - tactics.ta0010.exfiltration
+
+# Additional context fields for alert graph
+context_fields:
+  - network.http.user_agent
+  - principal.ip
+  - principal.ip_geo_artifact.location.country_or_region
+  - principal.ip_geo_artifact.location.state
+  - principal.user.display_name
+  - target.resource.name
+
+# Outcome variables
+risk_score: 75
+event_count: count_distinct(gcp.metadata.id)
+
+network_http_user_agent: array_distinct(gcp.network.http.user_agent)
+principal_ip: array_distinct(gcp.principal.ip)
+principal_ip_country: array_distinct(gcp.principal.ip_geo_artifact.location.country_or_region)
+principal_ip_state: array_distinct(gcp.principal.ip_geo_artifact.location.state)
+
+principal_user_id: gcp.principal.user.userid
+principal_user_display_name: gcp.principal.user.display_name
+
+target_resource_name: gcp.target.resource.name
+event_name: gcp.metadata.product_event_type
+
+# Condition (defensive sanity checks on normalized fields)
+condition:
+  - metadata.event_type = "USER_RESOURCE_UPDATE_PERMISSIONS"
+  - metadata.log_type = "GCP_CLOUDAUDIT"
+  - metadata.vendor_name = "Google Cloud Platform"
+  - metadata.product_event_type = "beta.compute.images.setIamPolicy"
+  - target.application = "compute.googleapis.com"
+  - security_result.action = "ALLOW"
+  - target.resource.attribute.labels.value = "allAuthenticatedUsers"
+  - target.resource.resource_subtype = "gce_image"

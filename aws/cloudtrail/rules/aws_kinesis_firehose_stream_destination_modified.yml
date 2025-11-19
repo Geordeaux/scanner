@@ -1,0 +1,31 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: AWS Kinesis Firehose stream destination modified
+description: |-
+  ## Goal
+  Detects when an AWS Kinesis Firehose Destination is modified.
+
+  ## Strategy
+  The rule monitors AWS Kinesis Firehose logs and detects when the event name is "UpdateDestination."
+
+  ## Triage and Response
+  1. Determine if the user identity is expected to perform the "UpdateDestination" API call on the account.
+  2. If the API call was not made by the user, rotate the user credentials and investigate other successfully accessed APIs.
+     * Rotate the credentials.
+     * Investigate if the same credentials made other unauthorized API calls.
+enabled: true
+severity: Medium
+query_text: |-
+  %ingest.source_type:"aws:cloudtrail"
+  eventSource:firehose.amazonaws.com
+  eventName:UpdateDestination
+  (not userAgent:(cloudformation.amazonaws.com APN\\/*))
+  | groupbycount(requestParameters.deliveryStreamName)
+  | where @q.count > 0
+time_range_s: 300
+run_frequency_s: 60
+event_sink_keys:
+- medium_severity_alerts
+tags:
+- source.cloudtrail
+- techniques.t1562.impair_defenses
+- tactics.ta0005.defense_evasion

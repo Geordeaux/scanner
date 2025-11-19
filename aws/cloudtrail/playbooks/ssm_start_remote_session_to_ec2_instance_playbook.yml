@@ -1,0 +1,14 @@
+name: SSM Start Remote Session to EC2 Instance Playbook
+description: This hunting query identifies when a user starts a remote session to
+  an EC2 instance using the AWS Systems Manager (SSM) service. The `StartSession`
+  API call allows users to connect to an EC2 instance using the SSM service. Multiple
+  `StartSession` requests to the same EC2 instance may indicate an adversary attempting
+  to gain access to the instance for malicious purposes.
+severity: Medium
+steps:
+- name: Investigation
+  description: This hunting query identifies when a user starts a remote session to
+    an EC2 instance using the AWS Systems Manager (SSM) service. The `StartSession`
+    API call allows users to connect to an EC2 instance using the SSM service. Multiple
+    `StartSession` requests to the same EC2 instance may indicate an adversary attempting
+    to gain access to the instance for malicious purposes.

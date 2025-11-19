@@ -1,0 +1,14 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Additional AWS regions enabled
+description: |-
+  Detect when additional AWS regions have been enabled.
+query_text: |-
+  %ingest.source_type:"aws:cloudtrail"
+  eventName:EnableRegion
+  eventSource:account.amazonaws.com
+  | groupbycount(userIdentity.arn)
+  | where @q.count > 0
+tags:
+- source.cloudtrail
+- techniques.t1535.unused_unsupported_cloud_regions
+- tactics.ta0005.defense_evasion

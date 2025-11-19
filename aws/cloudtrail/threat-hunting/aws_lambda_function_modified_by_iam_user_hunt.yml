@@ -1,0 +1,16 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS Lambda function modified by IAM user
+description: |-
+  Detect when an IAM user modifies an AWS Lambda function, which could indicate an attempt to maintain persistence or exfiltrate data in an AWS environment.
+query_text: |-
+  %ingest.source_type:"aws:cloudtrail"
+  eventSource:lambda.amazonaws.com
+  eventName:UpdateFunctionCode*
+  userIdentity.type:IAMUser
+  (not userIdentity.invokedBy:(cloudformation.amazonaws.com "AWS Internal"))
+  | stats countdistinct(requestParameters.functionName) as num_distinct_values by userIdentity.arn
+  | where num_distinct_values > 0
+tags:
+- techniques.t1098.account_manipulation
+- source.cloudtrail
+- tactics.ta0003.persistence

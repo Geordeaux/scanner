@@ -1,0 +1,10 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS GuardDuty Lambda Malicious IP Caller
+description: |-
+  Detects when a Lambda function is communicating with a known malicious IP address.
+query_text: "%ingest.source_type:aws_guardduty\nmetadata.product_event_type:\"UnauthorizedAccess:Lambda/MaliciousIPCaller\" "
+tags:
+- guardduty
+- aws
+- lambda
+- compromise

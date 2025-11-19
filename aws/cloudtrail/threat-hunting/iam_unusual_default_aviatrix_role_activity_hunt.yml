@@ -1,0 +1,15 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: IAM Unusual Default Aviatrix Role Activity
+description: |-
+  Identifies unusual activity related to the default Aviatrix role.
+  Unusual activity may indicate unauthorized access or misuse of the Aviatrix role.
+query_text: |-
+  %ingest.source_type:aws:cloudtrail
+  userIdentity.type:"AssumedRole"
+  userIdentity.arn:"*aviatrix-role*"
+  | stats count() as activity_counts by userIdentity.arn
+  | where activity_counts < 10
+tags:
+- tactics.ta0005.defense_evasion
+- techniques.t1078.004.cloud_accounts
+- source.aws.cloudtrail

@@ -1,0 +1,10 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: GitHub OAuth Application Access Restrictions Disabled
+description: |-
+  Detects when third-party application access restrictions are disabled for a GitHub organization.
+query_text: |-
+  %ingest.source_type:github
+  action:org.disable_oauth_app_restrictions
+tags:
+- github
+- converted_yaral

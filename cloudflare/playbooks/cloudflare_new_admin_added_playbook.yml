@@ -1,0 +1,14 @@
+name: Cloudflare New Admin Added Playbook
+description: Detects when a new member is invited to the Cloudflare account.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor Cloudflare Audit Logs for `member_invite`.
+- name: Triage
+  description: '1. Verify if the new member is a legitimate employee/contractor.
+
+    2. Check the role assigned (e.g., Super Administrator).
+
+    3. Revoke the invitation if unauthorized.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

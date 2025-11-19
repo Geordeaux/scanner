@@ -1,0 +1,16 @@
+name: AWS GuardDuty S3 Malicious IP Caller Playbook
+description: Detects S3 API calls originating from known malicious IP addresses.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor GuardDuty findings for `UnauthorizedAccess:S3/MaliciousIPCaller.Custom` or `UnauthorizedAccess:S3/MaliciousIPCaller`. This indicates that an S3 bucket is being accessed by an IP address included in a threat intelligence list.
+- name: Triage
+  description: '1. Identify the affected S3 bucket and the source IP.
+
+    2. Check the operation performed (e.g., GetObject, ListBucket).
+
+    3. If data was accessed, determine the sensitivity of the data.
+
+    4. Block the malicious IP via bucket policy or AWS WAF.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

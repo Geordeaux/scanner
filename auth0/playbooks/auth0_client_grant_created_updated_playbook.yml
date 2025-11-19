@@ -1,0 +1,21 @@
+name: Auth0 Client Grant Created or Updated Playbook
+description: |-
+  Response steps for when a client grant is created or updated.
+  This indicates a change in application permissions (scopes).
+severity: Critical
+steps:
+  - name: Triage
+    description: |-
+      1. Identify the user (`data.user_id`) who performed the action.
+      2. Identify the client (application) receiving the grant and the scopes granted.
+      3. Check the timestamp and source IP.
+  - name: Investigation
+    description: |-
+      1. Determine if the scope expansion was authorized (e.g., new feature deployment).
+      2. Verify if the scopes granted are excessive (e.g., `read:users`, `update:roles` to a public client).
+      3. Check if the user has a history of making such changes.
+  - name: Remediation
+    description: |-
+      1. If unauthorized, revoke the client grant immediately.
+      2. Rotate the credentials of the user who made the change.
+      3. Audit the application's usage of the new scopes during the exposure window.

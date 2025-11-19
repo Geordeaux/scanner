@@ -1,0 +1,25 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: AWS GuardDuty Port Probe Unprotected Port
+description: |-
+  ## Goal
+  Detects when an EC2 instance is being probed on an unprotected port from a known malicious IP.
+
+  ## Strategy
+  Monitor GuardDuty findings for `Recon:EC2/PortProbeUnprotectedPort`. This indicates that a known malicious actor is scanning your instance on ports that are not blocked by a security group.
+
+  ## Triage and Response
+  1. Identify the port and the source IP.
+  2. Verify your Security Group rules.
+  3. Ensure that only necessary ports are open and restricted to known IPs where possible.
+enabled: true
+severity: Medium
+query_text: "%ingest.source_type:aws_guardduty\nmetadata.product_event_type:\"Recon:EC2/PortProbeUnprotectedPort\" "
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- medium_severity_alerts
+tags:
+- guardduty
+- aws
+- reconnaissance

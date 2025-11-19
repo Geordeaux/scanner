@@ -1,0 +1,29 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: AWS WAF web access control list modified
+description: |-
+  ## Goal
+  Detect updates to an AWS Web Application Firewall (WAF) Access Control List (ACL).
+
+  ## Strategy
+  Monitor AWS WAF logs and detect when the event name is "UpdateWebACL".
+
+  ## Triage and Response
+  1. Verify if the user identity is authorized to perform the "UpdateWebACL" API call on the account.
+  2. If the API call was unauthorized, rotate the user's credentials and investigate other successfully accessed APIs.
+enabled: true
+severity: Low
+query_text: |-
+  %ingest.source_type:"aws:cloudtrail"
+  eventSource:waf*.amazonaws.com
+  eventName:UpdateWebACL
+  (not userAgent:(\\APN\\/* cloudformation.amazonaws.com))
+  | groupbycount(userIdentity.arn)
+  | where @q.count > 0
+time_range_s: 300
+run_frequency_s: 60
+event_sink_keys:
+- low_severity_alerts
+tags:
+- source.cloudtrail
+- techniques.t1562.impair_defenses
+- tactics.ta0005.defense_evasion

@@ -1,0 +1,16 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Cloudflare Multiple Error Requests from Single IP
+description: |-
+  Detect when a single IP address generates a high volume of error responses,
+  which may indicate scanning, enumeration, or attack attempts.
+query_text: |-
+  %ingest.source_type:cloudflare
+  ClientRequestMethod:GET
+  EdgeResponseStatus >= 400
+  | groupbycount(ClientIP)
+  | where @q.count > 100
+tags:
+- tactics.ta0001.initial_access
+- techniques.t1190.exploit_public_facing_application
+- techniques.t1133.external_remote_services
+- source.cloudflare

@@ -1,0 +1,29 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Restore Public AWS RDS Instance
+description: |-
+  Detects the recovery of a new public database instance from a snapshot. It may be a part of data exfiltration.
+
+  References:
+  * https://github.com/RhinoSecurityLabs/pacu/blob/866376cd711666c775bbfcde0524c817f2c5b181/pacu/modules/rds__explore_snapshots/main.py
+
+  False Positives:
+  * Unknown
+query_text: |-
+  %ingest.source_type="aws:cloudtrail"
+  eventSource="rds.amazonaws.com"
+  eventName="RestoreDBInstanceFromDBSnapshot"
+  responseElements.publiclyAccessible=true
+  | stats
+  min(@scnr.datetime) as firstTime,
+  max(@scnr.datetime) as lastTime,
+  count() as eventCount
+  by
+  userIdentity.arn,
+  eventSource,
+  eventName,
+  awsRegion
+tags:
+- tactics.ta0010.exfiltration
+- techniques.t1078.valid_accounts
+- techniques.t1567.exfiltration_over_web_service
+- source.cloudtrail

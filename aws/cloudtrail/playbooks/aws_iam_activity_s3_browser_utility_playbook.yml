@@ -1,0 +1,26 @@
+name: AWS IAM Activity By S3 Browser Utility Playbook
+description: Detects AWS IAM activities associated with the S3 Browser utility. This
+  may indicate an attempt to manipulate IAM accounts using unauthorised or suspicious
+  tools.
+severity: High
+steps:
+- name: Investigation
+  description: "Monitor AWS CloudTrail management events where:\n* The service is\
+    \ IAM (`iam.amazonaws.com`), and\n* The action is one of:\n  * `CreateUser`\n\
+    \  * `CreateLoginProfile`\n  * `CreateAccessKey`\n  * `PutUserPolicy`\n* The `userAgent`\
+    \ contains the S3 Browser client identifier (for example, `S3 Browser`).\n\nA\
+    \ single matching event is sufficient to generate an alert, as IAM account creation\
+    \ and policy changes via third-party tools are high-impact."
+- name: Triage
+  description: "* Identify the calling principal (IAM user or assumed role), source\
+    \ IP, and the exact IAM changes performed.\n* Confirm with the relevant team whether\
+    \ S3 Browser is:\n  * An approved tool in your environment, and\n  * Expected\
+    \ for this principal and host.\n* If use of S3 Browser is not explicitly approved:\n\
+    \  * Treat the activity as potentially malicious.\n  * Review recent authentication\
+    \ activity for the principal (logins, key usage, geolocation, device).\n  * Examine\
+    \ additional IAM changes around the same time (new keys, new users, inline policies,\
+    \ policy attachments).\n  * Consider revoking or rotating any access keys created,\
+    \ and tightening or temporarily disabling the affected principal.\n* If confirmed\
+    \ legitimate, consider:\n  * Migrating workflows to more controlled tooling (AWS\
+    \ Console/CLI with audited configuration).\n  * Adding explicit allow-listed principals\
+    \ or user agents if you decide to tolerate this pattern with reduced noise."

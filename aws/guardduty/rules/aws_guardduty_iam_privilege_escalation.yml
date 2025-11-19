@@ -1,0 +1,26 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: AWS GuardDuty IAM Privilege Escalation
+description: |-
+  ## Goal
+  Detects attempts by an IAM user to escalate their privileges.
+
+  ## Strategy
+  Monitor GuardDuty findings for `PrivilegeEscalation:IAMUser/AdministrativePermissions`. This finding indicates that a user has assigned highly privileged policies (like AdministratorAccess) to themselves or another user.
+
+  ## Triage and Response
+  1. Identify the user performing the action.
+  2. Verify if the privilege escalation was authorized.
+  3. If unauthorized, revoke the permissions immediately.
+  4. Investigate the user's activity for other malicious actions.
+enabled: true
+severity: High
+query_text: "%ingest.source_type:aws_guardduty\nmetadata.product_event_type:\"PrivilegeEscalation:IAMUser/AdministrativePermissions\" "
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- high_severity_alerts
+tags:
+- guardduty
+- aws
+- privilege_escalation

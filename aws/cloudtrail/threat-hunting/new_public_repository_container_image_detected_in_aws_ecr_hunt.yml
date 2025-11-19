@@ -1,0 +1,15 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: New Public Repository Container Image detected in AWS ECR
+description: |-
+  Detect new image uploads to public ECR, which may indicate potential data exfiltration or supply chain risks.
+query_text: |-
+  %ingest.source_type:"aws:cloudtrail"
+  eventSource:ecr-public.amazonaws.com
+  eventName:PutImage
+  (not errorCode:ImageAlreadyExistsException)
+  | groupbycount(requestParameters.repositoryName)
+  | where @q.count > 0
+tags:
+- techniques.t1567.exfiltration_over_web_service
+- source.cloudtrail
+- tactics.ta0010.exfiltration

@@ -1,0 +1,16 @@
+name: AWS GuardDuty S3 Bucket Public Access Block Disabled Playbook
+description: Detects when the S3 Block Public Access setting is disabled for a bucket.
+severity: Medium
+steps:
+- name: Investigation
+  description: Monitor GuardDuty findings for `Policy:S3/BucketPublicAccessBlock`. Disabling this setting can expose the bucket to the public internet.
+- name: Triage
+  description: '1. Identify the bucket and the user who modified the setting.
+
+    2. Verify if public access is required for this bucket.
+
+    3. If not, re-enable Block Public Access immediately.
+
+    4. Check bucket logs for any unauthorized access during the exposure window.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

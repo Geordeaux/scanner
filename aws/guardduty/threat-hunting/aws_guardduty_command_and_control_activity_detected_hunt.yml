@@ -1,0 +1,24 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS GuardDuty Command And Control Activity Detected
+description: |-
+  Detects when Amazon GuardDuty identifies command and control (C&C) activity in Amazon EC2, AWS Lambda, or Amazon EKS runtimes. This could indicate an attempt to establish communication between compromised systems and external command-and-control servers.
+query_text: |-
+  %ingest.source_type="aws:guardduty"
+  metadata.vendor_name:AMAZON
+  metadata.product_name:"AWS GuardDuty"
+  metadata.product_event_type:*C&CActivity*
+  not security_result.about.labels.Sample:"true"
+  | groupbycount(
+  recipientAccountId,
+  principal.ip,
+  target.resource.product_object_id
+  )
+  | where @q.count > 0
+tags:
+- source.aws
+- domain.cloud
+- domain.guardduty
+- tactics.ta0011.command_and_control
+- techniques.t1071.application_layer_protocol
+- use_case.aws_guardduty
+- use_case.command_and_control

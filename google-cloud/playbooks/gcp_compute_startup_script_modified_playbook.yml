@@ -1,0 +1,14 @@
+name: GCP Compute Startup Script Modified Playbook
+description: Detects modifications to VM instance startup scripts.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor Google Cloud audit logs for `compute.instances.setMetadata` where the key is `startup-script`. Attackers may modify startup scripts to execute malicious code on reboot.
+- name: Triage
+  description: '1. Identify the user and the VM instance.
+
+    2. Review the content of the new startup script.
+
+    3. Revert changes and isolate the instance if malicious.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

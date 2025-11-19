@@ -1,0 +1,25 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Google Workspace User Recovery Information Changed
+description: |-
+  ## Goal
+  Detects changes to a user's account recovery email or phone number.
+
+  ## Strategy
+  Monitor Google Workspace User audit logs for `change_recovery_email` or `change_recovery_phone`. Attackers modify this to maintain persistence and regain access if the password is reset.
+
+  ## Triage and Response
+  1. Identify the user.
+  2. Contact the user via an out-of-band method (e.g., Slack, Manager) to verify the change.
+  3. Revert the change and reset credentials if unauthorized.
+enabled: true
+severity: High
+query_text: "%ingest.source_type:google_workspace\naction:change_recovery_email OR action:change_recovery_phone "
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- high_severity_alerts
+tags:
+- google_workspace
+- identity
+- persistence

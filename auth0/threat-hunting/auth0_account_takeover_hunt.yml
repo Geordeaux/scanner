@@ -1,0 +1,10 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Auth0 New Admin Invited FOLLOWED BY Tenant Member Account Deletion
+description: |-
+  A user was invited as admin and shortly after deleted tenant member accounts. This may indicate account takeover attempts.
+query_text: |-
+  %ingest.source_type:auth0
+  type:s OR type:f
+tags:
+- Auth0
+- panther_migration

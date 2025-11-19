@@ -1,0 +1,15 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS WAF web access control list modified
+description: |-
+  Detect updates to an AWS Web Application Firewall (WAF) Access Control List (ACL).
+query_text: |-
+  %ingest.source_type:"aws:cloudtrail"
+  eventSource:waf*.amazonaws.com
+  eventName:UpdateWebACL
+  (not userAgent:(\\APN\\/* cloudformation.amazonaws.com))
+  | groupbycount(userIdentity.arn)
+  | where @q.count > 0
+tags:
+- source.cloudtrail
+- techniques.t1562.impair_defenses
+- tactics.ta0005.defense_evasion

@@ -1,0 +1,25 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: GitHub Deploy Key Created
+description: |-
+  ## Goal
+  Detects the creation of a deploy key.
+
+  ## Strategy
+  Monitor GitHub audit logs for `repo.create_deploy_key`. Deploy keys grant read/write access to repositories and can be used for persistence.
+
+  ## Triage and Response
+  1. Identify the repository and the key title.
+  2. Verify if the key is needed for a deployment system.
+  3. Delete the key if unauthorized.
+enabled: true
+severity: High
+query_text: "%ingest.source_type:github\naction:repo.create_deploy_key "
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- high_severity_alerts
+tags:
+- github
+- keys
+- persistence

@@ -1,0 +1,25 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Cloudflare Firewall Rule Deleted
+description: |-
+  ## Goal
+  Detects the deletion of a Cloudflare Firewall rule.
+
+  ## Strategy
+  Monitor Cloudflare Audit Logs for `firewall_custom_rule_delete`. Deleting firewall rules can expose the application to attacks previously mitigated.
+
+  ## Triage and Response
+  1. Identify the deleted rule and the user.
+  2. Verify authorization.
+  3. Re-create the rule if it was a critical control.
+enabled: true
+severity: High
+query_text: "%ingest.source_type:cloudflare\nAction:firewall_custom_rule_delete "
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- high_severity_alerts
+tags:
+- cloudflare
+- firewall
+- configuration

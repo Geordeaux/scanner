@@ -1,0 +1,9 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Cloudflare DNS Record Modified
+description: |-
+  Detects modifications to DNS records in Cloudflare.
+query_text: "%ingest.source_type:cloudflare\nAction:rec_edit OR Action:rec_add OR Action:rec_delete "
+tags:
+- cloudflare
+- dns
+- configuration

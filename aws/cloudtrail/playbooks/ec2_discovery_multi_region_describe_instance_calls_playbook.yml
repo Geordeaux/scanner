@@ -1,0 +1,16 @@
+name: High Frequency of EC2 Multi-Region DescribeInstances API Calls Playbook
+description: 'Identifies when a user makes multiple `DescribeInstances` API calls
+  in multiple regions within a short window.
+
+  High frequency of `DescribeInstances` API calls across multiple regions may indicate
+  an adversary attempting to discover the EC2 instances in the account or perform
+  reconnaissance.'
+severity: Medium
+steps:
+- name: Investigation
+  description: 'Identifies when a user makes multiple `DescribeInstances` API calls
+    in multiple regions within a short window.
+
+    High frequency of `DescribeInstances` API calls across multiple regions may indicate
+    an adversary attempting to discover the EC2 instances in the account or perform
+    reconnaissance.'

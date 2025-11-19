@@ -1,0 +1,10 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Hunt - Atlassian Jira Bulk Issue Exports
+description: |-
+  Hunt for Jira bulk issue exports.
+query_text: |-
+  %ingest.source_type:atlassian
+  attributes.action:bulk_issue_export
+tags:
+- hunt
+- source.atlassian

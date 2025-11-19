@@ -1,0 +1,12 @@
+name: GitHub audit log streaming endpoint was deleted Playbook
+description: Detect when a GitHub audit log stream has been deleted.
+severity: High
+steps:
+- name: Investigation
+  description: This rule monitors GitHub audit logs for the deletion of an audit log stream. An attacker may remove a stream to evade defenses set up by a security team.
+- name: Triage
+  description: '1. Determine if the change made by the actor is authorized.
+
+    2. If the change was unauthorized or unexpected, initiate your organization''s incident response process and investigate.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

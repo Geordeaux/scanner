@@ -1,0 +1,9 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: GitHub Advanced Security Change WITHOUT Repo Archived
+description: |-
+  Identifies when advances security change was made not to archive a repo. Eliminates false positives in the Advances Security Change Rule when the repo is archived.
+query_text: |-
+  %ingest.source_type:github
+  action:disable_ghas OR action:archived
+tags:
+- panther_migration

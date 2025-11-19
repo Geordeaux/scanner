@@ -1,0 +1,13 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Cloudflare Empty User Agent
+description: |-
+  Detect HTTP requests that have an empty or missing User-Agent header,
+  which can indicate automated attacks, bots, or malicious scanning activity.
+query_text: |-
+  %ingest.source_type:cloudflare
+  (ClientRequestUserAgent:"" or not ClientRequestUserAgent:*)
+tags:
+- tactics.ta0001.initial_access
+- techniques.t1190.exploit_public_facing_application
+- techniques.t1133.external_remote_services
+- source.cloudflare

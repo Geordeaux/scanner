@@ -1,0 +1,14 @@
+name: Cloudflare Service Token Created Playbook
+description: Detects the creation of a Cloudflare Access Service Token.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor Cloudflare Audit Logs for `service_token_create`. Service tokens are used for machine-to-machine authentication and should be tightly controlled.
+- name: Triage
+  description: '1. Identify the creator and the token purpose.
+
+    2. Verify if the token is needed.
+
+    3. Ensure it is rotated and stored securely.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

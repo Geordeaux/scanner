@@ -1,0 +1,20 @@
+name: Cloudflare WAF Allowed Threat Playbook
+description: 'Detect when Cloudflare''s Web Application Firewall (WAF) detects
+
+  a threat but takes an "Allow" action instead of blocking it,
+
+  which may indicate a misconfiguration or bypass attempt.'
+severity: High
+steps:
+- name: Investigation
+  description: Monitor Cloudflare logs for this specific threat type. Correlate with origin server logs.
+- name: Triage
+  description: '1. Validate the finding in the Cloudflare dashboard.
+
+    2. Identify the source IP and user agent.
+
+    3. Check if the request was blocked or allowed.
+
+    4. If allowed and malicious, update WAF rules to block.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

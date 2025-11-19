@@ -1,0 +1,13 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Auth0 Brute Force Attack on User
+description: |-
+  Detect a potential brute force attack by monitoring failed login attempts from the same Auth0 user.
+query_text: |-
+  %ingest.source_type:auth0
+  data.type:(fp fu)
+  | groupbycount(data.user_id)
+  | where @q.count > 5
+tags:
+- tactics.ta0006.credential_access
+- techniques.t1110.brute_force
+- source.auth0

@@ -1,0 +1,29 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Cloudflare Bad Client IP
+description: |-
+  ## Goal
+  Detect requests from IP addresses that have been classified as having a bad reputation,
+  including unknown, badHost, greylist, securityScanner, scan, or tor classifications.
+
+  ## Strategy
+  Monitor for requests from IPs with poor reputation or known malicious history.
+
+  ## Triage and Response
+  1. Check the IP reputation in Cloudflare or external threat intel.
+  2. If confirmed malicious, add to the IP Access Rules blocklist.
+enabled: true
+severity: Medium
+query_text: |-
+  %ingest.source_type:cloudflare
+  ClientIPClass:(unknown badHost greylist securityScanner scan tor)
+  | groupbycount(ClientIP)
+  | where @q.count > 0
+time_range_s: 300
+run_frequency_s: 60
+event_sink_keys:
+- medium_severity_alerts
+tags:
+- tactics.ta0001.initial_access
+- techniques.t1190.exploit_public_facing_application
+- techniques.t1133.external_remote_services
+- source.cloudflare

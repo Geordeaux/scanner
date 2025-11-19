@@ -1,0 +1,14 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: GitHub MFA requirement disabled
+description: |-
+  Detect when GitHub multi-factor authentication (MFA) requirements have been disabled.
+query_text: |-
+  %ingest.source_type:github
+  action:(org.disable_two_factor_requirement business.disable_two_factor_requirement)
+  | groupbycount(actor)
+  | where @q.count > 0
+tags:
+- techniques.t1556.modify_authentication_process
+- source.github-telemetry
+- source.github
+- tactics.ta0005.defense_evasion

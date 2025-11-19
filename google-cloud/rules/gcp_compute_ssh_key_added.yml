@@ -1,0 +1,25 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: GCP Compute SSH Key Added
+description: |-
+  ## Goal
+  Detects the addition of SSH keys to project or instance metadata.
+
+  ## Strategy
+  Monitor Google Cloud audit logs for `compute.projects.setCommonInstanceMetadata` or `compute.instances.setMetadata` involving `ssh-keys`. Adding SSH keys allows direct access to VMs.
+
+  ## Triage and Response
+  1. Identify the user and the key added.
+  2. Verify if the key addition is authorized.
+  3. Remove the key immediately if unauthorized.
+enabled: true
+severity: High
+query_text: "%ingest.source_type:google_cloud_audit\nprotoPayload.methodName:(\"v1.compute.projects.setCommonInstanceMetadata\" OR \"v1.compute.instances.setMetadata\")\nprotoPayload.request.items.key:\"ssh-keys\" "
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- high_severity_alerts
+tags:
+- google_cloud
+- compute
+- persistence

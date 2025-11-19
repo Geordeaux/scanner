@@ -1,0 +1,25 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Cloudflare Magic Transit Prefix Withdrawal
+description: |-
+  ## Goal
+  Detects when a BGP prefix is withdrawn from Magic Transit.
+
+  ## Strategy
+  Monitor Cloudflare Audit Logs. Withdrawing a prefix stops Cloudflare from advertising it, potentially exposing the network to DDoS or hijacking.
+
+  ## Triage and Response
+  1. Identify the prefix and the user.
+  2. Verify if this was a planned maintenance.
+  3. Re-advertise the prefix if unauthorized.
+enabled: true
+severity: Critical
+query_text: "%ingest.source_type:cloudflare\nAction:magic_transit_prefix_withdraw "
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- critical_severity_alerts
+tags:
+- cloudflare
+- magic_transit
+- network_security

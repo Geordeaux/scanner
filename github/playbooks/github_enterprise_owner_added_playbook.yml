@@ -1,0 +1,33 @@
+name: GitHub enterprise owner added Playbook
+description: Detect when a GitHub enterprise owner has been added.
+severity: High
+steps:
+- name: Investigation
+  description: 'This rule monitors GitHub audit logs for the addition of a GitHub enterprise owner. Enterprise owners have complete control over the enterprise, including:
+
+
+    * Managing administrators
+
+    * Adding and removing organizations
+
+    * Removing enterprise members from all organizations
+
+    * Managing enterprise settings
+
+    * Enforcing policy across organizations
+
+    * Managing billing settings
+
+
+    Adding members to this highly privileged role should be monitored, as an attacker with unauthorized access could seek to persist by adding additional roles.
+
+
+    ## Triage and response
+
+    1. Determine if the change made by the actor is authorized.
+
+    2. If the change was unauthorized or unexpected, initiate the organization''s incident response process and investigate.'
+- name: Triage
+  description: ''
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

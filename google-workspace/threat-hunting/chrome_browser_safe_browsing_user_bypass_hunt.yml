@@ -1,0 +1,10 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Chrome Browser Safe Browsing User Bypass
+description: |-
+  Detects and alerts on users bypassing Chrome Safe Browsing warnings and accessing potentially dangerous content or downloads
+query_text: |-
+  %ingest.source_type:google_workspace
+  action:badNavigationEvent OR action:contentTransferEvent OR action:dangerousDownloadEvent OR action:unscannedFileEvent
+tags:
+- google_workspace
+- converted_yaral

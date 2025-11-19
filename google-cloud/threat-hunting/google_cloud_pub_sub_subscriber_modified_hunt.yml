@@ -1,0 +1,13 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Google Cloud Pub/Sub Subscriber modified
+description: |-
+  Detect changes to Google Cloud Pub/Sub subscriptions that may prevent audit logs from being sent.
+query_text: |-
+  %ingest.source_type:gcp
+  protoPayload.methodName:(google.pubsub.v1.Subscriber.UpdateSubscription google.pubsub.v1.Subscriber.DeleteSubscription)
+  | groupbycount(protoPayload.authenticationInfo.principalEmail, data.protoPayload.resourceName)
+  | where @q.count > 0
+tags:
+- source.gcp
+- techniques.t1562.impair_defenses
+- tactics.ta0005.defense_evasion

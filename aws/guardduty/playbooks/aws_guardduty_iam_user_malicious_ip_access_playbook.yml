@@ -1,0 +1,14 @@
+name: AWS GuardDuty IAM User Malicious IP Access Playbook
+description: Detects AWS API calls made by an IAM user from a known malicious IP address.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor GuardDuty findings for `Recon:IAMUser/MaliciousIPCaller`.
+- name: Triage
+  description: '1. Identify the IAM user and the source IP.
+
+    2. Revoke the user''s credentials immediately.
+
+    3. Investigate the scope of the compromise.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

@@ -1,0 +1,11 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS GuardDuty EKS Cryptocurrency Mining
+description: |-
+  Detects cryptocurrency mining activity within an EKS cluster.
+query_text: "%ingest.source_type:aws_guardduty\nmetadata.product_event_type:\"Impact:Kubernetes/BitcoinTool.B\" "
+tags:
+- guardduty
+- aws
+- eks
+- kubernetes
+- crypto_mining

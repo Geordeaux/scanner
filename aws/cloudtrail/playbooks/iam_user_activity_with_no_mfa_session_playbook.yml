@@ -1,0 +1,12 @@
+name: IAM User Activity with No MFA Session Playbook
+description: 'Identifies IAM user activity where the user is not MFA authenticated.
+
+  Adversaries often target IAM users with weak or no MFA protection to gain unauthorized
+  access.'
+severity: Medium
+steps:
+- name: Investigation
+  description: 'Identifies IAM user activity where the user is not MFA authenticated.
+
+    Adversaries often target IAM users with weak or no MFA protection to gain unauthorized
+    access.'

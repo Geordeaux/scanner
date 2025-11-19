@@ -1,0 +1,17 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Auth0 User Deleted
+description: |-
+  Detects when a user is deleted in Auth0. While this can be a legitimate administrative
+  action, unauthorized deletion of users can disrupt operations or be used to cover
+  tracks after a compromise.
+query_text: |-
+  %ingest.source_type:auth0
+  data.type:sapi
+  data.description:"Delete a user"
+  data.details.request.path:/api/v2/users/*
+  | groupbycount(data.user_id)
+  | where @q.count > 0
+tags:
+- tactics.ta0040.impact
+- techniques.t1485.data_destruction
+- source.auth0

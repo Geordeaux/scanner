@@ -1,0 +1,27 @@
+name: AWS CloudWatch Log Group Deleted Playbook
+description: Detect deletion of Amazon CloudWatch log groups. This may indicate an
+  attempt to tamper with or disable logging and monitoring, thereby impairing defensive
+  mechanisms and forensic visibility.
+severity: High
+steps:
+- name: Investigation
+  description: 'Monitor AWS CloudTrail management events from `logs.amazonaws.com`
+    with:
+
+    * `eventName="DeleteLogGroup"`
+
+
+    Focus on successful deletions of log groups that are expected to be long-lived
+    or attached to critical workloads, security tooling, or compliance-related logging.'
+- name: Triage
+  description: '* Confirm whether the deleted log group is associated with critical
+    workloads (e.g. security services, production systems, audit logs).
+
+    * Validate that the deletion aligns with an approved change request or maintenance
+    window.
+
+    * Review recent activity from the same principal and source IP for related attempts
+    to weaken logging or monitoring (e.g. CloudTrail, Config, security tool logs).
+
+    * If unapproved, treat as a high-priority event: preserve evidence, assess potential
+    impact on visibility, and restore or recreate required logging configurations.'

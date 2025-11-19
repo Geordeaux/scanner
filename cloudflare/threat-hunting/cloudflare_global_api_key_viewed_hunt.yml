@@ -1,0 +1,9 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Cloudflare Global API Key Viewed
+description: |-
+  Detects when a user views their Global API Key.
+query_text: "%ingest.source_type:cloudflare\nAction:user_view_api_key "
+tags:
+- cloudflare
+- iam
+- api_key

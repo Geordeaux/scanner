@@ -1,0 +1,26 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS Successful API From Tor Exit Node
+description: |-
+  Detect successful AWS API executions originating from Tor exit nodes, which may indicate attempts to execute malicious commands or access sensitive resources from anonymized IP addresses.
+query_text: |-
+  %ingest.source_type="aws:cloudtrail"
+  metadata.vendor_name:AMAZON
+  metadata.product_name:"AWS CloudTrail"
+  security_result.action:ALLOW
+  gcti_feed.graph.metadata.product_name:"GCTI Feed"
+  gcti_feed.graph.metadata.threat.threat_feed_name:"Tor Exit Nodes"
+  gcti_feed.graph.metadata.entity_type:IP_ADDRESS
+  | groupbycount(
+  principal.ip,
+  principal.user.user_display_name,
+  metadata.product_event_type
+  )
+  | where @q.count > 0
+tags:
+- source.aws
+- domain.cloud
+- domain.network
+- tactics.ta0002.execution
+- techniques.t1204.user_execution
+- use_case.tor_exit_node
+- use_case.anonymous_access

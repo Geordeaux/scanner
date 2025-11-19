@@ -1,0 +1,26 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Cloudflare User 2FA Disabled
+description: |-
+  ## Goal
+  Detects when Two-Factor Authentication (2FA) is disabled for a user.
+
+  ## Strategy
+  Monitor Cloudflare Audit Logs for `user_2fa_disable`.
+
+  ## Triage and Response
+  1. Identify the user.
+  2. Contact the user immediately.
+  3. Enforce 2FA re-enablement.
+  4. Check for account compromise.
+enabled: true
+severity: Critical
+query_text: "%ingest.source_type:cloudflare\nAction:user_2fa_disable "
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- critical_severity_alerts
+tags:
+- cloudflare
+- iam
+- account_security

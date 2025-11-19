@@ -1,0 +1,36 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Security group open to the world
+description: |-
+  ## Goal
+  Detect when an AWS security group is opened to the world.
+
+  ## Strategy
+  Monitor for the creation or modification of an AWS security group through specific API calls:
+  * AuthorizeSecurityGroupIngress
+
+  This rule checks the list of IP ranges to see if it includes:
+  * 0.0.0.0/0
+  * ::/0
+
+  ## Triage and Response
+  1. Identify the user who made the API call.
+  2. Verify with the user if they initiated this API call.
+  3. If the API call was unauthorized:
+    * Rotate the user's credentials and investigate any other unauthorized API calls.
+    * Review other API calls made by the user.
+enabled: true
+severity: Medium
+query_text: |-
+  %ingest.source_type:"aws:cloudtrail"
+  eventName:AuthorizeSecurityGroupIngress
+  requestParameters.ipPermissions.items.ipRanges.items.cidrIp:("0.0.0.0/0" "::/0")
+  | groupbycount(recipientAccountId)
+  | where @q.count > 0
+time_range_s: 300
+run_frequency_s: 60
+event_sink_keys:
+- medium_severity_alerts
+tags:
+- source.cloudtrail
+- techniques.t1562.impair_defenses
+- tactics.ta0005.defense_evasion

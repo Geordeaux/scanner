@@ -1,0 +1,16 @@
+name: AWS GuardDuty detector deleted Playbook
+description: Detect when an attacker attempts to evade defenses by deleting a GuardDuty
+  detector.
+severity: High
+steps:
+- name: Investigation
+  description: 'Monitor the CloudTrail API call to detect if an attacker is deleting
+    a GuardDuty detector:
+
+
+    * DeleteDetector'
+- name: Triage
+  description: "1. Identify the user who owns the API key that made this call.\n2.\
+    \ Contact the user to confirm if they intended to make this call.\n3. If the user\
+    \ did not make the call:\n    * Rotate the credentials.\n    * Investigate any\
+    \ other unauthorized API calls made with the same credentials."

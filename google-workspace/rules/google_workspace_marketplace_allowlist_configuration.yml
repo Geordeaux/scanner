@@ -1,0 +1,26 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Google Workspace Marketplace Allowlist Configuration
+description: |-
+  ## Goal
+  Identifies when the Google Workspace Marketplace allowlist is configured to allow users to install and run any apps from the Marketplace. Allowing users to install and run any apps may increase the organization's risk of data exfiltration/leakage and increase its attack surface.
+
+  ## Strategy
+  Monitor Google Workspace audit logs for specific administrative or user actions.
+
+  ## Triage and Response
+  1. Identify the user and the action.
+  2. Verify if the action was authorized.
+  3. If unauthorized, revert the change and reset user credentials.
+enabled: true
+severity: Low
+query_text: |-
+  %ingest.source_type:google_workspace
+  action:CHANGE_APPLICATION_SETTING
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- low_severity_alerts
+tags:
+- google_workspace
+- converted_yaral

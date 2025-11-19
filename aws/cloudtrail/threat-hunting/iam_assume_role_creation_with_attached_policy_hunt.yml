@@ -1,0 +1,16 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: IAM Assume Role Creation with Attached Policy
+description: |-
+  Identifies the creation of an IAM role with an inline attached policy that allows the role to assume another role in a different account.
+  This could indicate a potential backdoor IAM role.
+query_text: |-
+  %ingest.source_type:aws:cloudtrail
+  eventName:CreateRole
+  eventSource:"iam.amazonaws.com"
+  requestParameters:("AssumeRole" AND "allow" AND "arn:aws:iam")
+  | regex requestParameters "AWS\": \"arn:aws:iam::(?<target_account_id>\d+):"
+  | where target_account_id != recipientAccountId
+tags:
+- tactics.ta0003.persistence
+- techniques.t1098.003.account_manipulation
+- source.aws.cloudtrail

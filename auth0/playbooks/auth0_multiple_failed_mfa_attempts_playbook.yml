@@ -1,0 +1,20 @@
+name: Auth0 Multiple Failed MFA Attempts Playbook
+description: |-
+  Response steps for multiple failed MFA attempts.
+  This could indicate an attacker with valid credentials but no MFA device.
+severity: Medium
+steps:
+  - name: Triage
+    description: |-
+      1. Identify the user (`data.user_id`) and the source IP.
+      2. Check the number of failed attempts.
+  - name: Investigation
+    description: |-
+      1. Contact the user to check if they are having trouble logging in.
+      2. Check if the password was recently changed.
+      3. Investigate the source IP for other malicious activity.
+  - name: Remediation
+    description: |-
+      1. If the user confirms it wasn't them, reset their password immediately.
+      2. Block the attacking IP.
+      3. Review the user's MFA enrollment status.

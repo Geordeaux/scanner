@@ -1,0 +1,16 @@
+name: Additional AWS regions enabled Playbook
+description: Detect when additional AWS regions have been enabled.
+severity: Medium
+steps:
+- name: Investigation
+  description: Monitor CloudTrail for the enabling of additional AWS regions. Attackers
+    may do this to create more resources, such as EC2 instances or ECS clusters, for
+    cryptomining.
+- name: Triage
+  description: "1. Verify if the API call was legitimate based on the event name,\
+    \ user identity, and IP address.\n2. If the action is legitimate, consider adding\
+    \ the user to a suppression list.\n3. If the action is suspicious:\n   - Contact\
+    \ the user to confirm whether they made the API call.\n   - Check the user investigation\
+    \ dashboard for other actions taken by the user.\n   - Investigate the IP for\
+    \ any unusual traffic patterns.\n4. If evidence suggests an attack, initiate the\
+    \ incident response process and conduct a thorough investigation."

@@ -1,0 +1,18 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS Lambda Update Function Code
+description: |-
+  Detects when an IAM user attempts to update or modify AWS Lambda function code. This can indicate an attempt to execute malicious code in the serverless environment.
+query_text: |-
+  %ingest.source_type="aws:cloudtrail"
+  eventSource:"lambda.amazonaws.com"
+  eventName:"UpdateFunctionCode"
+  userIdentity.type:"IAMUser"
+tags:
+- source.aws
+- domain.cloud
+- domain.lambda
+- domain.serverless
+- tactics.ta0002.execution
+- techniques.t1648.serverless_execution
+- use_case.lambda_code_change
+- use_case.serverless_execution

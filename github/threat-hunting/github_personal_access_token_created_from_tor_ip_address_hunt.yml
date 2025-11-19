@@ -1,0 +1,10 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: GitHub Personal Access Token Created from Tor IP Address
+description: |-
+  Detects when a GitHub Personal Access Token is created from a known Tor exit node IP address. An adversary may create a Personal Access Token before carrying out follow up actions such as cloning GitHub repositories to steal data.
+query_text: |-
+  %ingest.source_type:github
+  action:personal_access_token.request_created
+tags:
+- github
+- converted_yaral

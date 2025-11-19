@@ -1,0 +1,14 @@
+name: Google Workspace Calendar Made Public Playbook
+description: Detects when a user's primary calendar is shared publicly.
+severity: Medium
+steps:
+- name: Investigation
+  description: Monitor Google Workspace Calendar audit logs for `change_calendar_setting` where visibility is set to public.
+- name: Triage
+  description: '1. Identify the user and the calendar.
+
+    2. Verify if public sharing is necessary.
+
+    3. Restrict visibility if unauthorized.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

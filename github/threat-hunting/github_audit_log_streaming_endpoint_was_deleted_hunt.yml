@@ -1,0 +1,14 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: GitHub audit log streaming endpoint was deleted
+description: |-
+  Detect when a GitHub audit log stream has been deleted.
+query_text: |-
+  %ingest.source_type:github
+  action:audit_log_streaming.destroy
+  | groupbycount(actor)
+  | where @q.count > 0
+tags:
+- source.github-telemetry
+- source.github
+- techniques.t1562.impair_defenses
+- tactics.ta0005.defense_evasion

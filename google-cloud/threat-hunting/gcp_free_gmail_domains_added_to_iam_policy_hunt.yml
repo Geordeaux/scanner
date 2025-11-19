@@ -1,0 +1,20 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: GCP Free Gmail Domains Added To IAM Policy
+description: |-
+  Detect when free Google email addresses (e.g., gmail.com, googlemail.com, or googlegroups.com) are added to an IAM policy. This can indicate an attempt to gain unauthorized access by adding external, non-corporate accounts to the organization's IAM policies.
+query_text: |-
+  %ingest.source_type:gcp_audit
+  metadata.event_type:"USER_RESOURCE_UPDATE_PERMISSIONS"
+  metadata.log_type:"GCP_CLOUDAUDIT"
+  metadata.product_event_type:"SetIamPolicy"
+  metadata.vendor_name:"Google Cloud Platform"
+  security_result.action:"ALLOW"
+  target.resource.attribute.labels.service_binding_deltas_action:"ADD"
+tags:
+- source.gcp
+- gcp_audit
+- gcp
+- iam_policy
+- iam_policy_violation
+- techniques.t1136.create_account
+- tactics.ta0003.persistence

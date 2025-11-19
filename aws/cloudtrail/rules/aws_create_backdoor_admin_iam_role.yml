@@ -1,0 +1,25 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: AWS Backdoor Administrative IAM Role Created
+description: |-
+  ## Goal
+  Identifies when CreateRole and AttachAdminRolePolicy CloudTrail events occur in a short period of time. This sequence could indicate a potential security breach.
+
+  ## Strategy
+  Monitor logs for the specific sequence of events described.
+
+  ## Triage and Response
+  1. Identify the user and the sequence of actions.
+  2. Verify if the actions are authorized and business-justified.
+  3. If unauthorized, revert changes and suspend the user.
+enabled: true
+severity: High
+query_text: |-
+  %ingest.source_type:aws:cloudtrail
+  eventName:CreateRole OR eventName:AttachRolePolicy
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- high_severity_alerts
+tags:
+- panther_migration

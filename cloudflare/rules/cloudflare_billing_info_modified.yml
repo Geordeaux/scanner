@@ -1,0 +1,25 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Cloudflare Billing Information Modified
+description: |-
+  ## Goal
+  Detects changes to billing information.
+
+  ## Strategy
+  Monitor Cloudflare Audit Logs for `billing_update`. Attackers often change billing details to maintain persistence or pay for illicit resource usage.
+
+  ## Triage and Response
+  1. Identify the user.
+  2. Contact the finance team to verify.
+  3. Check for new resources created recently.
+enabled: true
+severity: High
+query_text: "%ingest.source_type:cloudflare\nAction:billing_update "
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- high_severity_alerts
+tags:
+- cloudflare
+- account
+- billing

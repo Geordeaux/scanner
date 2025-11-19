@@ -1,0 +1,19 @@
+name: Auth0 MFA Policy Disabled Playbook
+description: |-
+  Response steps for when an MFA policy is disabled.
+  This weakens the security posture and could be a precursor to an attack.
+severity: High
+steps:
+  - name: Triage
+    description: |-
+      1. Identify the user (`data.user_id`) who disabled the policy.
+      2. Check the timestamp and source IP.
+  - name: Investigation
+    description: |-
+      1. Determine if this was authorized.
+      2. Check if any high-risk users logged in without MFA shortly after.
+  - name: Remediation
+    description: |-
+      1. If unauthorized, re-enable the MFA policy immediately.
+      2. Investigate the user account.
+      3. Enforce MFA for all users and review recent logins.

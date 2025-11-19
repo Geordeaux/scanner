@@ -1,0 +1,19 @@
+name: Google Workspace user assigned super administrative role Playbook
+description: Detect when a user is added to the Super administrator role on Google Workspace.
+severity: High
+steps:
+- name: Investigation
+  description: 'Monitor Google Workspace logs for `ASSIGN_ROLE` events indicating the Super administrator role.
+
+
+    ## Triage and response
+
+    1. Verify with the Google admin if the user should legitimately be given the super admin role.
+
+    2. If the user was not legitimately added, investigate activity from the IP address that made the role addition.
+
+    3. Review activity around the Google Workspace admin who made the change and the newly added super admin.'
+- name: Triage
+  description: ''
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

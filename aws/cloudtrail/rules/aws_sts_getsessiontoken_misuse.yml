@@ -1,0 +1,49 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: AWS STS GetSessionToken Misuse
+enabled: true
+description: |-
+  ## Goal
+  Identifies the suspicious use of GetSessionToken. Tokens could be created and used by attackers to move laterally and escalate privileges.
+
+  References:
+  * https://github.com/elastic/detection-rules/pull/1213
+  * https://docs.aws.amazon.com/STS/latest/APIReference/API_GetSessionToken.html
+
+  False Positives:
+  * GetSessionToken may be done by a system or network administrator. Verify whether the user identity, user agent, and/or hostname should be making changes in your environment. GetSessionToken from unfamiliar users or hosts should be investigated. If known behavior is causing false positives, it can be exempted from the rule.
+
+  ## Strategy
+  Identifies the suspicious use of GetSessionToken. Tokens could be created and used by attackers to move laterally and escalate privileges.
+
+  References:
+  * https://github.com/elastic/detection-rules/pull/1213
+  * https://docs.aws.amazon.com/STS/latest/APIReference/API_GetSessionToken.html
+
+  False Positives:
+  * GetSessionToken may be done by a system or network administrator. Verify whether the user identity, user agent, and/or hostname should be making changes in your environment. GetSessionToken from unfamiliar users or hosts should be investigated. If known behavior is causing false positives, it can be exempted from the rule.
+
+  ## Triage and Response
+  Investigate and remediate as appropriate.
+severity: Low
+query_text: |-
+  %ingest.source_type="aws:cloudtrail"
+  eventSource="sts.amazonaws.com"
+  eventName="GetSessionToken"
+  userIdentity.type="IAMUser"
+  | stats
+  min(@scnr.datetime) as firstTime,
+  max(@scnr.datetime) as lastTime,
+  count() as eventCount
+  by
+  userIdentity.arn,
+  eventSource,
+  eventName,
+  awsRegion
+time_range_s: 300
+run_frequency_s: 60
+event_sink_keys:
+- low_severity_alerts
+tags:
+- tactics.ta0006.credential_access
+- techniques.t1550.use_alternate_authentication_material
+- source.cloudtrail

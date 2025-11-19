@@ -1,0 +1,37 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Auth0 High-Privilege Role Assigned
+description: |-
+  ## Goal
+  Detects when a role is assigned to a user in Auth0. This activity should be
+  monitored to prevent unauthorized privilege escalation, especially if the role
+  grants administrative access.
+
+  ## Strategy
+  1. Determine if this role assignment was authorized (e.g., promotion, new hire).
+  2. Verify if the user needs these permissions for their job function.
+  3. Check if the assigner has the authority to grant such roles.
+
+  ## Triage and Response
+  1. Identify the user (`data.user_id`) who assigned the role and the user receiving it.
+  2. Identify the role(s) assigned.
+  3. Check if the role contains administrative permissions.
+  1. If unauthorized, remove the role from the user immediately.
+  2. Investigate the account of the user who assigned the role.
+  3. Audit other recent role assignments.
+enabled: true
+severity: High
+query_text: |-
+  %ingest.source_type:auth0
+  data.type:sapi
+  data.description:"Assign roles to a user"
+  data.details.request.path:/api/v2/users/*/roles
+  | groupbycount(data.user_id)
+  | where @q.count > 0
+time_range_s: 300
+run_frequency_s: 60
+event_sink_keys:
+- high_severity_alerts
+tags:
+- tactics.ta0004.privilege_escalation
+- techniques.t1098.account_manipulation
+- source.auth0

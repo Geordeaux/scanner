@@ -1,0 +1,9 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Google Workspace SAML IDP Configuration Change
+description: |-
+  Identifies SAML provider configuration changes in Google Workspace. Security teams can monitor for changes to SAML provider configuration that may weaken the organization's security posture.
+query_text: |-
+  %ingest.source_type:google_workspace
+tags:
+- google_workspace
+- converted_yaral

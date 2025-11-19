@@ -1,0 +1,26 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS VPC Flow Logs Deleted
+description: |-
+  Detect deletion of AWS VPC Flow Logs. This may indicate an attempt to tamper with or disable network logging and monitoring, impairing defensive mechanisms and post-incident investigation.
+query_text: |-
+  %ingest.source_type="aws:cloudtrail"
+  eventSource="ec2.amazonaws.com"
+  eventName="DeleteFlowLogs"
+  | groupbycount(
+  recipientAccountId,
+  awsRegion,
+  userIdentity.type,
+  userIdentity.arn,
+  requestParameters.flowLogIds,
+  sourceIPAddress
+  )
+  | where @q.count > 0
+tags:
+- source.aws
+- domain.cloud
+- domain.network
+- domain.logging
+- tactics.ta0005.defence_evasion
+- techniques.t1562.008.impair_defences_disable_cloud_logs
+- use_case.aws_logging
+- use_case.vpc_flow_logs

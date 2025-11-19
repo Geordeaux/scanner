@@ -1,0 +1,10 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Hunt - Atlassian Project Role Changes
+description: |-
+  Hunt for project role changes.
+query_text: |-
+  %ingest.source_type:atlassian
+  message.content:'Project roles changed'
+tags:
+- hunt
+- source.atlassian

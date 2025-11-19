@@ -1,0 +1,25 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Cloudflare Tunnel Deleted
+description: |-
+  ## Goal
+  Detects the deletion of a Cloudflare Tunnel.
+
+  ## Strategy
+  Monitor Cloudflare Audit Logs for `tunnel_delete`. Deleting a tunnel can cause an immediate outage for hybrid/on-prem resources.
+
+  ## Triage and Response
+  1. Identify the tunnel and the user.
+  2. Verify if this was a planned decommissioning.
+  3. If accidental/malicious, restore the tunnel configuration.
+enabled: true
+severity: High
+query_text: "%ingest.source_type:cloudflare\nAction:tunnel_delete "
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- high_severity_alerts
+tags:
+- cloudflare
+- tunnel
+- availability

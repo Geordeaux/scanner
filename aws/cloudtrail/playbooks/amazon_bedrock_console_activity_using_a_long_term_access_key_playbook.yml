@@ -1,0 +1,17 @@
+name: Amazon Bedrock console activity using a long-term access key Playbook
+description: Detect attempts to access console-only API calls through a long-term
+  access key.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor CloudTrail for API calls to console-only APIs that should not
+    originate from long-term access keys. Attackers typically target the AWS Bedrock
+    service to host their own LLM service using the victim's resources.
+- name: Triage
+  description: "1. Confirm if the API call should have been made by the user from\
+    \ the specified IP address.\n2. If the action is legitimate, consider adding the\
+    \ user to a suppression list.\n3. If the action is unauthorized:\n   * Contact\
+    \ the user to verify if they made the API call.\n   * Investigate the user's other\
+    \ actions.\n   * Check for additional traffic from the specified IP address.\n\
+    4. If evidence suggests an attack, initiate the incident response process and\
+    \ conduct further investigation."

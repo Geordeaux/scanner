@@ -1,0 +1,33 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: AWS VPC Flow Log deleted
+description: |-
+  ## Goal
+  Detect when one or more AWS VPC Flow Logs are deleted.
+
+  ## Strategy
+  Monitor CloudTrail for deletions of AWS VPC Flow Logs via the DeleteFlowLogs API.
+
+  ## Triage and Response
+  1. Verify if the API call regarding the event name should have occurred.
+  2. If the action was legitimate, consider allowing the invoking service or user through a suppression list.
+  3. If the action was not legitimate:
+     - Contact the user to confirm if they made the API call.
+  4. If the API call was unauthorized:
+     - Rotate the user credentials.
+     - Investigate other API calls made with the old credentials that were not authorized by the user.
+enabled: true
+severity: Informational
+query_text: |-
+  %ingest.source_type:"aws:cloudtrail"
+  eventName:DeleteFlowLogs
+  eventSource:ec2.amazonaws.com
+  | groupbycount(userIdentity.arn)
+  | where @q.count > 0
+time_range_s: 300
+run_frequency_s: 60
+event_sink_keys:
+- informational_severity_alerts
+tags:
+- techniques.t1070.indicator_removal_on_host
+- source.cloudtrail
+- tactics.ta0005.defense_evasion

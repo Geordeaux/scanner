@@ -1,0 +1,21 @@
+name: Auth0 Brute Force Attack on User Playbook
+description: |-
+  Response steps for a potential brute force attack against a user.
+severity: Medium
+steps:
+  - name: Triage
+    description: |-
+      1. Identify the targeted user (`data.user_id`) and the source IP(s).
+      2. Check the volume and duration of failed attempts.
+      3. Check if there was a successful login from the same IP after the failed attempts.
+  - name: Investigation
+    description: |-
+      1. Check if the IP is known malicious (threat intel).
+      2. Check if other users are being targeted by the same IP (password spraying).
+      3. Verify if the user has MFA enabled.
+  - name: Remediation
+    description: |-
+      1. Block the attacking IP address in Auth0 or at the firewall.
+      2. Reset the user's password.
+      3. Enforce MFA for the user if not already enabled.
+      4. Notify the user of the suspicious activity.

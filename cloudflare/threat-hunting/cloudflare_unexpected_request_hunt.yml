@@ -1,0 +1,17 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Cloudflare Unexpected Client Request
+description: |-
+  Detect GET requests to URIs that are commonly targeted by attackers,
+  such as admin panels, configuration files, and system files.
+query_text: |-
+  %ingest.source_type:cloudflare
+  ClientRequestMethod:GET
+  (not ClientRequestBytes = 0)
+  ClientRequestURI:('/admin' '/admin.php' 'wp-admin' '.htaccess' '/etc/shadow' '/etc/passwd' '/etc/hosts' '/etc/ssh/')
+  | groupbycount(ClientIP)
+  | where @q.count > 0
+tags:
+- tactics.ta0001.initial_access
+- techniques.t1190.exploit_public_facing_application
+- techniques.t1133.external_remote_services
+- source.cloudflare

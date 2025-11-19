@@ -1,0 +1,9 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS GuardDuty CloudTrail Logging Disabled
+description: |-
+  Detects attempts to disable CloudTrail logging.
+query_text: "%ingest.source_type:aws_guardduty\nmetadata.product_event_type:\"Stealth:IAMUser/CloudTrailLoggingDisabled\" "
+tags:
+- guardduty
+- aws
+- defense_evasion

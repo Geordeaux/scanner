@@ -1,0 +1,14 @@
+name: Cloudflare Load Balancer Pool Deleted Playbook
+description: Detects the deletion of a Load Balancer pool.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor Cloudflare Audit Logs for `lb_pool_delete`.
+- name: Triage
+  description: '1. Identify the pool.
+
+    2. Verify if it was in use.
+
+    3. Restore the pool to prevent outage.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

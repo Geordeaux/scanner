@@ -1,0 +1,14 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: GitHub SAML/OIDC has been disabled
+description: |-
+  Detect when GitHub OIDC/SAML single sign-on (SSO) has been modified.
+query_text: |-
+  %ingest.source_type:github
+  action:(business.disable_saml org.disable_saml business.disable_oidc)
+  | groupbycount(actor)
+  | where @q.count > 0
+tags:
+- source.github-telemetry
+- techniques.t1562.impair_defenses
+- source.github
+- tactics.ta0005.defense_evasion

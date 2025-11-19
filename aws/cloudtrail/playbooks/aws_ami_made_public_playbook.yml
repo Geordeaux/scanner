@@ -1,0 +1,16 @@
+name: AWS AMI Made Public Playbook
+description: Detect when an AMI is made public.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor CloudTrail API calls to detect if an AMI is made public by
+    checking the `requestParameters.launchPermission.add.items.group` array for the
+    string "all."
+- name: Triage
+  description: "1. Determine if the AMI (the image ID) should be made public using\
+    \ CloudTrail logs.\n2. Investigate the ARN of the user who made the AMI public.\n\
+    3. Contact the user to confirm their intent regarding the public status of the\
+    \ image.\n4. If the user did not make the API call:\n    * Rotate the credentials.\n\
+    \    * Investigate if the same credentials were used for other unauthorized API\
+    \ calls.\n    * Revert AMI permissions to their original state.\n    * Begin your\
+    \ company's incident response process and investigate."

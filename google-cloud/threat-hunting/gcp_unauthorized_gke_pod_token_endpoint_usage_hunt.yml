@@ -1,0 +1,24 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Unauthorized GKE Pod Token Endpoint Usage
+description: |-
+  Alert when an authorization token likely originating from GKE activity is subsequently used within a command line on an endpoint system, suggesting potential credential exfiltration and reuse.
+query_text: |-
+  %ingest.source_type:cs_edr
+  metadata.log_type:CS_EDR
+  metadata.event_type:PROCESS_LAUNCH
+  target.process.command_line:Bearer
+  target.process.command_line:(kubernetes.default.svc container.googleapis.com gke.)
+  | groupbycount(
+      principal.asset.hostname,
+      principal.user.userid,
+      target.process.command_line
+    )
+  | where @q.count > 0
+tags:
+- source.cs_edr
+- cs_edr
+- gcp
+- gke
+- kubernetes
+- techniques.t1552.unsecured_credentials
+- tactics.ta0006.credential_access

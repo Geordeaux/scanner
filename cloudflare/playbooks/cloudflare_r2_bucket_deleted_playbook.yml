@@ -1,0 +1,14 @@
+name: Cloudflare R2 Bucket Deleted Playbook
+description: Detects the deletion of a Cloudflare R2 storage bucket.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor Cloudflare Audit Logs for `r2_bucket_delete`. Deleting a bucket causes permanent data loss.
+- name: Triage
+  description: '1. Identify the bucket and the user.
+
+    2. Verify if this was a planned action.
+
+    3. If malicious, attempt to recover data (if backups exist outside R2).'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

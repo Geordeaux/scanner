@@ -1,0 +1,24 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS GuardDuty Disabled
+description: |-
+  Detects when an Amazon GuardDuty detector is disabled or deleted. This may indicate an attempt to impair defences by turning off threat detection and monitoring.
+query_text: |-
+  %ingest.source_type="aws:cloudtrail"
+  eventSource:"guardduty.amazonaws.com"
+  (
+  eventName:"DeleteDetector" or
+  (
+  eventName:"UpdateDetector" and
+  requestParameters.enable:false
+  )
+  )
+  | where errorCode IS NULL
+tags:
+- source.aws
+- domain.cloud
+- domain.guardduty
+- domain.logging_and_monitoring
+- tactics.ta0005.defence_evasion
+- techniques.t1562.impair_defences
+- techniques.t1562.008.disable_cloud_logging_monitoring
+- use_case.control_plane_hardening

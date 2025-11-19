@@ -1,0 +1,60 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: AWS Enable Or Disable Region
+enabled: true
+severity: Medium
+description: |-
+  ## Goal
+  Detects when an AWS region is enabled or disabled. This can indicate infrastructure changes that might be used for defence evasion by enabling or disabling regions without proper authorisation.
+
+  ## Strategy
+  Monitor AWS CloudTrail management events from `account.amazonaws.com` for:
+  * `EnableRegion`
+  * `DisableRegion`
+
+  Region state changes can:
+  * Introduce new, unmonitored attack surface (previously disabled regions).
+  * Disrupt services and monitoring if regions are disabled unexpectedly.
+  * Be used to route attacker activity into less visible regions.
+
+  ## Triage and Response
+  * Identify who initiated the change (principal, role, source IP, console vs API).
+  * Confirm there is an approved change (for example, change ticket, deployment plan, or documented regional expansion).
+  * Validate whether the affected region is expected to be in use and that required controls (CloudTrail, Config, GuardDuty, security tooling) are enabled there.
+  * If the action is unapproved or suspicious:
+    * Treat as potential account compromise.
+    * Verify controls in all active regions (logging, detection, guardrails).
+    * Escalate according to your incident response process.
+query_text: |-
+  %ingest.source_type="aws:cloudtrail"
+  eventSource:"account.amazonaws.com"
+  eventName:(
+  "EnableRegion"
+  "DisableRegion"
+  )
+  errorCode IS NULL
+time_range_s: 3600
+run_frequency_s: 3600
+event_sink_keys:
+- medium_severity_alerts
+tags:
+- source.aws
+- domain.cloud
+- domain.aws_account
+- tactics.ta0005.defence_evasion
+- techniques.t1535.unused_or_unsupported_cloud_regions
+- use_case.region_governance
+- use_case.account_hardening
+context_fields:
+- userIdentity.type
+- userIdentity.arn
+- userIdentity.principalId
+- sourceIPAddress
+- userAgent
+- awsRegion
+- eventTime
+- recipientAccountId
+- requestParameters.regionName
+- additional.fields["RegionOptStatus"]
+- principal.location.name
+- target.resource.name
+- target.resource.product_object_id

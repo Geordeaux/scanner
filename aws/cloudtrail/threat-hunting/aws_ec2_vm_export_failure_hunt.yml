@@ -1,0 +1,27 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS EC2 VM Export Failure
+description: |-
+  An attempt to export an AWS EC2 instance has been detected. A VM Export might indicate an attempt to extract information from an instance.
+
+  References:
+  * https://docs.aws.amazon.com/vm-import/latest/userguide/vmexport.html#export-instance
+query_text: |-
+  %ingest.source_type="aws:cloudtrail"
+  eventName="CreateInstanceExportTask"
+  eventSource="ec2.amazonaws.com"
+  (not (errorMessage:* or errorCode:*))
+  | stats
+  min(@scnr.datetime) as firstTime,
+  max(@scnr.datetime) as lastTime,
+  count() as eventCount
+  by
+  userIdentity.arn,
+  eventSource,
+  eventName,
+  awsRegion
+tags:
+- source.cloudtrail
+- tactics.ta0009.collection
+- tactics.ta0010.exfiltration
+- techniques.t1005.data_from_local_system
+- techniques.t1537.transfer_data_to_cloud_account

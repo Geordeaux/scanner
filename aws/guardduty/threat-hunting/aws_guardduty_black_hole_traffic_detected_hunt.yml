@@ -1,0 +1,24 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS GuardDuty Black Hole Traffic Detected
+description: |-
+  Detects when an Amazon EC2 instance or a container attempts to communicate with a black hole IP address. This could indicate exfiltration of data or communication with malicious actors.
+query_text: |-
+  %ingest.source_type="aws:guardduty"
+  metadata.vendor_name:AMAZON
+  metadata.product_name:"AWS GuardDuty"
+  metadata.product_event_type:*BlackholeTraffic*
+  not security_result.about.labels.Sample:"true"
+  | groupbycount(
+  recipientAccountId,
+  principal.ip,
+  target.resource.product_object_id
+  )
+  | where @q.count > 0
+tags:
+- source.aws
+- domain.cloud
+- domain.guardduty
+- tactics.ta0011.command_and_control
+- techniques.t1071.application_layer_protocol
+- use_case.aws_guardduty
+- use_case.network_blackhole_traffic

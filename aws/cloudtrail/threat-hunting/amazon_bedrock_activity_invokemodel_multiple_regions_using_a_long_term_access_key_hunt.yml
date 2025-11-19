@@ -1,0 +1,15 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Amazon Bedrock activity InvokeModel multiple regions using a long-term access key
+description: |-
+  Detect attempts to use InvokeModel in multiple regions.
+query_text: |-
+  %ingest.source_type:"aws:cloudtrail"
+  eventName:InvokeModel
+  eventSource:bedrock.amazonaws.com
+  userIdentity.accessKeyId:*AKIA*
+  | stats countdistinct(awsRegion) as num_distinct_values by userIdentity.arn
+  | where num_distinct_values > 3
+tags:
+- source.cloudtrail
+- tactics.ta0007.discovery
+- techniques.t1526.cloud_service_discovery

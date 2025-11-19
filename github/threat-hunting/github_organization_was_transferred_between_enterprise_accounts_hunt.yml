@@ -1,0 +1,14 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: GitHub organization was transferred between enterprise accounts
+description: |-
+  Detect when a GitHub organization is transferred between enterprise accounts.
+query_text: |-
+  %ingest.source_type:github
+  action:org.transfer
+  | groupbycount(actor)
+  | where @q.count > 0
+tags:
+- techniques.t1567.exfiltration_over_web_service
+- source.github-telemetry
+- source.github
+- tactics.ta0010.exfiltration

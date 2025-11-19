@@ -1,0 +1,14 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: EC2 Modify Instance Attribute User Data
+description: |-
+  Identifies when a user modifies the user data attribute of an EC2 instance.
+  Modifying the user data attribute could indicate an adversary attempting to gain persistence or execute malicious code on the instance.
+query_text: |-
+  %ingest.source_type:aws:cloudtrail
+  eventName:ModifyInstanceAttribute
+  eventSource:"ec2.amazonaws.com"
+  requestParameters:"userData"
+tags:
+- tactics.ta0003.persistence
+- techniques.t1037.boot_or_logon_initialization_scripts
+- source.aws.cloudtrail

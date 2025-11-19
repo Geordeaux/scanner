@@ -1,0 +1,15 @@
+name: AWS RDS Cluster deleted Playbook
+description: Detect when a user deletes a database cluster in RDS.
+severity: Informational
+steps:
+- name: Investigation
+  description: 'Monitor the relevant CloudTrail API call for RDS cluster deletions:
+
+
+    * DeleteDBCluster'
+- name: Triage
+  description: "1. Determine if the API call (the event name) should have occurred.\n\
+    2. If it shouldn't have been made:\n   * Contact the user (user identity) to confirm\
+    \ if they made the API call.\n3. If the API call was not made by the user:\n \
+    \  * Rotate the user credentials.\n   * Investigate other API calls made with\
+    \ the old credentials that were not authorized by the user."

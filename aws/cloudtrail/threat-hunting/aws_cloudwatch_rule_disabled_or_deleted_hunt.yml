@@ -1,0 +1,15 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS CloudWatch rule disabled or deleted
+description: |-
+  Detect when a CloudWatch rule has been disabled or deleted.
+query_text: |-
+  %ingest.source_type:"aws:cloudtrail"
+  eventSource:events.amazonaws.com
+  eventName:(DisableRule DeleteRule)
+  (not userIdentity.invokedBy:(backup.amazonaws.com schemas.amazonaws.com cloudformation.amazonaws.com))
+  | groupbycount(userIdentity.arn)
+  | where @q.count > 0
+tags:
+- techniques.t1562.impair_defenses
+- source.cloudtrail
+- tactics.ta0005.defense_evasion

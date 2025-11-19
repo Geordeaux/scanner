@@ -1,0 +1,23 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS IAM Activity By S3 Browser Utility
+description: |-
+  Detects AWS IAM activities associated with the S3 Browser utility. This may indicate an attempt to manipulate IAM accounts using unauthorised or suspicious tools.
+query_text: |-
+  %ingest.source_type="aws:cloudtrail"
+  eventSource:"iam.amazonaws.com"
+  eventName:(
+  "CreateUser"
+  "CreateLoginProfile"
+  "CreateAccessKey"
+  "PutUserPolicy"
+  )
+  userAgent:/S3 Browser/
+tags:
+- source.aws
+- domain.cloud
+- domain.identity_and_access
+- domain.iam
+- tactics.ta0003.persistence
+- techniques.t1098.account_manipulation
+- use_case.third_party_client
+- use_case.iam_anomaly

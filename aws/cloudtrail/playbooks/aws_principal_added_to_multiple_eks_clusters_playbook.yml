@@ -1,0 +1,16 @@
+name: AWS principal added to multiple EKS clusters Playbook
+description: Detect when an AWS principal is granted permissions on multiple Amazon
+  EKS clusters in a short period, indicating a potential compromise of your AWS environment.
+severity: Low
+steps:
+- name: Investigation
+  description: This rule triggers if CreateAccessEntry or AssociateAccessPolicy events
+    occur for the same AWS principal on more than 5 unique EKS clusters.
+- name: Triage
+  description: "1. Determine if the grantee should have permissions on the target\
+    \ EKS clusters.\n2. Assess if the grantor should have provided those permissions.\n\
+    3. If the API calls were not made by the user:\n   * Rotate user credentials.\n\
+    \   * Review other API calls made by the user.\n   * Revert the permissions change\
+    \ by removing the access entry.\n4. If the API calls were made by the user:\n\
+    \   * Evaluate if the user should be granting access to the cluster.\n   * If\
+    \ not, investigate other API calls made by the user for further implications."

@@ -1,0 +1,18 @@
+name: Auth0 MFA Policy Enabled Playbook
+description: |-
+  Response steps for when an MFA policy is enabled.
+  Ensure this aligns with security policies.
+severity: Informational
+steps:
+  - name: Triage
+    description: |-
+      1. Identify the user (`data.user_id`) who enabled the policy.
+      2. Check the timestamp.
+  - name: Investigation
+    description: |-
+      1. Verify if this change was authorized.
+      2. Ensure the policy enabled is correct.
+  - name: Remediation
+    description: |-
+      1. If unauthorized, revert the change.
+      2. Educate the administrator on change management.

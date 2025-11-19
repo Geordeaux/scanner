@@ -1,0 +1,17 @@
+name: AWS IAM AdministratorAccess policy was applied to a user Playbook
+description: Detect when the AdministratorAccess policy is attached to an AWS IAM
+  user.
+severity: Medium
+steps:
+- name: Investigation
+  description: Monitor CloudTrail to identify if an attacker has attached the AWS
+    managed AdministratorAccess policy to an AWS IAM user using the AttachUserPolicy
+    API call.
+- name: Triage
+  description: "1. Verify if the session name should have made the API call.\n2. If\
+    \ the API call was not made by the user:\n   * Rotate the user's credentials.\n\
+    \   * Investigate other API calls made by the user.\n   * Remove the AdministratorAccess\
+    \ policy from the specified user using the aws-cli command to detach the user\
+    \ policy.\n3. If the API call was made legitimately:\n   * Assess if the user\
+    \ requires the AdministratorAccess policy for their tasks.\n   * Advise the user\
+    \ to seek the least privileged policy that meets their operational needs."

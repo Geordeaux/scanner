@@ -1,0 +1,28 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: AWS GuardDuty EKS Privileged Container Launched
+description: |-
+  ## Goal
+  Detects the launch of a privileged container within an EKS cluster.
+
+  ## Strategy
+  Monitor GuardDuty findings for `PrivilegeEscalation:Kubernetes/PrivilegedContainer`. Privileged containers have access to the host's devices and can bypass container isolation, posing a significant security risk.
+
+  ## Triage and Response
+  1. Identify the pod and the user who launched it.
+  2. Verify if the privileged mode is required for the workload.
+  3. If unauthorized, terminate the pod immediately.
+  4. Investigate the user's intent and potential compromise.
+enabled: true
+severity: Critical
+query_text: "%ingest.source_type:aws_guardduty\nmetadata.product_event_type:\"PrivilegeEscalation:Kubernetes/PrivilegedContainer\" "
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- critical_severity_alerts
+tags:
+- guardduty
+- aws
+- eks
+- kubernetes
+- privilege_escalation

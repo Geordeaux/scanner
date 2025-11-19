@@ -1,0 +1,28 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: GitHub payment method removed
+description: |-
+  ## Goal
+  Detect when a GitHub payment method has been removed.
+
+  ## Strategy
+  This rule monitors GitHub audit logs for the removal of a payment method.
+
+  ## Triage and response
+  1. Determine if the change taken by the actor is authorized.
+  2. If the change was not authorized or unexpected, begin your organization's incident response process and investigate.
+enabled: true
+severity: Informational
+query_text: |-
+  %ingest.source_type:github
+  action:payment_method.remove
+  | groupbycount(actor)
+  | where @q.count > 0
+time_range_s: 300
+run_frequency_s: 60
+event_sink_keys:
+- informational_severity_alerts
+tags:
+- source.github-telemetry
+- techniques.t1098.account_manipulation
+- source.github
+- tactics.ta0003.persistence

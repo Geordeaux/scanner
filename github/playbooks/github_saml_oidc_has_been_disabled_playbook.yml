@@ -1,0 +1,18 @@
+name: GitHub SAML/OIDC has been disabled Playbook
+description: Detect when GitHub OIDC/SAML single sign-on (SSO) has been modified.
+severity: High
+steps:
+- name: Investigation
+  description: 'This rule monitors GitHub audit logs for modifications to OIDC/SAML SSO. Disabling these settings could weaken the organization''s security posture.
+
+
+    ## Triage and response
+
+
+    1. Determine if the change made by the actor is authorized.
+
+    2. If the change was unauthorized or unexpected, initiate the organization''s incident response process and investigate.'
+- name: Triage
+  description: ''
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

@@ -1,0 +1,60 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+
+name: GCP Successful API Call From Tor Exit Node
+description: |-
+  ## Goal
+  Detect successful Google Cloud API executions originating from Tor exit nodes. This behavior may indicate an attempt to hide malicious activities or unauthorized access.
+
+  ## Strategy
+  Monitor Google Cloud Audit Logs for successful API calls where the caller IP address is identified as a Tor exit node via a threat-intelligence feed enrichment. Trigger an alert whenever such activity is observed.
+
+  ## Triage and Response
+  1. Confirm whether the activity was expected (e.g., red-team exercise or legitimate scanning).
+  2. Review the principal identity, service account, and API methods invoked.
+  3. Examine other activity involving the same Tor IP or identity.
+  4. If unauthorized, initiate incident response actions and consider blocking Tor exit traffic.
+
+enabled: true
+severity: High
+
+query_text: |-
+  %ingest.source_type:gcp
+  protoPayload.requestMetadata.callerIp:*
+  protoPayload.serviceName:*
+  principal.ip_geo_artifact.threat_feed_name:"Tor Exit Nodes"
+  | groupbycount(
+      project_id,
+      protoPayload.authenticationInfo.principalEmail,
+      protoPayload.requestMetadata.callerIp
+    )
+  | where @q.count > 0
+
+time_range_s: 300      # Look back 5 minutes
+run_frequency_s: 60     # Run every minute
+
+event_sink_keys:
+  - high_severity_alerts
+
+tags:
+  - source.gcp
+  - gcp
+  - gcp_audit
+  - tor_exit_node
+  - techniques.t1204.user_execution
+  - tactics.ta0002.execution
+
+context_fields:
+  - project_id
+  - protoPayload.authenticationInfo.principalEmail
+  - protoPayload.requestMetadata.callerIp
+  - protoPayload.serviceName
+  - protoPayload.methodName
+  - principal.ip_geo_artifact.location.country_or_region
+  - principal.ip_geo_artifact.location.state
+  - principal.ip_geo_artifact.network.organization_name
+  - principal.ip_geo_artifact.threat_feed_name
+  - resource.type
+  - resource.labels.project_id
+
+risk_score: 75
+event_count: "@q.count"

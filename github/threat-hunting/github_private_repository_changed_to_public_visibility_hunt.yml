@@ -1,0 +1,16 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: GitHub private repository changed to public visibility
+description: |-
+  Detect when a GitHub repository changes its visibility to public.
+query_text: |-
+  %ingest.source_type:github
+  action:repo.access
+  previous_visibility:private
+  visibility:public
+  | groupbycount(repo)
+  | where @q.count > 0
+tags:
+- source.github-telemetry
+- tactics.ta0009.collection
+- source.github
+- techniques.t1213.data_from_information_repositories

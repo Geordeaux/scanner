@@ -1,0 +1,9 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Cloudflare Worker Script Modified
+description: |-
+  Detects modifications to a Cloudflare Worker script.
+query_text: "%ingest.source_type:cloudflare\nAction:worker_script_update "
+tags:
+- cloudflare
+- workers
+- supply_chain

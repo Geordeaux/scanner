@@ -1,0 +1,11 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Hunt - Atlassian Org Admin Invitations
+description: |-
+  Hunt for org admin invitations.
+query_text: |-
+  %ingest.source_type:atlassian
+  attributes.action:user_invite_to_org
+  attributes.context.attributes.groupName:'org-admins'
+tags:
+- hunt
+- source.atlassian

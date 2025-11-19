@@ -1,0 +1,10 @@
+name: Google Cloud BigQuery Datasets Opened To Public Playbook
+description: Detect when Google Cloud BigQuery datasets are made publicly accessible by adding `allUsers` or `allAuthenticatedUsers` to the access policy. This can lead to unauthorized data exposure and is a significant security risk.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor GCP Cloud Audit logs for events where the `SetIamPolicy` action is taken on BigQuery datasets with members set to `allUsers` or `allAuthenticatedUsers`. Capture relevant details such as the principal IP, user, and target resource to assess potential threats.
+- name: Triage
+  description: Investigate the detected event to determine if it was authorized. Review the principal IPs, users, and other details to ensure that no unauthorized data exposure has occurred. Ensure that all access policies comply with company policies.
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

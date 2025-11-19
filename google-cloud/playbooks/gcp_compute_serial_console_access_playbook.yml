@@ -1,0 +1,14 @@
+name: GCP Compute Serial Console Access Playbook
+description: Detects access to the interactive serial console of a VM instance.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor Google Cloud audit logs for `compute.instances.serialPortOutput`. The serial console can provide root access to a VM, bypassing network controls.
+- name: Triage
+  description: '1. Identify the user and the VM instance.
+
+    2. Verify if serial console access is necessary and authorized.
+
+    3. Disable serial console access if unauthorized.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

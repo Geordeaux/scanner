@@ -1,0 +1,10 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: GitHub Outgoing Repository Transfer Initiated
+description: |-
+  Detects when a GitHub repository is transferred.
+query_text: |-
+  %ingest.source_type:github
+  action:repo.transfer_outgoing
+tags:
+- github
+- converted_yaral

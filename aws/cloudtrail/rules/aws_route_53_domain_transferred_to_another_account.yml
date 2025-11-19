@@ -1,0 +1,46 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: AWS Route 53 Domain Transferred to Another Account
+enabled: true
+description: |-
+  ## Goal
+  Detects when a request has been made to transfer a Route 53 domain to another AWS account.
+
+  References:
+  * https://github.com/elastic/detection-rules/blob/c76a39796972ecde44cb1da6df47f1b6562c9770/rules/integrations/aws/persistence_route_53_domain_transferred_to_another_account.toml
+
+  False Positives:
+  * A domain may be transferred to another AWS account by a system or network administrator. Verify whether the user identity, user agent, and/or hostname should be making changes in your environment. Domain transfers from unfamiliar users or hosts should be investigated. If known behavior is causing false positives, it can be exempted from the rule.
+
+  ## Strategy
+  Detects when a request has been made to transfer a Route 53 domain to another AWS account.
+
+  References:
+  * https://github.com/elastic/detection-rules/blob/c76a39796972ecde44cb1da6df47f1b6562c9770/rules/integrations/aws/persistence_route_53_domain_transferred_to_another_account.toml
+
+  False Positives:
+  * A domain may be transferred to another AWS account by a system or network administrator. Verify whether the user identity, user agent, and/or hostname should be making changes in your environment. Domain transfers from unfamiliar users or hosts should be investigated. If known behavior is causing false positives, it can be exempted from the rule.
+
+  ## Triage and Response
+  Investigate and remediate as appropriate.
+severity: Low
+query_text: |-
+  %ingest.source_type="aws:cloudtrail"
+  eventSource="route53.amazonaws.com"
+  eventName="TransferDomainToAnotherAwsAccount"
+  | stats
+  min(@scnr.datetime) as firstTime,
+  max(@scnr.datetime) as lastTime,
+  count() as eventCount
+  by
+  userIdentity.arn,
+  eventSource,
+  eventName,
+  awsRegion
+time_range_s: 300
+run_frequency_s: 60
+event_sink_keys:
+- low_severity_alerts
+tags:
+- source.cloudtrail
+- tactics.ta0003.persistence
+- techniques.t1098.account_manipulation

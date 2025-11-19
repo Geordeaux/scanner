@@ -1,0 +1,14 @@
+name: GitHub Invitation Sent To Non Company Email Domain Playbook
+description: Detects when an invitation to join a GitHub enterprise or organization is sent to a non-company email address. This rule can be customized to alert you when a GitHub invitation is sent to an unexpected domain i.e. not one of your company's domains used for email.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor for invitations sent to non-company domains.
+- name: Triage
+  description: '1. Identify the invited email and the inviter.
+
+    2. Verify if the external collaboration is authorized.
+
+    3. Revoke the invitation if unauthorized.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

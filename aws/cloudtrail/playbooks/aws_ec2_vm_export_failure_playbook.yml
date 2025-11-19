@@ -1,0 +1,18 @@
+name: AWS EC2 VM Export Failure Playbook
+description: 'An attempt to export an AWS EC2 instance has been detected. A VM Export
+  might indicate an attempt to extract information from an instance.
+
+
+  References:
+
+  * https://docs.aws.amazon.com/vm-import/latest/userguide/vmexport.html#export-instance'
+severity: Low
+steps:
+- name: Investigation
+  description: 'An attempt to export an AWS EC2 instance has been detected. A VM Export
+    might indicate an attempt to extract information from an instance.
+
+
+    References:
+
+    * https://docs.aws.amazon.com/vm-import/latest/userguide/vmexport.html#export-instance'

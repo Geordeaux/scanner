@@ -1,0 +1,30 @@
+name: SES Identity Has Been Deleted Playbook
+description: 'Detects an instance of an SES identity being deleted via the "DeleteIdentity"
+  event. This may be an indicator of an adversary removing the account that carried
+  out suspicious or malicious activities
+
+
+  References:
+
+  * https://unit42.paloaltonetworks.com/compromised-cloud-compute-credentials/
+
+
+  False Positives:
+
+  * Unknown'
+severity: Medium
+steps:
+- name: Investigation
+  description: 'Detects an instance of an SES identity being deleted via the "DeleteIdentity"
+    event. This may be an indicator of an adversary removing the account that carried
+    out suspicious or malicious activities
+
+
+    References:
+
+    * https://unit42.paloaltonetworks.com/compromised-cloud-compute-credentials/
+
+
+    False Positives:
+
+    * Unknown'

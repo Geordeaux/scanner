@@ -1,0 +1,12 @@
+name: Multiple Service Logging Deleted or Stopped Playbook
+description: 'Identifies the deletion or stopping of multiple service logging actions
+  (CloudTrail, VPC Flow Logs, S3 Logging, Route53 Logging).
+
+  Adversaries may disable logging to evade detection.'
+severity: High
+steps:
+- name: Investigation
+  description: 'Identifies the deletion or stopping of multiple service logging actions
+    (CloudTrail, VPC Flow Logs, S3 Logging, Route53 Logging).
+
+    Adversaries may disable logging to evade detection.'

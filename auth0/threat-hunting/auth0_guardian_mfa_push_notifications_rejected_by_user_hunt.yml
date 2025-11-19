@@ -1,0 +1,14 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Auth0 Guardian MFA Push Notifications Rejected by User
+description: |-
+  Detect when multiple Auth0 Guardian multi-factor authentication (MFA)
+  push notifications are rejected by a user.
+query_text: |-
+  %ingest.source_type:auth0
+  data.type:gd_auth_rejected
+  | groupbycount(data.user_id)
+  | where @q.count > 10
+tags:
+- tactics.ta0006.credential_access
+- techniques.t1621.multi_factor_authentication_request_generation
+- source.auth0

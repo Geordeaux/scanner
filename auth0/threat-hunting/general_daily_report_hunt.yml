@@ -1,0 +1,15 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Report - Daily Auth0 Activity Summary
+description: |-
+  Daily summary of Auth0 activity, including total logins, failed logins, and administrative actions.
+query_text: |-
+  %ingest.source_type:auth0
+  | stats
+      count() as total_events,
+      count(data.type = "s") as successful_logins,
+      count(data.type = "f") as failed_logins,
+      count(data.type = "sapi") as admin_actions
+    by bin(time, 1d)
+tags:
+- report
+- source.auth0

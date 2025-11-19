@@ -1,0 +1,31 @@
+name: AWS Lateral Movement Using IAM Session Token Playbook
+description: Detect when an IAM session token is created and then used from a different
+  IP address, indicating potential lateral movement.
+severity: Low
+steps:
+- name: Investigation
+  description: 'Monitor AWS CloudTrail management events where:
+
+    * A session token is created via `GetSessionToken` (STS), and
+
+    * The same access key ID is later used from a different source IP within the detection
+    window.
+
+
+    Because direct cross-event joins are limited, this rule approximates correlation
+    by:
+
+    * Looking at all `GetSessionToken` events and other events that contain an `accessKeyId`
+    in the same time window.
+
+    * Alerting when there is repeated use of the same `accessKeyId`, which can indicate
+    reuse of a temporary session credential.'
+- name: Triage
+  description: "* Confirm:\n  * Who initiated the `GetSessionToken` request (`principal.user.user_display_name`,\
+    \ `userIdentity.arn`).\n  * Whether the originating IP and subsequent IP(s) are\
+    \ expected (VPN egress, SSO proxies, bastion hosts, etc.).\n* Validate:\n  * If\
+    \ MFA was used for the `GetSessionToken` request.\n  * Whether the subsequent\
+    \ actions taken with the session token align with expected activity.\n* If suspicious:\n\
+    \  * Revoke or rotate associated credentials (user keys, roles).\n  * Review all\
+    \ activity tied to the session access key across regions.\n  * Hunt for related\
+    \ anomalous authentication or privilege escalation events."

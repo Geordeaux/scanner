@@ -1,0 +1,32 @@
+name: AWS Lambda Update Function Code Playbook
+description: Detects when an IAM user attempts to update or modify AWS Lambda function
+  code. This can indicate an attempt to execute malicious code in the serverless environment.
+severity: Low
+steps:
+- name: Investigation
+  description: 'Monitor AWS CloudTrail management events where:
+
+    * The service is Lambda (`lambda.amazonaws.com`), and
+
+    * The action is `UpdateFunctionCode`.
+
+
+    These events may represent:
+
+    * Legitimate deployments or code updates as part of CI/CD.
+
+    * Manual or ad-hoc updates that bypass normal deployment pipelines.
+
+    * Malicious attempts to inject or modify serverless code.'
+- name: Triage
+  description: "* Validate:\n  * The initiating principal (userIdentity.arn, type,\
+    \ and name) and whether they are authorised to modify Lambda functions.\n  * Whether\
+    \ the change aligns with an approved deployment or change request.\n  * Which\
+    \ function(s) were updated and their criticality (production vs non-production).\n\
+    * If suspicious or unapproved:\n  * Coordinate with application owners to confirm\
+    \ the expected code state.\n  * Review recent function invocations and logs for\
+    \ signs of malicious behaviour.\n  * Consider rolling back to a known-good version\
+    \ or redeploying from source control.\n* Longer term:\n  * Enforce Lambda updates\
+    \ via CI/CD only and restrict direct console/API code updates.\n  * Tighten IAM\
+    \ policies for Lambda code modification and add mandatory review for production\
+    \ functions."

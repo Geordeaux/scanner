@@ -1,0 +1,12 @@
+name: User Creation with Administrator Policy Assigned Playbook
+description: 'Identifies the creation of a user followed by the assignment of administrative
+  rights.
+
+  This sequence allows an adversary to create a backdoor admin user.'
+severity: High
+steps:
+- name: Investigation
+  description: 'Identifies the creation of a user followed by the assignment of administrative
+    rights.
+
+    This sequence allows an adversary to create a backdoor admin user.'

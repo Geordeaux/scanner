@@ -1,0 +1,31 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Atlassian Confluence Space Export
+description: |-
+  ## Goal
+  Detects when a Confluence space is exported (XML, PDF, HTML).
+  Large exports can indicate data exfiltration.
+
+  ## Strategy
+  1. Determine if this was authorized.
+  2. Check the size and sensitivity of the exported space.
+
+  ## Triage and Response
+  1. Identify the user (`attributes.actor.email`) who performed the export.
+  2. Identify the space exported.
+  1. If unauthorized, investigate the user's device for exfiltrated data.
+  2. Review the user's permissions.
+enabled: true
+severity: High
+query_text: |-
+  %ingest.source_type:atlassian
+  attributes.action:space_export
+  | groupbycount(attributes.actor.email)
+  | where @q.count > 0
+time_range_s: 300
+run_frequency_s: 60
+event_sink_keys:
+- high_severity_alerts
+tags:
+- tactics.ta0010.exfiltration
+- techniques.t1560.archive_collected_data
+- source.atlassian

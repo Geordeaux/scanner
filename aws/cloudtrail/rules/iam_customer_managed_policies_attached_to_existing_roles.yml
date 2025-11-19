@@ -1,0 +1,29 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: AWS IAM Customer-Managed Policy Attachment to Existing Roles
+description: |-
+  ## Goal
+  Identifies when customer-managed IAM policies are attached to existing roles.
+  This could indicate a privilege escalation attempt by attaching policies with elevated permissions.
+
+  ## Strategy
+  Identifies when customer-managed IAM policies are attached to existing roles.
+  This could indicate a privilege escalation attempt by attaching policies with elevated permissions.
+
+  ## Triage and Response
+  Investigate and remediate as appropriate.
+enabled: true
+severity: Medium
+query_text: |-
+  %ingest.source_type:aws:cloudtrail
+  eventName:AttachRolePolicy
+  eventSource:"iam.amazonaws.com"
+  | parse_json requestParameters "policyArn"
+  | where NOT policyArn matches "^arn:aws:iam::aws:policy"
+time_range_s: 3600
+run_frequency_s: 60
+event_sink_keys:
+- medium_severity_alerts
+tags:
+- tactics.ta0004.privilege_escalation
+- techniques.t1548.005.abuse_elevation_control_mechanism
+- source.aws.cloudtrail

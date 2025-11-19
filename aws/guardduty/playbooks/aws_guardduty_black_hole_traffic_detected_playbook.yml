@@ -1,0 +1,15 @@
+name: AWS GuardDuty Black Hole Traffic Detected Playbook
+description: Detects when an Amazon EC2 instance or a container attempts to communicate with a black hole IP address. This could indicate exfiltration of data or communication with malicious actors.
+severity: High
+steps:
+- name: Investigation
+  description: 'Monitor GuardDuty findings for the detection of black hole traffic (finding types containing `BlackholeTraffic`). Capture relevant details such as the principal IP, user, and location to assess potential threats.
+
+
+    ## Triage and response
+
+    Investigate the detected black hole traffic event to determine if it was authorized. Review the user agent, principal IPs, and other details to assess potential threats. Ensure that no unauthorized communication is occurring.'
+- name: Triage
+  description: ''
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

@@ -1,0 +1,100 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: AWS S3 Public Access Block Removed
+enabled: true
+severity: High
+description: |-
+  ## Goal
+  Detect when the S3 Public Access Block configuration is removed from an S3 bucket or an AWS account. This could indicate an attempt to impair defenses by making resources open to unauthorized users.
+
+  ## Strategy
+  Monitor AWS CloudTrail management events from:
+  * `s3.amazonaws.com`
+  * `s3control.amazonaws.com`
+
+  for the following API calls:
+  * `DeletePublicAccessBlock` (account- or bucket-level)
+  * `PutPublicAccessBlock` (account- or bucket-level)
+
+  Flag events where:
+  * Public Access Block is deleted, or
+  * Public Access Block is modified so that any of the following are set to `false`:
+    * `BlockPublicAcls`
+    * `IgnorePublicAcls`
+    * `BlockPublicPolicy`
+    * `RestrictPublicBuckets`
+
+  ## Triage and Response
+  * Confirm whether relaxing or removing Public Access Block is part of an approved change (for example, a temporary test bucket).
+  * Identify all affected accounts/buckets and review their contents for sensitivity and exposure risk.
+  * If unapproved, immediately re-enable strict Public Access Block and consider enabling S3 Block Public Access at the org/root account level.
+  * Review other recent configuration changes and access by the same principal for additional misconfigurations or malicious activity.
+query_text: |-
+  %ingest.source_type="aws:cloudtrail"
+  eventSource:(
+  "s3.amazonaws.com"
+  "s3control.amazonaws.com"
+  )
+  eventName:(
+  DeletePublicAccessBlock
+  PutPublicAccessBlock
+  DeleteBucketPublicAccessBlock
+  PutBucketPublicAccessBlock
+  DeleteAccountPublicAccessBlock
+  PutAccountPublicAccessBlock
+  )
+  not errorCode:*
+  (
+  eventName:(
+  DeletePublicAccessBlock
+  DeleteBucketPublicAccessBlock
+  DeleteAccountPublicAccessBlock
+  )
+  or
+  (
+  eventName:(
+  PutPublicAccessBlock
+  PutBucketPublicAccessBlock
+  PutAccountPublicAccessBlock
+  )
+  (
+  requestParameters.PublicAccessBlockConfiguration.BlockPublicAcls:"false"
+  or requestParameters.PublicAccessBlockConfiguration.IgnorePublicAcls:"false"
+  or requestParameters.PublicAccessBlockConfiguration.BlockPublicPolicy:"false"
+  or requestParameters.PublicAccessBlockConfiguration.RestrictPublicBuckets:"false"
+  )
+  )
+  )
+  | groupbycount(
+  recipientAccountId,
+  userIdentity.arn,
+  awsRegion
+  )
+  | where @q.count > 0
+time_range_s: 3600
+run_frequency_s: 3600
+event_sink_keys:
+- high_severity_alerts
+tags:
+- source.aws
+- domain.cloud
+- domain.s3
+- tactics.ta0005.defense_evasion
+- techniques.t1562.impair_defenses
+- use_case.aws_s3
+- use_case.public_access_block
+context_fields:
+- recipientAccountId
+- awsRegion
+- eventSource
+- eventName
+- eventTime
+- sourceIPAddress
+- userAgent
+- userIdentity.type
+- userIdentity.arn
+- userIdentity.accountId
+- requestParameters.PublicAccessBlockConfiguration.BlockPublicAcls
+- requestParameters.PublicAccessBlockConfiguration.IgnorePublicAcls
+- requestParameters.PublicAccessBlockConfiguration.BlockPublicPolicy
+- requestParameters.PublicAccessBlockConfiguration.RestrictPublicBuckets
+- additionalEventData

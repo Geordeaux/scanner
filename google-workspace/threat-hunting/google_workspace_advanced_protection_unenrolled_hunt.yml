@@ -1,0 +1,9 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Google Workspace Advanced Protection Unenrolled
+description: |-
+  Detects when a user unenrolls from the Advanced Protection Program.
+query_text: "%ingest.source_type:google_workspace\naction:unenroll_advanced_protection "
+tags:
+- google_workspace
+- security
+- defense_evasion

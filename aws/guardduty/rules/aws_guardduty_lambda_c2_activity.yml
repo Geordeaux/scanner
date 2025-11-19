@@ -1,0 +1,26 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: AWS GuardDuty Lambda C&C Activity
+description: |-
+  ## Goal
+  Detects when a Lambda function is communicating with a Command and Control (C&C) server.
+
+  ## Strategy
+  Monitor GuardDuty findings for `Backdoor:Lambda/C&CActivity.B`.
+
+  ## Triage and Response
+  1. Identify the Lambda function.
+  2. Disable the function.
+  3. Investigate the code for backdoors or compromised dependencies.
+enabled: true
+severity: Critical
+query_text: "%ingest.source_type:aws_guardduty\nmetadata.product_event_type:\"Backdoor:Lambda/C&CActivity.B\" "
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- critical_severity_alerts
+tags:
+- guardduty
+- aws
+- lambda
+- c2

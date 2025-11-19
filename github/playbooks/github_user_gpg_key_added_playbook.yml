@@ -1,0 +1,14 @@
+name: GitHub User GPG Key Added Playbook
+description: Detects when a GPG key is added to a user account.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor GitHub audit logs for `gpg_key.create`. GPG keys are used to sign commits; an attacker could use a stolen or unauthorized key to sign malicious commits.
+- name: Triage
+  description: '1. Identify the user and the key ID.
+
+    2. Verify if the user added this key.
+
+    3. Revoke the key immediately if unauthorized.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

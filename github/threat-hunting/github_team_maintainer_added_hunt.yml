@@ -1,0 +1,9 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: GitHub Team Maintainer Added
+description: |-
+  Detects when a user is promoted to team maintainer.
+query_text: "%ingest.source_type:github\naction:team.add_maintainer "
+tags:
+- github
+- iam
+- privilege_escalation

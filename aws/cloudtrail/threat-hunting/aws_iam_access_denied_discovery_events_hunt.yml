@@ -1,0 +1,18 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS IAM Access Denied Discovery Events
+description: |-
+  Detects excessive `AccessDenied` events within a one-hour timeframe from a single IAM principal. This may indicate reconnaissance activity or permission mapping by an adversary.
+query_text: |-
+  %ingest.source_type="aws:cloudtrail"
+  errorCode:"AccessDenied*"
+  or errorCode:"*AccessDenied"
+  | groupbycount(userIdentity.arn, sourceIPAddress)
+  | where @q.count >= 5
+tags:
+- source.aws
+- domain.cloud
+- domain.identity_and_access
+- tactics.ta0007.discovery
+- techniques.t1580.cloud_infrastructure_discovery
+- use_case.iam_anomaly
+- use_case.discovery_noise

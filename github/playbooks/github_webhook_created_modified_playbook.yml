@@ -1,0 +1,14 @@
+name: GitHub Webhook Created or Modified Playbook
+description: Detects the creation or modification of a GitHub webhook.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor GitHub audit logs for `hook.create` or `hook.config_changed`. Attackers may create webhooks to exfiltrate repository events and data to external servers.
+- name: Triage
+  description: '1. Identify the repository and the webhook URL.
+
+    2. Verify if the webhook destination is authorized.
+
+    3. Remove the webhook immediately if unauthorized.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

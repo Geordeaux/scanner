@@ -1,0 +1,14 @@
+name: GCP VPC Peering Created Playbook
+description: Detects the creation of a VPC peering connection.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor Google Cloud audit logs for `compute.networks.addPeering`. Unauthorized peering can expose internal networks to external or malicious networks.
+- name: Triage
+  description: '1. Identify the user and the peer network.
+
+    2. Verify if the peering is authorized and secure.
+
+    3. Remove the peering connection if unauthorized.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

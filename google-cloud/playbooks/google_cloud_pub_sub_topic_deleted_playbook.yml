@@ -1,0 +1,10 @@
+name: Google Cloud Pub/Sub topic deleted Playbook
+description: Detect deletion of Google Cloud Pub/Sub subscriptions, which can prevent audit logs from being sent.
+severity: Informational
+steps:
+- name: Investigation
+  description: Monitor Google Cloud admin activity audit logs for the invocation of the `DeleteTopic` method.
+- name: Triage
+  description: Review the subscription to ensure it is properly configured.
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

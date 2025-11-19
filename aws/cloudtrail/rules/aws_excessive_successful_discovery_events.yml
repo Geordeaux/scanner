@@ -1,0 +1,34 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: AWS Excessive Successful Discovery Events
+enabled: true
+severity: Low
+description: "## Goal\nDetects excessive successful discovery-style API calls (for example, `Describe`, `List`, `Get`) from a single IAM user within a short timeframe. This can indicate reconnaissance as part of an attacker\u2019s attempt to understand the cloud environment.\n\n## Strategy\nMonitor AWS CloudTrail management events and identify IAM users that perform a burst of discovery-related API calls:\n* API operation name starting with `Describe`, `List`, or `Get`.\n* Requests that complete successfully (no `errorCode`).\n\nOver a five-minute window, count events per IAM user and alert when the number of successful discovery calls exceeds a chosen threshold (for example, 10+).\n\n## Triage and Response\n* Identify the IAM user, originating IP, and user agent.\n* Determine whether the behaviour aligns with:\n  * Known automation (for example, inventory jobs, backup tooling, or deployment scripts), or\n  * Anomalous, ad-hoc activity from consoles or unfamiliar hosts.\n* Review recent\
+  \ authentication activity and role usage for the same identity.\n* If the activity is unapproved or unexpected:\n  * Treat as potential reconnaissance.\n  * Review additional actions performed by the user around the same time (for example, write or privilege-escalation APIs).\n  * Consider temporary access restriction and escalate per your incident response process."
+query_text: |-
+  %ingest.source_type="aws:cloudtrail"
+  userIdentity.type:"IAMUser"
+  eventName:(Describe* List* Get*)
+  (not errorCode:*)
+  | groupbycount(userIdentity.arn)
+  | where @q.count > 10
+time_range_s: 300
+run_frequency_s: 300
+event_sink_keys:
+- low_severity_alerts
+tags:
+- source.aws
+- domain.cloud
+- domain.discovery
+- tactics.ta0007.discovery
+- techniques.t1580.cloud_infrastructure_discovery
+- use_case.account_and_inventory_discovery
+context_fields:
+- userIdentity.arn
+- userIdentity.userName
+- sourceIPAddress
+- userAgent
+- awsRegion
+- eventTime
+- recipientAccountId
+- principal.ip_geo_artifact.location.country_or_region
+- principal.ip_geo_artifact.location.state

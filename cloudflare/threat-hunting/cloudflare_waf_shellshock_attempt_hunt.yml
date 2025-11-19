@@ -1,0 +1,10 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Cloudflare WAF Shellshock Attempt
+description: |-
+  Detects Shellshock (CVE-2014-6271) attempts blocked by Cloudflare WAF.
+query_text: "%ingest.source_type:cloudflare\nWAFAction:block\nRuleId:981176 "
+tags:
+- cloudflare
+- waf
+- rce
+- shellshock

@@ -1,0 +1,14 @@
+name: Cloudflare API Token Created Playbook
+description: Detects the creation of a new API Token.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor Cloudflare Audit Logs for `user_api_token_create`.
+- name: Triage
+  description: '1. Identify the user and the token permissions.
+
+    2. Verify if the token follows least privilege.
+
+    3. Revoke if unnecessary or too permissive.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

@@ -1,0 +1,16 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: SNS Topic Subscription with Email by Rare User
+description: |-
+  This hunting query gathered evidence of an SNS topic subscribed to by an email address of a user who does not typically perform this action. Adversaries may subscribe to SNS topics to collect sensitive information or exfiltrate data via an external email address.
+query_text: |-
+  %ingest.source_type="aws:cloudtrail"
+  eventSource="sns.amazonaws.com"
+  eventName="Subscribe"
+  requestParameters like "*email*"
+  | groupbycount(userIdentity.arn, requestParameters)
+  | where @q.count = 1
+tags:
+- source.aws
+- domain.cloud
+- tactics.ta0010.exfiltration
+- techniques.t1567.exfiltration_over_web_service

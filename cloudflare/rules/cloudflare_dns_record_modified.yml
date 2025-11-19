@@ -1,0 +1,26 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Cloudflare DNS Record Modified
+description: |-
+  ## Goal
+  Detects modifications to DNS records in Cloudflare.
+
+  ## Strategy
+  Monitor Cloudflare Audit Logs for `rec_edit` or `rec_add` events. Unauthorized DNS changes can redirect traffic to malicious sites (subdomain takeover).
+
+  ## Triage and Response
+  1. Identify the user who made the change.
+  2. Verify if the change was authorized via change management.
+  3. If unauthorized, revert the change immediately.
+  4. Rotate the user's API key/credentials.
+enabled: true
+severity: High
+query_text: "%ingest.source_type:cloudflare\nAction:rec_edit OR Action:rec_add OR Action:rec_delete "
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- high_severity_alerts
+tags:
+- cloudflare
+- dns
+- configuration

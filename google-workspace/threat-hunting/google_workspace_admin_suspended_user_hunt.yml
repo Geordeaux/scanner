@@ -1,0 +1,9 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Google Workspace Admin Suspended User
+description: |-
+  Detects when an administrator suspends a user account.
+query_text: "%ingest.source_type:google_workspace\naction:suspend_user "
+tags:
+- google_workspace
+- admin
+- impact

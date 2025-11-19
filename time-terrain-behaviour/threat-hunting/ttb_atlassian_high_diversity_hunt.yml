@@ -1,0 +1,15 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: 'TTB Hunt: Atlassian TTB High Diversity Anomaly'
+description: |-
+  Hunt for users with high diversity in Products/Sources and Event Keys.
+query_text: |-
+  %ingest.source_type="atlassian"
+  | stats
+    distinct_count(event_source) as terrain_score,
+    distinct_count(event_key) as behavior_score
+    by actor.displayName
+  | sort -terrain_score, -behavior_score
+tags:
+- source.atlassian
+- ttb.anomaly
+- defense_evasion

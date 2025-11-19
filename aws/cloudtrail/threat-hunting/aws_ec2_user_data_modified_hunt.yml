@@ -1,0 +1,18 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS EC2 User Data Modified
+description: |-
+  Detects modifications to the user data script of an EC2 instance. This can indicate unauthorised changes that might be used for privilege escalation, persistence, or other malicious activity.
+query_text: |-
+  %ingest.source_type="aws:cloudtrail"
+  eventSource:"ec2.amazonaws.com"
+  eventName:"ModifyInstanceAttribute"
+  requestParameters.userData:*
+  (not errorCode:*)
+tags:
+- source.aws
+- domain.cloud
+- domain.aws_ec2
+- tactics.ta0004.privilege_escalation
+- techniques.t1037.boot_or_logon_initialization_scripts
+- use_case.ec2_user_data_change
+- use_case.persistence_priv_esc

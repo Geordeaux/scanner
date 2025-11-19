@@ -1,0 +1,18 @@
+name: GitHub personal access token (PAT) auto approve policy modified Playbook
+description: Detect when a GitHub personal access token is set to auto approve.
+severity: Medium
+steps:
+- name: Investigation
+  description: 'This rule monitors GitHub audit logs for changes to the auto approval policy on personal access tokens. Changes in personal access token settings can indicate potential unauthorized access to repositories.
+
+
+    ## Triage and response
+
+
+    1. Determine if the change made by the actor is authorized.
+
+    2. If the change was not authorized or unexpected, initiate your organization''s incident response process and investigate.'
+- name: Triage
+  description: ''
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

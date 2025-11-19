@@ -1,0 +1,71 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: AWS IAM Compromised Key Quarantine Policy Attached
+enabled: true
+severity: High
+description: |-
+  ## Goal
+  Detects when the AWS managed policy `AWSCompromisedKeyQuarantine` is attached to a user, role, or group. This policy is typically applied by AWS when the credentials of an IAM user have been compromised or publicly exposed.
+
+  ## Strategy
+  Monitor AWS CloudTrail management events where:
+  * The service is IAM (`iam.amazonaws.com`), and
+  * The action is one of:
+    * `AttachUserPolicy`
+    * `AttachGroupPolicy`
+    * `AttachRolePolicy`
+  * The `policyArn` in the request contains `AWSCompromisedKeyQuarantine`.
+
+  These events strongly suggest that AWS has detected potentially compromised access keys or credentials for the affected IAM principal.
+
+  ## Triage and Response
+  * Identify:
+    * The IAM principal to which `AWSCompromisedKeyQuarantine` was attached (user, role, or group).
+    * The AWS account and region.
+    * The actor who invoked the API call (userIdentity.arn and type), if not an AWS internal actor.
+  * Immediately:
+    * Treat as a high-severity indicator of compromise for the affected IAM identity.
+    * Revoke and rotate any associated access keys and credentials.
+    * Validate whether the affected access keys or credentials were ever committed to source control, shared in tickets, or exposed in logs.
+  * Hunt and review:
+    * Recent activity by the affected principal (CloudTrail, access to critical resources, data access).
+    * Any corresponding AWS Security Hub, GuardDuty, or Abuse reports.
+  * If confirmed unauthorised:
+    * Contain by disabling or deleting the affected IAM user or role as appropriate.
+    * Implement preventive controls to avoid future exposure (for example, pre-commit scanning, CI secret scanning, tighter key lifecycle).
+query_text: |-
+  %ingest.source_type="aws:cloudtrail"
+  eventSource:"iam.amazonaws.com"
+  eventName:(
+  "AttachUserPolicy"
+  "AttachGroupPolicy"
+  "AttachRolePolicy"
+  )
+  requestParameters.policyArn:"AWSCompromisedKeyQuarantine"
+time_range_s: 3600
+run_frequency_s: 3600
+event_sink_keys:
+- high_severity_alerts
+tags:
+- source.aws
+- domain.cloud
+- domain.identity_and_access
+- domain.iam
+- tactics.ta0006.credential_access
+- techniques.t1552.unsecured_credentials
+- use_case.compromised_credentials
+- use_case.aws_managed_quarantine_policy
+context_fields:
+- userIdentity.type
+- userIdentity.arn
+- userIdentity.userName
+- sourceIPAddress
+- userAgent
+- awsRegion
+- eventTime
+- eventID
+- recipientAccountId
+- eventName
+- requestParameters.policyArn
+- requestParameters.userName
+- requestParameters.groupName
+- requestParameters.roleName

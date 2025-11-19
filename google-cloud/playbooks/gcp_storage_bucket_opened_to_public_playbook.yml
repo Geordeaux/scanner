@@ -1,0 +1,10 @@
+name: GCP Storage Bucket Opened To Public Playbook
+description: Detect when Google Cloud Storage buckets are opened to the public by adding `allUsers` or `allAuthenticatedUsers` to the access policy. This behavior may indicate a misconfiguration that could lead to unauthorized data exposure.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor Cloud Audit Logs for events where the `storage.setIamPermissions` method is called on Google Cloud Storage buckets and the access policy includes `allUsers` or `allAuthenticatedUsers`. If such events are detected, trigger an alert to investigate potential misconfigurations.
+- name: Triage
+  description: Investigate the detected use cases to determine if they were authorized. Review the user and IP addresses involved to ensure that no unauthorized access has occurred. Verify the bucket's permissions to confirm whether the change was intentional or accidental. Monitor for further suspicious activities involving this storage bucket.
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

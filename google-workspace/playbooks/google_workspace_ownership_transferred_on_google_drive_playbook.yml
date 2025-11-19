@@ -1,0 +1,14 @@
+name: Google Workspace Ownership Transferred On Google Drive Playbook
+description: Identifies when a Google Workspace user transfers the ownership of a file.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor for mass downloads, deletions, or external sharing of files.
+- name: Triage
+  description: '1. Identify the user and the files involved.
+
+    2. Verify if the activity is business-justified.
+
+    3. Revoke sharing or suspend the user if data exfiltration is suspected.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

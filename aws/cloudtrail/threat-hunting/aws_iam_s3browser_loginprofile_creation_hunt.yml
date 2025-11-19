@@ -1,0 +1,28 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS IAM S3Browser LoginProfile Creation
+description: |-
+  Detects S3 Browser utility performing reconnaissance looking for existing IAM Users without a LoginProfile defined then (when found) creating a LoginProfile.
+
+  References:
+  * https://permiso.io/blog/s/unmasking-guivil-new-cloud-threat-actor
+
+  False Positives:
+  * Valid usage of S3 Browser for IAM LoginProfile listing and/or creation
+query_text: |-
+  %ingest.source_type="aws:cloudtrail"
+  eventSource="iam.amazonaws.com"
+  eventName=(GetLoginProfile CreateLoginProfile)
+  userAgent:'S3 Browser'
+  | stats
+  min(@scnr.datetime) as firstTime,
+  max(@scnr.datetime) as lastTime,
+  count() as eventCount
+  by
+  userIdentity.arn,
+  eventSource,
+  eventName,
+  awsRegion
+tags:
+- tactics.ta0006.credential_access
+- techniques.t1552.unsecured_credentials
+- source.cloudtrail

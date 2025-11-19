@@ -1,0 +1,14 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Security group open to the world
+description: |-
+  Detect when an AWS security group is opened to the world.
+query_text: |-
+  %ingest.source_type:"aws:cloudtrail"
+  eventName:AuthorizeSecurityGroupIngress
+  requestParameters.ipPermissions.items.ipRanges.items.cidrIp:("0.0.0.0/0" "::/0")
+  | groupbycount(recipientAccountId)
+  | where @q.count > 0
+tags:
+- source.cloudtrail
+- techniques.t1562.impair_defenses
+- tactics.ta0005.defense_evasion

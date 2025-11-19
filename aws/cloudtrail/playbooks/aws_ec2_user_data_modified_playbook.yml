@@ -1,0 +1,21 @@
+name: AWS EC2 User Data Modified Playbook
+description: Detects modifications to the user data script of an EC2 instance. This
+  can indicate unauthorised changes that might be used for privilege escalation, persistence,
+  or other malicious activity.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor AWS CloudTrail management events for `ModifyInstanceAttribute`
+    calls against EC2 where the user data attribute is present. Any change to user
+    data is high-risk because it can introduce arbitrary scripts that execute at boot.
+- name: Triage
+  description: "* Identify the instance, role, and caller that modified user data.\n\
+    * Confirm whether the change is associated with a planned deployment, automation\
+    \ pipeline, or break-glass procedure.\n* Review the new user data content (for\
+    \ example, in the EC2 console or via API) for:\n  * Credential harvesting, reverse\
+    \ shells, or additional agents.\n  * Changes to monitoring/EDR, network configuration,\
+    \ or persistence.\n* If the activity is not clearly legitimate:\n  * Treat as\
+    \ a potential compromise of the modifying principal and/or instance.\n  * Capture\
+    \ forensic data (CloudTrail, system logs, EDR telemetry, network flows).\n  *\
+    \ Consider reverting user data, rotating credentials, and isolating the instance\
+    \ according to your incident response process."

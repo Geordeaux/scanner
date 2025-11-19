@@ -1,0 +1,14 @@
+name: High EC2 Instance Deployment Count Attempts Playbook
+description: 'Identifies when a user makes EC2 `RunInstances` API calls with a high
+  instance deployment count.
+
+  High instance deployment counts may indicate an adversary attempting to deploy a
+  large number of instances for cryptomining or other malicious activities.'
+severity: High
+steps:
+- name: Investigation
+  description: 'Identifies when a user makes EC2 `RunInstances` API calls with a high
+    instance deployment count.
+
+    High instance deployment counts may indicate an adversary attempting to deploy
+    a large number of instances for cryptomining or other malicious activities.'

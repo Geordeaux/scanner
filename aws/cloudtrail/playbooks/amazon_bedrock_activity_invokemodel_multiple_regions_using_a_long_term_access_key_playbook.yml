@@ -1,0 +1,19 @@
+name: Amazon Bedrock activity InvokeModel multiple regions using a long-term access
+  key Playbook
+description: Detect attempts to use InvokeModel in multiple regions.
+severity: Medium
+steps:
+- name: Investigation
+  description: Monitor CloudTrail for any attempts to use the InvokeModel API call
+    in multiple regions from a long-term access key. Attackers typically target the
+    AWS Bedrock service to host their own LLM services using victim resources.
+- name: Triage
+  description: "1. Verify if the API call (the event name) should have been made by\
+    \ the user (the user's ARN) from the specified IP address (the client IP).\n2.\
+    \ If the action is legitimate, consider adding the user to a suppression list.\n\
+    3. If the action is unauthorized:\n   * Contact the user (the user's ARN) to confirm\
+    \ if they made the API call.\n   * Check the User Investigation dashboard for\
+    \ other actions taken by the user (the user's ARN).\n   * Check the IP Investigation\
+    \ dashboard for additional traffic from the IP (the client IP).\n4. If the triage\
+    \ results suggest an attacker is involved, initiate the incident response process\
+    \ and investigation."

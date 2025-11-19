@@ -1,0 +1,10 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS GuardDuty Lambda C&C Activity
+description: |-
+  Detects when a Lambda function is communicating with a Command and Control (C&C) server.
+query_text: "%ingest.source_type:aws_guardduty\nmetadata.product_event_type:\"Backdoor:Lambda/C&CActivity.B\" "
+tags:
+- guardduty
+- aws
+- lambda
+- c2

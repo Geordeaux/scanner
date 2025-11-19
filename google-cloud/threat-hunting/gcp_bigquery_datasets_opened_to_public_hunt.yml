@@ -1,0 +1,29 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Google Cloud BigQuery Datasets Opened To Public
+description: |-
+  Detect when Google Cloud BigQuery datasets are made publicly accessible by adding `allUsers` or `allAuthenticatedUsers` to the access policy. This can lead to unauthorized data exposure and is a significant security risk.
+query_text: |-
+  %ingest.source_type:gcp_audit
+  metadata.event_type:USER_RESOURCE_UPDATE_PERMISSIONS
+  metadata.log_type:GCP_CLOUDAUDIT
+  metadata.vendor_name:"Google Cloud Platform"
+  metadata.product_name:BigQuery
+  metadata.product_event_type:google.iam.v1.IAMPolicy.SetIamPolicy
+  target.application:bigquery.googleapis.com
+  security_result.action:ALLOW
+  target.resource.attribute.labels.dataset_change_binding_deltas_action:ADD
+  (
+    target.resource.attribute.labels.dataset_change_binding_deltas_member:allUsers or
+    target.resource.attribute.labels.dataset_change_binding_deltas_member:allAuthenticatedUsers
+  )
+  target.resource.attribute.labels.dataset_change_binding_deltas_role:"roles/bigquery"
+  target.resource.resource_subtype:bigquery_dataset
+  target.resource.resource_type:DATABASE
+tags:
+- source.gcp
+- gcp_audit
+- bigquery_access_policy
+- data_exposure
+- misconfiguration
+- techniques.t1530.data_from_cloud_storage_object
+- tactics.ta0009.collection

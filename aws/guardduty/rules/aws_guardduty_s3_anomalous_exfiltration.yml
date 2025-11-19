@@ -1,0 +1,26 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: AWS GuardDuty S3 Anomalous Exfiltration
+description: |-
+  ## Goal
+  Detects anomalous data exfiltration from an S3 bucket.
+
+  ## Strategy
+  Monitor GuardDuty findings for `Exfiltration:S3/AnomalousBehavior`. This finding is triggered by unusual patterns of GetObject calls.
+
+  ## Triage and Response
+  1. Identify the bucket and the user.
+  2. Verify if the data transfer volume is expected.
+  3. If unauthorized, revoke credentials and check where the data was sent.
+enabled: true
+severity: High
+query_text: "%ingest.source_type:aws_guardduty\nmetadata.product_event_type:\"Exfiltration:S3/AnomalousBehavior\" "
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- high_severity_alerts
+tags:
+- guardduty
+- aws
+- s3
+- exfiltration

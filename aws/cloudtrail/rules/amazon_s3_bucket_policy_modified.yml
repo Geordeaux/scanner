@@ -1,0 +1,38 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Amazon S3 bucket policy modified
+description: |-
+  ## Goal
+  Detect modifications to S3 Bucket policies.
+
+  ## Strategy
+  Monitor CloudTrail for modifications to S3 policies via the following API calls:
+  * PutBucketAcl
+  * PutBucketPolicy
+  * PutBucketCors
+  * PutBucketLifecycle
+  * PutBucketReplication
+  * DeleteBucketPolicy
+  * DeleteBucketCors
+  * DeleteBucketReplication
+
+  ## Triage and Response
+  1. Identify the user who made the API call.
+  2. Contact the user to confirm whether they initiated the API call.
+  3. If the call was unauthorized:
+     * Rotate the user's credentials and investigate other API calls they made.
+     * Identify additional API calls made by the user that were not authorized.
+enabled: true
+severity: Informational
+query_text: |-
+  %ingest.source_type:"aws:cloudtrail"
+  eventName:(PutBucketAcl PutBucketPolicy PutBucketCors PutBucketLifecycle PutBucketReplication DeleteBucketPolicy DeleteBucketCors DeleteBucketReplication)
+  | groupbycount(userIdentity.arn)
+  | where @q.count > 0
+time_range_s: 300
+run_frequency_s: 60
+event_sink_keys:
+- informational_severity_alerts
+tags:
+- techniques.t1485.data_destruction
+- tactics.ta0040.impact
+- source.cloudtrail

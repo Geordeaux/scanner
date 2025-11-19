@@ -1,0 +1,14 @@
+name: Cloudflare Billing Information Modified Playbook
+description: Detects changes to billing information.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor Cloudflare Audit Logs for `billing_update`. Attackers often change billing details to maintain persistence or pay for illicit resource usage.
+- name: Triage
+  description: '1. Identify the user.
+
+    2. Contact the finance team to verify.
+
+    3. Check for new resources created recently.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

@@ -1,0 +1,16 @@
+name: GitHub Actions Workflow Modified Playbook
+description: Detects modifications to GitHub Actions workflow files.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor GitHub audit logs for pushes to `.github/workflows/*.yml`. Attackers may modify workflows to inject malicious code into the build pipeline (supply chain attack).
+- name: Triage
+  description: '1. Identify the repository and the user.
+
+    2. Review the changes to the workflow file.
+
+    3. Verify if the change was authorized and reviewed.
+
+    4. Revert immediately if malicious.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

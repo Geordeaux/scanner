@@ -1,0 +1,9 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Google Workspace Group Settings Modified to Public
+description: |-
+  Detects when a Google Group's settings are changed to allow public access.
+query_text: "%ingest.source_type:google_workspace\naction:change_group_setting "
+tags:
+- google_workspace
+- groups
+- exposure

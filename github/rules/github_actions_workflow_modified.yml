@@ -1,0 +1,26 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: GitHub Actions Workflow Modified
+description: |-
+  ## Goal
+  Detects modifications to GitHub Actions workflow files.
+
+  ## Strategy
+  Monitor GitHub audit logs for pushes to `.github/workflows/*.yml`. Attackers may modify workflows to inject malicious code into the build pipeline (supply chain attack).
+
+  ## Triage and Response
+  1. Identify the repository and the user.
+  2. Review the changes to the workflow file.
+  3. Verify if the change was authorized and reviewed.
+  4. Revert immediately if malicious.
+enabled: true
+severity: High
+query_text: "%ingest.source_type:github\naction:push\nfile_path:\".github/workflows/*\" "
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- high_severity_alerts
+tags:
+- github
+- actions
+- supply_chain

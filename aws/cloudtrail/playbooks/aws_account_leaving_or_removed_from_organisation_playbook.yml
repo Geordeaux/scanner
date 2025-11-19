@@ -1,0 +1,27 @@
+name: AWS Account Leaving Or Removed From The Organisation Playbook
+description: Detect when an AWS account attempts to leave, or is removed from, the
+  AWS Organisation.
+severity: Medium
+steps:
+- name: Investigation
+  description: 'Monitor AWS CloudTrail management events for:
+
+    * `LeaveOrganization`
+
+    * `RemoveAccountFromOrganization`
+
+
+    These actions may represent:
+
+    * Legitimate administrative account restructuring, or
+
+    * Malicious attempts to evade central governance, SCP enforcement, monitoring,
+    and logging.'
+- name: Triage
+  description: '* Validate whether the action aligns with an approved change request.
+
+    * Confirm the initiating principal is authorised to perform Organisation-level
+    changes.
+
+    * Escalate immediately if unapproved, as this may indicate a compromised principal
+    attempting to remove an account from governance.'

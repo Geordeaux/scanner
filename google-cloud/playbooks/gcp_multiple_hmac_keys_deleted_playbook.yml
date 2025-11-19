@@ -1,0 +1,10 @@
+name: GCP Multiple HMAC Keys Deleted Playbook
+description: Detect when multiple HMAC authentication keys are deleted from GCP Storage settings. This behavior may indicate an attempt to remove account access, which could be malicious.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor Cloud Audit Logs for `storage.hmacKeys.delete` events and detect if more than one such event occurs within a 1-hour window by the same user. Capture relevant details such as the event count, user information, and IP addresses involved, and set a high severity risk score to indicate the potential threat.
+- name: Triage
+  description: Investigate the detected deletion attempts to determine if they were authorized. Review the user and IP addresses involved to ensure that no unauthorized access removal has occurred. Monitor for further suspicious activities involving this user or IP address.
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

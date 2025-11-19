@@ -1,0 +1,15 @@
+name: AWS GuardDuty Command And Control Activity Detected Playbook
+description: Detects when Amazon GuardDuty identifies command and control (C&C) activity in Amazon EC2, AWS Lambda, or Amazon EKS runtimes. This could indicate an attempt to establish communication between compromised systems and external command-and-control servers.
+severity: High
+steps:
+- name: Investigation
+  description: 'Monitor GuardDuty findings for the detection of C&C activities (finding types containing `C&CActivity`). Capture relevant details such as the principal IP, user, and location to assess potential threats.
+
+
+    ## Triage and response
+
+    Investigate the detected C&C event to determine if it was authorized. Review the user agent, principal IPs, and other details to assess potential threats. Ensure that no unauthorized communication channels are established.'
+- name: Triage
+  description: ''
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

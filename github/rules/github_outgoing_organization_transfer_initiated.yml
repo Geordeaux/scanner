@@ -1,0 +1,26 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: GitHub Outgoing Organization Transfer Initiated
+description: |-
+  ## Goal
+  Detects when a GitHub organization is transferred to another enterprise account. An adversary may attempt to transfer a GitHub organization to an enterprise account they control in order to steal data.
+
+  ## Strategy
+  Monitor for organization or repository transfers.
+
+  ## Triage and Response
+  1. Identify the source and destination.
+  2. Verify authorization.
+  3. Contact GitHub support if malicious.
+enabled: true
+severity: Low
+query_text: |-
+  %ingest.source_type:github
+  action:org.transfer_outgoing
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- low_severity_alerts
+tags:
+- github
+- converted_yaral

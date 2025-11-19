@@ -1,0 +1,26 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: AWS.Administrative.IAM.User.Created
+description: |-
+  ## Goal
+  Identifies when an Administrative IAM user is creates. This could indicate a potential security breach.
+
+  ## Strategy
+  Monitor logs for the specific sequence of events described.
+
+  ## Triage and Response
+  1. Identify the user and the sequence of actions.
+  2. Verify if the actions are authorized and business-justified.
+  3. If unauthorized, revert changes and suspend the user.
+enabled: true
+severity: Low
+query_text: |-
+  %ingest.source_type:aws:cloudtrail
+  eventName:CreateUser OR eventName:AttachUserPolicy
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- low_severity_alerts
+tags:
+- Beta
+- panther_migration

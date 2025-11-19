@@ -1,0 +1,10 @@
+name: GCP Multiple KMS Keys Disabled Or Destroyed Playbook
+description: Detect when multiple KMS crypto key versions are disabled or destroyed from GCP Cloud KMS. This behavior may indicate an attempt to compromise data integrity or availability, which could be malicious.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor Cloud Audit Logs for DestroyCryptoKeyVersion and UpdateCryptoKeyVersion events. Detect if more than ten such events occur within a 1-hour window by the same user. Capture relevant details such as the event count, user information, and IP addresses involved, and set a high severity risk score to indicate the potential threat.
+- name: Triage
+  description: Investigate the detected disable or destroy attempts to determine if they were authorized. Review the user and IP addresses involved to ensure that no unauthorized data destruction has occurred. Monitor for further suspicious activities involving this user or IP address.
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

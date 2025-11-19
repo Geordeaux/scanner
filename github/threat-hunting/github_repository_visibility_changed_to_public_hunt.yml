@@ -1,0 +1,10 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: GitHub Repository Visibility Changed To Public
+description: |-
+  Detects when the visibility for a GitHub repository is changed to public.
+query_text: |-
+  %ingest.source_type:github
+  action:repo.access
+tags:
+- github
+- converted_yaral

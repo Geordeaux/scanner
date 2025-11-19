@@ -1,0 +1,9 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: GitHub Organization Owner Added
+description: |-
+  Detects when a new owner is added to a GitHub organization.
+query_text: "%ingest.source_type:github\naction:org.add_member\npermission:admin "
+tags:
+- github
+- iam
+- privilege_escalation

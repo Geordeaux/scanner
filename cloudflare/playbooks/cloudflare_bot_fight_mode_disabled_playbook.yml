@@ -1,0 +1,14 @@
+name: Cloudflare Bot Fight Mode Disabled Playbook
+description: Detects when Bot Fight Mode is disabled.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor Cloudflare Audit Logs. Disabling this exposes the site to automated scraping and attacks.
+- name: Triage
+  description: '1. Identify the user.
+
+    2. Re-enable Bot Fight Mode.
+
+    3. Check for bot traffic spikes.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

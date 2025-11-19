@@ -1,0 +1,31 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: AWS GuardDuty S3 Ransomware Activity
+description: |-
+  ## Goal
+  Detects potential ransomware activity targeting S3 buckets.
+
+  ## Strategy
+  Monitor GuardDuty findings for `Impact:S3/ObjectDelete.HighVolume` or `Impact:S3/ObjectEncrypt.HighVolume`. These indicate a high volume of object deletions or encryptions, which is characteristic of ransomware.
+
+  ## Triage and Response
+  1. Identify the principal performing the actions.
+  2. Check if this is a legitimate data lifecycle operation.
+  3. If unauthorized, revoke credentials immediately.
+  4. Assess the extent of data loss and initiate recovery from backups.
+enabled: true
+severity: Critical
+query_text: |-
+  %ingest.source_type:aws_guardduty
+  metadata.product_event_type:(
+  "Impact:S3/ObjectDelete.HighVolume"
+  "Impact:S3/ObjectEncrypt.HighVolume"
+  )
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- critical_severity_alerts
+tags:
+- guardduty
+- aws
+- ransomware

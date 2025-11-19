@@ -1,0 +1,28 @@
+name: Cloudflare Bot Requests Playbook
+description: 'Detect bots making HTTP requests at a high volume, which
+
+  may indicate automated attacks or scraping activities.
+
+
+  This rule uses the Cloudflare Bot Score, which is a score
+
+  from 1 to 99 that indiciates how likely the request came
+
+  came from a bot. Scores of 1 through 29 are likely
+
+  automated requests.
+
+
+  The default threshold is 600 requests per 5 minutes (2 RPS).'
+severity: Low
+steps:
+- name: Investigation
+  description: Monitor for high-velocity requests or known bot signatures.
+- name: Triage
+  description: '1. Analyze the request pattern (rate, path).
+
+    2. Enable ''Under Attack Mode'' if necessary.
+
+    3. Tune Bot Management settings.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

@@ -1,0 +1,26 @@
+name: AWS Config Disabling Channel/Recorder Playbook
+description: 'Detects AWS Config Service disabling
+
+
+  References:
+
+  * https://docs.aws.amazon.com/config/latest/developerguide/cloudtrail-log-files-for-aws-config.html
+
+
+  False Positives:
+
+  * Valid change in AWS Config Service'
+severity: High
+steps:
+- name: Investigation
+  description: 'Detects AWS Config Service disabling
+
+
+    References:
+
+    * https://docs.aws.amazon.com/config/latest/developerguide/cloudtrail-log-files-for-aws-config.html
+
+
+    False Positives:
+
+    * Valid change in AWS Config Service'

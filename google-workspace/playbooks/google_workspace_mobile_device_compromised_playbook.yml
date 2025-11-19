@@ -1,0 +1,14 @@
+name: Google Workspace Mobile Device Compromised Playbook
+description: Detects indications of a compromised mobile device managed by Google Workspace.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor Google Workspace mobile audit logs for events indicating device compromise (e.g., jailbroken/rooted device detection).
+- name: Triage
+  description: '1. Identify the user and the device.
+
+    2. Block the device from accessing corporate data.
+
+    3. Wipe the device if necessary.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

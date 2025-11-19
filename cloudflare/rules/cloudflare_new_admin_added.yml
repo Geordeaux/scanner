@@ -1,0 +1,25 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Cloudflare New Admin Added
+description: |-
+  ## Goal
+  Detects when a new member is invited to the Cloudflare account.
+
+  ## Strategy
+  Monitor Cloudflare Audit Logs for `member_invite`.
+
+  ## Triage and Response
+  1. Verify if the new member is a legitimate employee/contractor.
+  2. Check the role assigned (e.g., Super Administrator).
+  3. Revoke the invitation if unauthorized.
+enabled: true
+severity: High
+query_text: "%ingest.source_type:cloudflare\nAction:member_invite "
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- high_severity_alerts
+tags:
+- cloudflare
+- iam
+- persistence

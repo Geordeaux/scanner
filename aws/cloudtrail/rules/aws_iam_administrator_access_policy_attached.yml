@@ -1,0 +1,77 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: AWS IAM Administrator Access Policy Attached
+enabled: true
+severity: High
+description: |-
+  ## Goal
+  Detects when the AWS IAM `AdministratorAccess` policy is attached to a user, group, or role, which can be used for privilege escalation. This is a high-severity concern as it may indicate unauthorised access or an attempt to gain elevated privileges.
+
+  ## Strategy
+  Monitor AWS CloudTrail management events where:
+  * The service is IAM (`iam.amazonaws.com`), and
+  * The action is one of:
+    * `AttachUserPolicy`
+    * `AttachGroupPolicy`
+    * `AttachRolePolicy`
+  * The attached policy ARN is `arn:aws:iam::aws:policy/AdministratorAccess`.
+
+  A single matching event is sufficient to generate an alert, as attaching `AdministratorAccess` grants full administrative permissions.
+
+  ## Triage and Response
+  * Identify:
+    * The calling principal (ARN, type, and user/role name).
+    * The target principal (user, group, or role) receiving `AdministratorAccess`.
+    * The AWS account and region.
+  * Confirm whether:
+    * This change is covered by an approved change request or break-glass process.
+    * The actor is a known automation role or trusted administrator.
+  * If not clearly authorised:
+    * Treat as suspected privilege escalation.
+    * Immediately revoke or detach the `AdministratorAccess` policy from the target principal.
+    * Review:
+      * Recent activity by the calling principal (new keys, role assumptions, policy edits).
+      * Any actions performed by the newly privileged identity.
+    * Consider temporarily disabling or restricting the calling principal until investigation is complete.
+  * If confirmed legitimate:
+    * Ensure long-term use of `AdministratorAccess` is minimised in favour of scoped, least-privilege roles.
+    * Add explicit guardrails (for example, SCPs or approval workflows) around future use of `AdministratorAccess`.
+query_text: |-
+  %ingest.source_type="aws:cloudtrail"
+  eventSource:"iam.amazonaws.com"
+  eventName:(
+  "AttachUserPolicy"
+  "AttachGroupPolicy"
+  "AttachRolePolicy"
+  )
+  requestParameters.policyArn:"arn:aws:iam::aws:policy/AdministratorAccess"
+time_range_s: 3600
+run_frequency_s: 3600
+event_sink_keys:
+- high_severity_alerts
+tags:
+- source.aws
+- domain.cloud
+- domain.identity_and_access
+- domain.iam
+- tactics.ta0005.defence_evasion
+- tactics.ta0003.persistence
+- tactics.ta0004.privilege_escalation
+- tactics.ta0001.initial_access
+- techniques.t1078.004.valid_accounts_cloud_accounts
+- use_case.iam_admin_policy
+- use_case.privilege_escalation
+context_fields:
+- userIdentity.type
+- userIdentity.arn
+- userIdentity.userName
+- sourceIPAddress
+- userAgent
+- awsRegion
+- eventTime
+- eventID
+- recipientAccountId
+- eventName
+- requestParameters.policyArn
+- requestParameters.userName
+- requestParameters.groupName
+- requestParameters.roleName

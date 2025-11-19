@@ -1,0 +1,9 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: GCP GKE Exec into Pod
+description: |-
+  Detects execution of commands inside a GKE pod.
+query_text: "%ingest.source_type:google_cloud_audit\nprotoPayload.methodName:\"io.k8s.core.v1.pods.exec\" "
+tags:
+- google_cloud
+- gke
+- execution

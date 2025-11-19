@@ -1,0 +1,25 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Cloudflare Bot Fight Mode Disabled
+description: |-
+  ## Goal
+  Detects when Bot Fight Mode is disabled.
+
+  ## Strategy
+  Monitor Cloudflare Audit Logs. Disabling this exposes the site to automated scraping and attacks.
+
+  ## Triage and Response
+  1. Identify the user.
+  2. Re-enable Bot Fight Mode.
+  3. Check for bot traffic spikes.
+enabled: true
+severity: High
+query_text: "%ingest.source_type:cloudflare\nAction:zone_setting_edit\nSetting:\"bot_fight_mode\"\nNewValue:\"off\" "
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- high_severity_alerts
+tags:
+- cloudflare
+- bot_management
+- misconfiguration

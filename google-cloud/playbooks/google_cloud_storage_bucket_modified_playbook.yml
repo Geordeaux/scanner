@@ -1,0 +1,18 @@
+name: Google Cloud Storage Bucket modified Playbook
+description: Detect administrative changes to a GCS Bucket, such as updates to the retention policy or bucket lock.
+severity: Informational
+steps:
+- name: Investigation
+  description: 'Monitor GCS bucket admin activity audit logs to identify updates made by the method:
+
+
+    * storage.buckets.update
+
+
+    ## Triage and response
+
+    Review the bucket to ensure proper configuration.'
+- name: Triage
+  description: ''
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

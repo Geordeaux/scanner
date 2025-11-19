@@ -1,0 +1,18 @@
+name: Auth0 MFA Factor Setting Enabled Playbook
+description: |-
+  Response steps for when an MFA factor is enabled.
+  Ensure this aligns with security policies.
+severity: Informational
+steps:
+  - name: Triage
+    description: |-
+      1. Identify the user (`data.user_id`) and the factor enabled.
+      2. Check the timestamp.
+  - name: Investigation
+    description: |-
+      1. Verify if this change was authorized.
+      2. Ensure the factor enabled is approved by the organization (e.g., Push vs SMS).
+  - name: Remediation
+    description: |-
+      1. If unauthorized or non-compliant, disable the factor.
+      2. Educate the administrator on approved MFA factors.

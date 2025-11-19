@@ -1,0 +1,14 @@
+name: GitHub Self-Hosted Runner Registered Playbook
+description: Detects the registration of a new self-hosted runner.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor GitHub audit logs for `runner_group.register`. Unauthorized runners can be used to execute malicious code or exfiltrate secrets from the environment.
+- name: Triage
+  description: '1. Identify the runner and the user who registered it.
+
+    2. Verify if the runner is authorized.
+
+    3. Remove the runner immediately if unauthorized.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

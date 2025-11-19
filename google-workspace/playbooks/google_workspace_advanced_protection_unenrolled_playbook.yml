@@ -1,0 +1,14 @@
+name: Google Workspace Advanced Protection Unenrolled Playbook
+description: Detects when a user unenrolls from the Advanced Protection Program.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor Google Workspace User audit logs for `unenroll_advanced_protection`. High-risk users should remain enrolled to prevent targeted attacks.
+- name: Triage
+  description: '1. Identify the user.
+
+    2. Verify if the unenrollment was intentional and authorized.
+
+    3. Re-enroll the user if necessary.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

@@ -1,0 +1,30 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Atlassian Jira User Removed from Group
+description: |-
+  ## Goal
+  Detect when a user is removed from a group in Atlassian Jira.
+
+  ## Strategy
+  1. Determine if this was authorized.
+  2. Check if this disrupts critical workflows.
+
+  ## Triage and Response
+  1. Identify the user (`attributes.actor.email`) who performed the removal.
+  2. Identify the user removed and the group.
+  1. If unauthorized, restore the user to the group.
+  2. Investigate the actor's account.
+enabled: true
+severity: Medium
+query_text: |-
+  %ingest.source_type:atlassian
+  message.content:'User removed from group'
+  | groupbycount(attributes.actor.email)
+  | where @q.count > 0
+time_range_s: 300
+run_frequency_s: 60
+event_sink_keys:
+- medium_severity_alerts
+tags:
+- tactics.ta0040.impact
+- techniques.t1531.account_access_removal
+- source.atlassian

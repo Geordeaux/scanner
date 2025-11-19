@@ -1,0 +1,16 @@
+name: Cloudflare WAF Path Traversal Attempt Playbook
+description: Detects Path Traversal (LFI) attempts blocked by Cloudflare WAF.
+severity: Critical
+steps:
+- name: Investigation
+  description: Monitor Cloudflare WAF logs for rule matches related to directory traversal (e.g., `../`).
+- name: Triage
+  description: '1. Identify the source IP and the targeted file path.
+
+    2. Verify if the WAF blocked the request.
+
+    3. If not blocked, check backend logs for file access.
+
+    4. Block the IP.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

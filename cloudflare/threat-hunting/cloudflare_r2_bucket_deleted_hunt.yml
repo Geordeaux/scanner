@@ -1,0 +1,9 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Cloudflare R2 Bucket Deleted
+description: |-
+  Detects the deletion of a Cloudflare R2 storage bucket.
+query_text: "%ingest.source_type:cloudflare\nAction:r2_bucket_delete "
+tags:
+- cloudflare
+- r2
+- availability

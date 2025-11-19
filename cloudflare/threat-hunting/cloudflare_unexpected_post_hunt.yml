@@ -1,0 +1,18 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Cloudflare Unexpected POST Requests
+description: |-
+  Detect POST or PUT requests to URIs that typically don't accept
+  POST/PUT requests, which may indicate file upload attempts, web
+  shell activity, or other malicious file operations.
+query_text: |-
+  %ingest.source_type:cloudflare
+  ClientRequestMethod:(POST PUT)
+  ClientRequestURI:(.jpg .jpeg .gif .png .icon .ico .xml .swf .svg .ppt .pttx .doc .docx .rtf .pdf .tif .zip .mov)
+  | groupbycount(ClientIP)
+  | where @q.count > 0
+tags:
+- tactics.ta0003.persistence
+- tactics.ta0011.command_and_control
+- techniques.t1505.server_software_component
+- techniques.t1071.application_layer_protocol
+- source.cloudflare

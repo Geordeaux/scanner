@@ -1,0 +1,27 @@
+name: AWS VPC Flow Logs Deleted Playbook
+description: Detect deletion of AWS VPC Flow Logs. This may indicate an attempt to
+  tamper with or disable network logging and monitoring, impairing defensive mechanisms
+  and post-incident investigation.
+severity: Low
+steps:
+- name: Investigation
+  description: 'Monitor AWS CloudTrail management events from `ec2.amazonaws.com`
+    with:
+
+    * `eventName="DeleteFlowLogs"`
+
+
+    Focus on successful deletions of flow logs associated with production VPCs, internet-facing
+    workloads, or security monitoring.'
+- name: Triage
+  description: '* Identify which VPCs, subnets, or network interfaces were covered
+    by the deleted flow logs.
+
+    * Confirm whether the deletion aligns with an approved change request or maintenance
+    activity.
+
+    * Review recent activity from the same principal and source IP for related attempts
+    to weaken logging (e.g. CloudTrail, CloudWatch Logs, Config).
+
+    * If unapproved, treat as a high-priority event: preserve evidence, assess the
+    impact on network visibility, and reinstate required VPC Flow Logs.'

@@ -1,0 +1,25 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: GCP Workload Identity Pool Disabled Or Deleted
+description: |-
+  Detect when GCP Workload Identity Pools are disabled or deleted. Disabling or deleting a pool will prevent any connected identities from accessing GCP resources.
+query_text: |-
+  %ingest.source_type:gcp_audit_log
+  metadata.log_type:GCP_CLOUDAUDIT
+  metadata.product_event_type:(google.iam.v1.WorkloadIdentityPools.DeleteWorkloadIdentityPool google.iam.v1.WorkloadIdentityPools.UpdateWorkloadIdentityPool)
+  target.application:iam.googleapis.com
+  security_result.action:ALLOW
+  | groupbycount(
+      metadata.product_event_type,
+      target.resource.name,
+      principal.user.userid
+    )
+  | where @q.count > 0
+tags:
+- gcp_audit_log
+- workload_identity_pool
+- iam
+- techniques.t1078.valid_accounts
+- tactics.ta0005.defense_evasion
+- tactics.ta0003.persistence
+- tactics.ta0004.privilege_escalation
+- tactics.ta0001.initial_access

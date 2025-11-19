@@ -1,0 +1,24 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Cloudflare Under Attack Mode Disabled
+description: |-
+  ## Goal
+  Detects when 'Under Attack Mode' is disabled.
+
+  ## Strategy
+  Monitor Cloudflare Audit Logs. If this mode was enabled during an active attack, disabling it prematurely could expose the origin.
+
+  ## Triage and Response
+  1. Confirm if the attack has subsided.
+  2. If not, re-enable Under Attack Mode.
+enabled: true
+severity: Medium
+query_text: "%ingest.source_type:cloudflare\nAction:zone_setting_edit\nNewValue:\"medium\" OR NewValue:\"high\"\nOldValue:\"under_attack\" "
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- medium_severity_alerts
+tags:
+- cloudflare
+- configuration
+- ddos

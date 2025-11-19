@@ -1,0 +1,14 @@
+name: AWS MultiFactor Authentication Disabled Playbook
+description: Detects attempts to disable multi-factor authentication (MFA) for an
+  AWS IAM user, which could indicate an unauthorized attempt to bypass MFA.
+severity: Medium
+steps:
+- name: Investigation
+  description: Monitor AWS CloudTrail events for actions that disable MFA, such as
+    `DeleteVirtualMFADevice` and `DeactivateMFADevice`. If these actions are detected
+    within a one-hour window, trigger an alert.
+- name: Triage
+  description: Investigate further to confirm whether the actions were authorized
+    by checking with relevant stakeholders. Verify that no unauthorized changes have
+    been made to IAM user settings. Consider reviewing access controls and logging
+    to ensure no unauthorized modifications have occurred.

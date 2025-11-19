@@ -1,0 +1,24 @@
+name: Google Compute Engine firewall rule modified Playbook
+description: Detect when a firewall rule is created, modified, or deleted.
+severity: Informational
+steps:
+- name: Investigation
+  description: 'Monitor Google Compute Engine activity audit logs for the following methods:
+
+
+    * delete a firewall
+
+    * insert a firewall
+
+    * patch a firewall
+
+
+    ## Triage and response
+
+    1. Review the log and role to ensure proper permissions.
+
+    2. Check the users associated with the role to confirm they should have those permissions.'
+- name: Triage
+  description: ''
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

@@ -1,0 +1,25 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Google Workspace Group Settings Modified to Public
+description: |-
+  ## Goal
+  Detects when a Google Group's settings are changed to allow public access.
+
+  ## Strategy
+  Monitor Google Workspace Groups audit logs for changes that allow "Public" or "External" access to group content or membership.
+
+  ## Triage and Response
+  1. Identify the admin and the group.
+  2. Verify if public access is intended.
+  3. Revert settings immediately if unauthorized.
+enabled: true
+severity: High
+query_text: "%ingest.source_type:google_workspace\naction:change_group_setting "
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- high_severity_alerts
+tags:
+- google_workspace
+- groups
+- exposure

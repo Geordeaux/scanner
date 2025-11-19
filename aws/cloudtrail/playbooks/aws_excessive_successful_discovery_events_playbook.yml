@@ -1,0 +1,28 @@
+name: AWS Excessive Successful Discovery Events Playbook
+description: "Detects excessive successful discovery-style API calls (for example,\
+  \ `Describe`, `List`, `Get`) from a single IAM user within a short timeframe. This\
+  \ can indicate reconnaissance as part of an attacker\u2019s attempt to understand\
+  \ the cloud environment."
+severity: Low
+steps:
+- name: Investigation
+  description: 'Monitor AWS CloudTrail management events and identify IAM users that
+    perform a burst of discovery-related API calls:
+
+    * API operation name starting with `Describe`, `List`, or `Get`.
+
+    * Requests that complete successfully (no `errorCode`).
+
+
+    Over a five-minute window, count events per IAM user and alert when the number
+    of successful discovery calls exceeds a chosen threshold (for example, 10+).'
+- name: Triage
+  description: "* Identify the IAM user, originating IP, and user agent.\n* Determine\
+    \ whether the behaviour aligns with:\n  * Known automation (for example, inventory\
+    \ jobs, backup tooling, or deployment scripts), or\n  * Anomalous, ad-hoc activity\
+    \ from consoles or unfamiliar hosts.\n* Review recent authentication activity\
+    \ and role usage for the same identity.\n* If the activity is unapproved or unexpected:\n\
+    \  * Treat as potential reconnaissance.\n  * Review additional actions performed\
+    \ by the user around the same time (for example, write or privilege-escalation\
+    \ APIs).\n  * Consider temporary access restriction and escalate per your incident\
+    \ response process."

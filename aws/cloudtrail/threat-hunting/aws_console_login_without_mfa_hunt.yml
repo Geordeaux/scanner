@@ -1,0 +1,25 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS Console Login Without MFA
+description: |-
+  Detect AWS Management Console logins where Multi-Factor Authentication (MFA) was not used. This highlights interactive access relying solely on username and password, increasing the risk of unauthorised access.
+query_text: |-
+  %ingest.source_type="aws:cloudtrail"
+  eventSource="signin.amazonaws.com"
+  eventName="ConsoleLogin"
+  responseElements.ConsoleLogin="Success"
+  additionalEventData.MFAUsed="No"
+  | groupbycount(
+  recipientAccountId,
+  userIdentity.type,
+  userIdentity.arn,
+  sourceIPAddress
+  )
+  | where @q.count > 0
+tags:
+- source.aws
+- domain.cloud
+- domain.authn
+- tactics.ta0001.initial_access
+- techniques.t1078.004.valid_accounts_cloud_accounts
+- use_case.aws_authentication
+- use_case.mfa_hardening

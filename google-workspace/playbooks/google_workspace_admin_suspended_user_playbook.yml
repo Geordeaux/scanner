@@ -1,0 +1,14 @@
+name: Google Workspace Admin Suspended User Playbook
+description: Detects when an administrator suspends a user account.
+severity: Medium
+steps:
+- name: Investigation
+  description: Monitor Google Workspace Admin audit logs for `suspend_user`. This rule helps track administrative actions and potential insider threats or response actions.
+- name: Triage
+  description: '1. Identify the admin and the suspended user.
+
+    2. Verify the reason for suspension.
+
+    3. Ensure proper documentation of the incident.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

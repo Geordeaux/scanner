@@ -1,0 +1,55 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+
+name: GCP Storage Bucket Opened To Public
+description: |-
+  ## Goal
+  Detect when Google Cloud Storage buckets are opened to the public by adding `allUsers` or `allAuthenticatedUsers` to the access policy. This behavior may indicate a misconfiguration that could lead to unauthorized data exposure.
+
+  ## Strategy
+  Monitor Cloud Audit Logs for events where the `storage.setIamPermissions` method is called on Google Cloud Storage buckets and the access policy includes `allUsers` or `allAuthenticatedUsers`. If such events are detected, trigger an alert to investigate potential misconfigurations.
+
+  ## Triage and Response
+  Investigate the detected use cases to determine if they were authorized. Review the user and IP addresses involved to ensure that no unauthorized access has occurred. Verify the bucket's permissions to confirm whether the change was intentional or accidental. Monitor for further suspicious activities involving this storage bucket.
+
+enabled: true
+severity: High
+
+query_text: |-
+  %ingest.source_type:gcp
+  protoPayload.methodName:storage.setIamPermissions
+  protoPayload.request.policy.bindings.members:(allUsers allAuthenticatedUsers)
+  (not protoPayload.status.message:ERROR)
+  | groupbycount(project_id, bucket_name, protoPayload.authenticationInfo.principalEmail)
+  | where @q.count > 0
+
+time_range_s: 3600
+run_frequency_s: 300
+
+event_sink_keys:
+  - gcp_storage_bucket_opened_to_public_alerts
+
+tags:
+  - source.gcp
+  - gcp
+  - gcp_audit
+  - storage_bucket_opened_to_public
+  - techniques.t1562.impair_defenses
+  - tactics.ta0005.defense_evasion
+
+# Additional context fields for alert graph
+context_fields:
+  - project_id
+  - bucket_name
+  - protoPayload.authenticationInfo.principalEmail
+  - protoPayload.request.policy.bindings.role
+  - protoPayload.request.policy.bindings.members
+  - protoPayload.requestMetadata.callerIp
+  - protoPayload.requestMetadata.callerIp_geo.country
+  - protoPayload.requestMetadata.callerIp_geo.state
+  - protoPayload.requestMetadata.callerSuppliedUserAgent
+  - protoPayload.serviceName
+  - protoPayload.resourceName
+
+# Outcome variables
+risk_score: 75
+event_count: "@q.count"

@@ -1,0 +1,25 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Cloudflare High Request Rate to Sensitive Endpoint
+description: |-
+  ## Goal
+  Detects high request rates to sensitive endpoints (e.g., admin panels).
+
+  ## Strategy
+  Monitor for spikes in traffic to paths like `/admin`, `/api/admin`, etc.
+
+  ## Triage and Response
+  1. Identify the source IP and path.
+  2. Verify if the traffic is legitimate (e.g., admin activity).
+  3. If not, block the IP and investigate intent.
+enabled: true
+severity: High
+query_text: "%ingest.source_type:cloudflare\nClientRequestPath:\"/admin*\" OR ClientRequestPath:\"/dashboard*\"\n| count(ClientIP) > 100 "
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- high_severity_alerts
+tags:
+- cloudflare
+- waf
+- brute_force

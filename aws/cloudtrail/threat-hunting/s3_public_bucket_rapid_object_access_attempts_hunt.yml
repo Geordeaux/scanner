@@ -1,0 +1,16 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: S3 Public Bucket Rapid Object Access Attempts
+description: |-
+  Identifies when an anonymous user makes multiple `GetObject` requests to a public S3 bucket.
+  Rapid access may indicate data exfiltration or reconnaissance.
+query_text: |-
+  %ingest.source_type="aws:cloudtrail"
+  eventName="GetObject"
+  eventSource="s3.amazonaws.com"
+  userIdentity.type="Anonymous"
+  | stats count() as access_count by requestParameters.bucketName
+  | where access_count >= 15
+tags:
+- tactics.ta0010.exfiltration
+- techniques.t1530.data_from_cloud_storage_object
+- source.aws.cloudtrail

@@ -1,0 +1,25 @@
+name: AWS EC2 High Number Of API Calls Playbook
+description: Detects when an EC2 instance makes a high number of API calls within
+  a short period. This can indicate reconnaissance activity, aggressive automation,
+  or misconfigured tooling.
+severity: Low
+steps:
+- name: Investigation
+  description: 'Monitor AWS CloudTrail management events where the caller is an EC2
+    instance role (via an assumed role session whose principalId includes an EC2 instance
+    ID).
+
+    Aggregate events over a five-minute window and identify instances whose API call
+    volume exceeds a defined threshold (for example, more than 50 API calls per instance
+    per source IP in five minutes).'
+- name: Triage
+  description: "* Confirm whether the instance and role are associated with a known\
+    \ application or scheduled job.\n* Validate that the observed API usage pattern\
+    \ matches the expected behaviour for that workload (for example, known inventory\
+    \ sync, backup, or discovery jobs).\n* Review recent changes (deployments, configuration\
+    \ changes, new tooling) that might explain the spike.\n* If activity is unexpected,\
+    \ treat as potential reconnaissance or compromised instance:\n  * Capture additional\
+    \ telemetry (CloudTrail, VPC Flow Logs, EDR if present).\n  * Assess the blast\
+    \ radius (what APIs and resources are being accessed).\n  * Consider containment\
+    \ (instance quarantine, role credential revocation, or security group tightening)\
+    \ in line with your incident response plan."

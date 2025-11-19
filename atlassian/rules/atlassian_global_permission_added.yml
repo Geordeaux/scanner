@@ -1,0 +1,32 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Atlassian Jira Global Permission Added
+description: |-
+  ## Goal
+  Detect when global permission is added in Atlassian Jira.
+  This can indicate potential privilege escalation or unauthorized
+  administrative changes.
+
+  ## Strategy
+  1. Determine if this change was authorized via change management.
+  2. Verify the necessity of the permission.
+
+  ## Triage and Response
+  1. Identify the user (`attributes.actor.email`) who added the permission.
+  2. Identify the permission added and the target group/user.
+  1. If unauthorized, revert the permission change.
+  2. Investigate the actor's account.
+enabled: true
+severity: Medium
+query_text: |-
+  %ingest.source_type:atlassian
+  message.content:'Global permission added'
+  | groupbycount(attributes.actor.email)
+  | where @q.count > 0
+time_range_s: 300
+run_frequency_s: 60
+event_sink_keys:
+- medium_severity_alerts
+tags:
+- tactics.ta0004.privilege_escalation
+- techniques.t1078.valid_accounts
+- source.atlassian

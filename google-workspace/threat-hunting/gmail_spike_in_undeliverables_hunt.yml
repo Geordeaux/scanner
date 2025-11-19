@@ -1,0 +1,9 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Gmail Spike In Undeliverables
+description: |-
+  Detects a spike in undeliverable emails, this can be an early indication of a targeted phishing campaign or a compromised user account.
+query_text: |-
+  %ingest.source_type:google_workspace
+tags:
+- google_workspace
+- converted_yaral

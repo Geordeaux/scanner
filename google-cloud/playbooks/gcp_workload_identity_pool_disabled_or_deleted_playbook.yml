@@ -1,0 +1,16 @@
+name: GCP Workload Identity Pool Disabled Or Deleted Playbook
+description: Detect when GCP Workload Identity Pools are disabled or deleted. Disabling or deleting a pool will prevent any connected identities from accessing GCP resources.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor GCP Cloud Audit Logs for events related to deletion or modification of Workload Identity Pools. These actions can be indicative of an attempt to evade security controls, maintain persistence, escalate privileges, or gain unauthorized access.
+- name: Triage
+  description: '1. Identify who performed the action and from where (IP / geo).
+
+    2. Confirm whether the change (delete/modify/disable) was authorized and expected.
+
+    3. Review other recent actions by the same principal.
+
+    4. If suspicious, roll back the change and initiate incident response.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

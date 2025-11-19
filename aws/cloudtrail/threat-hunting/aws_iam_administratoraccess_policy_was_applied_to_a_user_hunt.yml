@@ -1,0 +1,15 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS IAM AdministratorAccess policy was applied to a user
+description: |-
+  Detect when the AdministratorAccess policy is attached to an AWS IAM user.
+query_text: |-
+  %ingest.source_type:"aws:cloudtrail"
+  eventSource:iam.amazonaws.com
+  eventName:AttachUserPolicy
+  requestParameters.policyArn:"arn:aws:iam::aws:policy/AdministratorAccess"
+  | groupbycount(userIdentity.arn)
+  | where @q.count > 0
+tags:
+- tactics.ta0004.privilege_escalation
+- techniques.t1098.account_manipulation
+- source.cloudtrail

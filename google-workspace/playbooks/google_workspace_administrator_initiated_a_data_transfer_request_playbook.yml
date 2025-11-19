@@ -1,0 +1,17 @@
+name: Google Workspace administrator initiated a data transfer request Playbook
+description: Detect when a Google Workspace administrator initiates a data transfer request.
+severity: Low
+steps:
+- name: Investigation
+  description: 'Monitor Google Workspace logs to identify when an administrator requests to transfer ownership of a user''s data to another user within the same organization. This request typically occurs when a user has left the organization, but it could also be misused by an attacker to exfiltrate data to a compromised account.
+
+
+    ## Triage and response
+
+    1. Assess whether there is a legitimate reason for the data transfer request.
+
+    2. If the request lacks a legitimate reason, investigate the activity of the Google Workspace administrator and the IP address that initiated the request.'
+- name: Triage
+  description: ''
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

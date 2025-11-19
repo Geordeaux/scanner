@@ -1,0 +1,26 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Cloudflare WAF Shellshock Attempt
+description: |-
+  ## Goal
+  Detects Shellshock (CVE-2014-6271) attempts blocked by Cloudflare WAF.
+
+  ## Strategy
+  Monitor Cloudflare WAF logs for Shellshock signatures in headers.
+
+  ## Triage and Response
+  1. Identify the source IP.
+  2. Confirm the block.
+  3. Ensure backend servers are patched against Shellshock.
+enabled: true
+severity: Critical
+query_text: "%ingest.source_type:cloudflare\nWAFAction:block\nRuleId:981176 "
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- critical_severity_alerts
+tags:
+- cloudflare
+- waf
+- rce
+- shellshock

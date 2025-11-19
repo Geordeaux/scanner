@@ -1,0 +1,16 @@
+name: AWS GuardDuty Unauthorized Access Malicious IP Caller Playbook
+description: Detects when an EC2 instance is communicating with a known malicious IP address.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor GuardDuty findings for `UnauthorizedAccess:EC2/MaliciousIPCaller.Custom` or `UnauthorizedAccess:EC2/MaliciousIPCaller`. These indicate that an EC2 instance is communicating with an IP address included in a threat intelligence list.
+- name: Triage
+  description: '1. Identify the instance and the malicious IP.
+
+    2. Check the direction of traffic (inbound/outbound).
+
+    3. If outbound, the instance may be compromised and calling home.
+
+    4. Isolate the instance and investigate running processes.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

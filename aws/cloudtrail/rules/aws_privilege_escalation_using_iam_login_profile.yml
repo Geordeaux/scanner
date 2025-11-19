@@ -1,0 +1,67 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: AWS Privilege Escalation Using IAM Login Profile
+enabled: true
+severity: Low
+description: |-
+  ## Goal
+  Detect when a user creates or updates a login profile for another user and then a successful AWS Console login is performed from the same IP address within a short time window. This can indicate an attempt to escalate privileges by unauthorized users.
+
+  ## Strategy
+  Monitor AWS CloudTrail events for:
+  * IAM login profile changes via `CreateLoginProfile` or `UpdateLoginProfile` from `iam.amazonaws.com`.
+  * Successful AWS Console logins via `ConsoleLogin` from `signin.amazonaws.com`.
+
+  Identify source IP addresses that perform both a login profile change and at least one successful console login in the same account within the rule time window. This heuristic indicates that the same IP both modified login profiles and logged into the console, which may represent privilege escalation using a newly enabled credential.
+
+  ## Triage and Response
+  * Confirm whether the login profile change and subsequent console login were part of an approved change (for example, a helpdesk or break-glass procedure).
+  * Validate that the actor principal is authorized to manage IAM login profiles for the affected account.
+  * Review which user(s) logged in from the same IP and whether that usage is expected (e.g. admin workstation vs. unfamiliar IP).
+  * If suspicious, revoke or rotate affected credentials, enforce MFA, and review additional activity from the same IP and principals.
+query_text: |-
+  %ingest.source_type="aws:cloudtrail"
+  eventSource:("iam.amazonaws.com" "signin.amazonaws.com")
+  (
+  (
+  eventSource:"iam.amazonaws.com"
+  eventName:("CreateLoginProfile" "UpdateLoginProfile")
+  )
+  or
+  (
+  eventSource:"signin.amazonaws.com"
+  eventName:"ConsoleLogin"
+  responseElements.ConsoleLogin:"Success"
+  )
+  )
+  not errorCode:*
+  | groupbycount(
+  recipientAccountId,
+  sourceIPAddress
+  )
+  | where @q.count > 1
+time_range_s: 3600
+run_frequency_s: 3600
+event_sink_keys:
+- low_severity_alerts
+tags:
+- source.aws
+- domain.cloud
+- domain.iam
+- tactics.ta0003.persistence
+- tactics.ta0004.privilege_escalation
+- techniques.t1136.003.cloud_account
+- use_case.aws_iam
+- use_case.privilege_escalation
+context_fields:
+- recipientAccountId
+- awsRegion
+- eventSource
+- eventName
+- eventTime
+- sourceIPAddress
+- userIdentity.type
+- userIdentity.arn
+- userIdentity.userName
+- requestParameters.userName
+- responseElements.ConsoleLogin
+- userAgent

@@ -1,0 +1,29 @@
+name: AWS API Gateway Keys Accessed Playbook
+description: Detect when AWS API Gateway keys are accessed, particularly when their
+  values are returned to the caller.
+severity: Low
+steps:
+- name: Investigation
+  description: 'Monitor AWS CloudTrail events for API Gateway management actions:
+
+    * `GetApiKey` with `requestParameters.includeValue=true`
+
+    * `GetApiKeys` with `requestParameters.includeValues=true`
+
+
+    These actions may represent:
+
+    * Legitimate operational inspection of API keys, or
+
+    * Potential attempts to retrieve API key material for misuse, abuse of rate limits,
+    or unauthorised access to protected APIs.'
+- name: Triage
+  description: '* Identify the calling principal (userIdentity.arn, source IP, user
+    agent) and confirm the activity against an approved change or operational task.
+
+    * Determine whether the retrieved key(s) are associated with sensitive or high-value
+    APIs (e.g. production, privileged admin APIs).
+
+    * If access is not clearly justified, treat as potential key exposure: rotate
+    the affected keys, review recent usage patterns, and investigate for related suspicious
+    activity.'

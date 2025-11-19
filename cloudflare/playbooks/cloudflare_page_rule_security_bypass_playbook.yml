@@ -1,0 +1,14 @@
+name: Cloudflare Page Rule Security Bypass Playbook
+description: Detects the creation or modification of a Page Rule that bypasses security controls.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor Cloudflare Audit Logs for `pagerule_create` or `pagerule_update` containing actions like `disable_security` or `disable_waf`.
+- name: Triage
+  description: '1. Identify the page rule and the user.
+
+    2. Verify if the bypass is necessary and scoped correctly.
+
+    3. If too broad, refine or remove the rule.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

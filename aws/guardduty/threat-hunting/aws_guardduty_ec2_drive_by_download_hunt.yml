@@ -1,0 +1,10 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS GuardDuty EC2 Drive-By Download
+description: |-
+  Detects traffic indicating a drive-by download attempt.
+query_text: "%ingest.source_type:aws_guardduty\nmetadata.product_event_type:\"Trojan:EC2/DriveBySourceTraffic\" "
+tags:
+- guardduty
+- aws
+- ec2
+- malware

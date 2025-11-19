@@ -1,0 +1,13 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Google Workspace accessed by Google
+description: |-
+  Create a signal when Google accesses your Google Workspace tenant using administrative tools.
+query_text: |-
+  %ingest.source_type:gsuite
+  id.applicationName:access_transparency
+  | count
+  | where @q.count > 0
+tags:
+- source.gsuite
+- techniques.t1199.trusted_relationship
+- tactics.ta0001.initial_access

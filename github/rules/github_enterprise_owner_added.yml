@@ -1,0 +1,37 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: GitHub enterprise owner added
+description: |-
+  ## Goal
+  Detect when a GitHub enterprise owner has been added.
+
+  ## Strategy
+  This rule monitors GitHub audit logs for the addition of a GitHub enterprise owner. Enterprise owners have complete control over the enterprise, including:
+
+  * Managing administrators
+  * Adding and removing organizations
+  * Removing enterprise members from all organizations
+  * Managing enterprise settings
+  * Enforcing policy across organizations
+  * Managing billing settings
+
+  Adding members to this highly privileged role should be monitored, as an attacker with unauthorized access could seek to persist by adding additional roles.
+
+  ## Triage and response
+  1. Determine if the change made by the actor is authorized.
+  2. If the change was unauthorized or unexpected, initiate the organization's incident response process and investigate.
+enabled: true
+severity: High
+query_text: |-
+  %ingest.source_type:github
+  action:business.add_admin
+  | groupbycount(actor)
+  | where @q.count > 0
+time_range_s: 300
+run_frequency_s: 60
+event_sink_keys:
+- high_severity_alerts
+tags:
+- source.github-telemetry
+- techniques.t1098.account_manipulation
+- source.github
+- tactics.ta0003.persistence

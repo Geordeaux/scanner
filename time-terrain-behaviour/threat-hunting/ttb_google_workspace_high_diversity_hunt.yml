@@ -1,0 +1,15 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: 'TTB Hunt: Google Workspace TTB High Diversity Anomaly'
+description: |-
+  Hunt for users with high diversity in Workspace Applications and Event Types.
+query_text: |-
+  %ingest.source_type="google_workspace"
+  | stats
+    distinct_count(id.applicationName) as terrain_score,
+    distinct_count(events.type) as behavior_score
+    by actor.email
+  | sort -terrain_score, -behavior_score
+tags:
+- source.google_workspace
+- ttb.anomaly
+- exfiltration

@@ -1,0 +1,9 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: GCP DNS Zone Modified
+description: |-
+  Detects modifications to Cloud DNS managed zones.
+query_text: "%ingest.source_type:google_cloud_audit\nprotoPayload.methodName:(\"dns.managedZones.update\" OR \"dns.managedZones.patch\") "
+tags:
+- google_cloud
+- network
+- impact

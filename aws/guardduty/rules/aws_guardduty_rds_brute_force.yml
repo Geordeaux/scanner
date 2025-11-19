@@ -1,0 +1,26 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: AWS GuardDuty RDS Brute Force
+description: |-
+  ## Goal
+  Detects brute force attacks against an RDS database.
+
+  ## Strategy
+  Monitor GuardDuty findings for `CredentialAccess:RDS/AnomalousBehavior.BruteForce`.
+
+  ## Triage and Response
+  1. Identify the RDS instance and the source IP.
+  2. Block the IP.
+  3. Verify if any login was successful.
+enabled: true
+severity: High
+query_text: "%ingest.source_type:aws_guardduty\nmetadata.product_event_type:\"CredentialAccess:RDS/AnomalousBehavior.BruteForce\" "
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- high_severity_alerts
+tags:
+- guardduty
+- aws
+- rds
+- brute_force

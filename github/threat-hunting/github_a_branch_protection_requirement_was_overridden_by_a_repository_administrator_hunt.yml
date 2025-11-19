@@ -1,0 +1,14 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: GitHub a branch protection requirement was overridden by a repository administrator
+description: |-
+  Detect when GitHub branch protection has been overridden by a repository administrator.
+query_text: |-
+  %ingest.source_type:github
+  action:protected_branch.policy_override
+  | groupbycount(actor)
+  | where @q.count > 0
+tags:
+- source.github-telemetry
+- source.github
+- techniques.t1562.impair_defenses
+- tactics.ta0005.defense_evasion

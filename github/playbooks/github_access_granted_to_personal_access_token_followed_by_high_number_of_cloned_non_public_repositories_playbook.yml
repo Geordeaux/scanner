@@ -1,0 +1,14 @@
+name: GitHub Access Granted To Personal Access Token Followed By High Number Of Cloned Non Public Repositories Playbook
+description: Detects when a user grants access to a GitHub Personal Access Token prior to cloning several GitHub non-public GitHub repositories. An adversary may grant access to a Personal Access Token before attempting to steal the contents of several GitHub repositories using a an automated script or offensive tool.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor GitHub audit logs for specific event types.
+- name: Triage
+  description: '1. Identify the actor and the target resource.
+
+    2. Verify if the action was authorized.
+
+    3. If unauthorized, revert the change and rotate credentials.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

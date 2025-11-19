@@ -1,0 +1,14 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS VPC Flow Log deleted
+description: |-
+  Detect when one or more AWS VPC Flow Logs are deleted.
+query_text: |-
+  %ingest.source_type:"aws:cloudtrail"
+  eventName:DeleteFlowLogs
+  eventSource:ec2.amazonaws.com
+  | groupbycount(userIdentity.arn)
+  | where @q.count > 0
+tags:
+- techniques.t1070.indicator_removal_on_host
+- source.cloudtrail
+- tactics.ta0005.defense_evasion

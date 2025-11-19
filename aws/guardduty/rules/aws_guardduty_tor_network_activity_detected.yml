@@ -1,0 +1,65 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: AWS GuardDuty Tor Network Activity Detected
+description: |-
+  ## Goal
+  Detects when Amazon GuardDuty identifies Tor network activity in an AWS account. This could indicate that an actor is using the Tor network to mask their identity, which may be used for command and control (C2) activities or other malicious purposes.
+
+  ## Strategy
+  Monitor GuardDuty findings for events related to Tor network activity (`TorIPCaller`, `TorRelay`, `TorClient`). Capture relevant details such as the principal IP, user, and location to assess potential threats.
+
+  ## Triage and Response
+  Investigate the detected Tor network activity to determine if it is benign or malicious. Review the principal IPs, users, and other details to ensure that no unauthorized access or C2 activities are occurring. Ensure that all Tor network usage is conducted in compliance with company policies.
+enabled: true
+severity: High
+priority: High
+query_text: |-
+  %ingest.source_type:aws_guardduty
+  metadata.vendor_name:AMAZON
+  metadata.product_name:"AWS GuardDuty"
+  (
+  metadata.product_event_type:/TorIPCaller/ or
+  metadata.product_event_type:/TorRelay/ or
+  metadata.product_event_type:/TorClient/
+  )
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- high_severity_alerts
+tags:
+- tor_network_activity
+- guardduty
+- aws
+- command_and_control
+context_fields:
+- principal.ip
+- principal.ip_geo_artifact.location.country_or_region
+- principal.ip_geo_artifact.location.state
+- target.resource.name
+- target.resource.product_object_id
+- security_result.summary
+- security_result.description
+- security_result.severity
+- security_result.severity_details
+- metadata.product_event_type
+mitre_attack_tactic: command_and_control
+mitre_attack_technique: proxy_multi_hop_proxy
+mitre_attack_technique_id: T1090.003
+risk_score: max(35)
+event_count: count_distinct(guardduty.metadata.id)
+principal_ip: array_distinct(guardduty.principal.ip)
+principal_ip_country: array_distinct(guardduty.principal.ip_geo_artifact.location.country_or_region)
+principal_ip_state: array_distinct(guardduty.principal.ip_geo_artifact.location.state)
+principal_user_display_name: guardduty.principal.user.user_display_name
+aws_region: guardduty.target.location.name
+target_resource_name: guardduty.target.resource.name
+target_resource_product_object_id: guardduty.target.resource.product_object_id
+security_result_summary: array_distinct(guardduty.security_result.summary)
+security_result_description: array_distinct(guardduty.security_result.description)
+security_result_severity: array_distinct(guardduty.security_result.severity)
+security_result_severity_details: array_distinct(guardduty.security_result.severity_details)
+metadata_product_event_type: array_distinct(guardduty.metadata.product_event_type)
+condition:
+- metadata.vendor_name = "AMAZON"
+- metadata.product_name = "AWS GuardDuty"
+- metadata.product_event_type =~ /TorIPCaller|TorRelay|TorClient/
+- security_result.summary != "[SAMPLE]"

@@ -1,0 +1,25 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: GitHub Webhook Created or Modified
+description: |-
+  ## Goal
+  Detects the creation or modification of a GitHub webhook.
+
+  ## Strategy
+  Monitor GitHub audit logs for `hook.create` or `hook.config_changed`. Attackers may create webhooks to exfiltrate repository events and data to external servers.
+
+  ## Triage and Response
+  1. Identify the repository and the webhook URL.
+  2. Verify if the webhook destination is authorized.
+  3. Remove the webhook immediately if unauthorized.
+enabled: true
+severity: High
+query_text: "%ingest.source_type:github\naction:hook.create OR action:hook.config_changed "
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- high_severity_alerts
+tags:
+- github
+- persistence
+- exfiltration

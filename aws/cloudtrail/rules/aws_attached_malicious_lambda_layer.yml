@@ -1,0 +1,61 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: AWS Attached Malicious Lambda Layer
+enabled: false
+description: |-
+  ## Goal
+  Detects when an user attached a Lambda layer to an existing function to override a library that is in use by the function, where their malicious code could utilize the function's IAM role for AWS API calls.
+  This would give an adversary access to the privileges associated with the Lambda service role that is attached to that function.
+
+
+  References:
+  * https://docs.aws.amazon.com/lambda/latest/dg/API_UpdateFunctionConfiguration.html
+
+  False Positives:
+  * Lambda Layer being attached may be performed by a system administrator. Verify whether the user identity, user agent, and/or hostname should be making changes in your environment.
+  * Lambda Layer being attached from unfamiliar users should be investigated. If known behavior is causing false positives, it can be exempted from the rule.
+
+  ## Strategy
+  Detects when an user attached a Lambda layer to an existing function to override a library that is in use by the function, where their malicious code could utilize the function's IAM role for AWS API calls.
+  This would give an adversary access to the privileges associated with the Lambda service role that is attached to that function.
+
+
+  References:
+  * https://docs.aws.amazon.com/lambda/latest/dg/API_UpdateFunctionConfiguration.html
+
+  False Positives:
+  * Lambda Layer being attached may be performed by a system administrator. Verify whether the user identity, user agent, and/or hostname should be making changes in your environment.
+  * Lambda Layer being attached from unfamiliar users should be investigated. If known behavior is causing false positives, it can be exempted from the rule.
+
+  ## Triage and Response
+  Investigate and remediate as appropriate.
+severity: Medium
+query_text: |-
+  %ingest.source_type="aws:cloudtrail"
+  eventSource="lambda.amazonaws.com"
+  eventName="UpdateFunctionConfiguration*"
+  userIdentity.type="IAMUser"
+  | stats
+  min(@scnr.datetime) as firstTime,
+  max(@scnr.datetime) as lastTime,
+  count() as eventCount
+  by
+  userIdentity.arn,
+  eventSource,
+  eventName,
+  awsRegion
+time_range_s: 300
+run_frequency_s: 60
+event_sink_keys:
+- medium_severity_alerts
+tags:
+- tactics.ta0003.persistence
+- tactics.ta0004.privilege_escalation
+- techniques.t1574.hijack_execution_flow
+- source.cloudtrail
+tests:
+- name: Test alert is triggered when Lambda layer attached to existing function
+  now_timestamp: '2024-08-21T00:03:00.000Z'
+  dataset_inline: '{"timestamp":"2024-08-21T00:02:30.000Z","%ingest.source_type":"aws:cloudtrail","eventSource":"lambda.amazonaws.com","eventName":"UpdateFunctionConfiguration20150331v2","userIdentity":{"arn":"arn:aws:iam::123456789012:user/JohnDoe","type":"IAMUser"},"awsRegion":"us-west-2"}
+
+    '
+  expected_detection_result: true

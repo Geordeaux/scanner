@@ -1,0 +1,32 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS ECS Task Definition That Queries The Credential Endpoint
+description: |-
+  Detects when an Elastic Container Service (ECS) Task Definition includes a command to query the credential endpoint.
+  This can indicate a potential adversary adding a backdoor to establish persistence or escalate privileges.
+
+
+  References:
+  * https://github.com/RhinoSecurityLabs/pacu/blob/866376cd711666c775bbfcde0524c817f2c5b181/pacu/modules/ecs__backdoor_task_def/main.py
+  * https://docs.aws.amazon.com/AmazonECS/latest/APIReference/API_RegisterTaskDefinition.html
+  * https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-iam-roles.html
+
+  False Positives:
+  * Task Definition being modified to request credentials from the Task Metadata Service for valid reasons
+query_text: |-
+  %ingest.source_type="aws:cloudtrail"
+  eventSource="ecs.amazonaws.com"
+  eventName=(DescribeTaskDefinition RegisterTaskDefinition RunTask)
+  requestParameters.containerDefinitions.command:'*AWS_CONTAINER_CREDENTIALS_RELATIVE_URI*'
+  | stats
+  min(@scnr.datetime) as firstTime,
+  max(@scnr.datetime) as lastTime,
+  count() as eventCount
+  by
+  userIdentity.arn,
+  eventSource,
+  eventName,
+  awsRegion
+tags:
+- tactics.ta0006.credential_access
+- techniques.t1552.unsecured_credentials
+- source.cloudtrail

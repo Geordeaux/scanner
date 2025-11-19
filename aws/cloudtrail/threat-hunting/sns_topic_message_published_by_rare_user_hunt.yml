@@ -1,0 +1,17 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: SNS Topic Message Published by Rare User
+description: |-
+  This hunting query gathers evidence of an SNS topic message published by a user who does not typically perform this action. Adversaries may publish messages to SNS topics to stage capabilities for data exfiltration or other malicious activities.
+query_text: |-
+  %ingest.source_type="aws:cloudtrail"
+  eventSource="sns.amazonaws.com"
+  eventName="Publish"
+  userIdentity.type="AssumedRole"
+  userIdentity.arn like "*:i-*"
+  | groupbycount(userIdentity.arn, requestParameters)
+  | where @q.count > 0
+tags:
+- source.aws
+- domain.cloud
+- tactics.ta0010.exfiltration
+- techniques.t1567.exfiltration_over_web_service

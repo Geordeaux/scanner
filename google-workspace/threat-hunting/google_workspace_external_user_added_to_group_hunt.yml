@@ -1,0 +1,10 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Google Workspace External User Added To Group
+description: |-
+  Identifies when an external user account is added to a group in Google Workspace. Security teams can monitor for unexpected user accounts being added to Google Workspace groups to prevent unauthorized access to data.
+query_text: |-
+  %ingest.source_type:google_workspace
+  action:ADD_GROUP_MEMBER
+tags:
+- google_workspace
+- converted_yaral

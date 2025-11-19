@@ -1,0 +1,10 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS GuardDuty IAM User Malicious IP Access
+description: |-
+  Detects AWS API calls made by an IAM user from a known malicious IP address.
+query_text: "%ingest.source_type:aws_guardduty\nmetadata.product_event_type:\"Recon:IAMUser/MaliciousIPCaller\" "
+tags:
+- guardduty
+- aws
+- iam
+- compromise

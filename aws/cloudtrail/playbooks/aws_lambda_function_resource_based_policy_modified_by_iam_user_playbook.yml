@@ -1,0 +1,18 @@
+name: AWS Lambda function resource-based policy modified by IAM user Playbook
+description: Detect when an AWS Lambda function's resource-based policy is modified
+  by an IAM user, which could indicate an attempt to maintain persistence or allow
+  invocation from an external account.
+severity: Low
+steps:
+- name: Investigation
+  description: Monitor the `AddPermission` CloudTrail API call to identify changes
+    to the AWS Lambda function's resource-based policy.
+- name: Triage
+  description: "1. Determine if the IAM user is expected to update the Lambda function\
+    \ based on the function name provided.\n2. Investigate the statement for details\
+    \ on the policy modification.\n3. If the action is legitimate, consider adding\
+    \ the user to a suppression list.\n4. If the action is unauthorized:\n   * Contact\
+    \ the IAM user to confirm if they made the API call.\n   * Check the User Investigation\
+    \ dashboard for other actions taken by the user.\n   * Check the IP Investigation\
+    \ dashboard for additional traffic from the client's IP.\n5. If an attack is suspected,\
+    \ initiate the company's incident response process and conduct further investigation."

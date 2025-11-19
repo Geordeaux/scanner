@@ -1,0 +1,9 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Cloudflare Access Application Deleted
+description: |-
+  Detects the deletion of a Cloudflare Access application.
+query_text: "%ingest.source_type:cloudflare\nAction:access_app_delete "
+tags:
+- cloudflare
+- access
+- availability

@@ -1,0 +1,9 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Google Workspace Suspicious Login from Unusual Location
+description: |-
+  Detects login attempts from unusual geographic locations.
+query_text: "%ingest.source_type:google_workspace\naction:login_success OR action:login_failure "
+tags:
+- google_workspace
+- login
+- compromise

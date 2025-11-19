@@ -1,0 +1,14 @@
+name: Cloudflare Magic Transit Prefix Withdrawal Playbook
+description: Detects when a BGP prefix is withdrawn from Magic Transit.
+severity: Critical
+steps:
+- name: Investigation
+  description: Monitor Cloudflare Audit Logs. Withdrawing a prefix stops Cloudflare from advertising it, potentially exposing the network to DDoS or hijacking.
+- name: Triage
+  description: '1. Identify the prefix and the user.
+
+    2. Verify if this was a planned maintenance.
+
+    3. Re-advertise the prefix if unauthorized.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

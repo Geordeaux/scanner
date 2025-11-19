@@ -1,0 +1,30 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: GitHub unknown user cloned private repository
+description: |-
+  ## Goal
+  Detect when an unknown actor clones a GitHub repository.
+
+  ## Strategy
+  This rule monitors GitHub audit logs for repository clones where the actor is unspecified.
+
+  ## Triage and response
+  1. Check if the IP address associated with the clone action belongs to a known corporate device.
+  2. If the action cannot be traced back to an internal user, initiate your organization's incident response process and conduct an investigation.
+enabled: true
+severity: Medium
+query_text: |-
+  %ingest.source_type:github
+  action:git.clone
+  (not repository_public:true)
+  (not actor:*)
+  | groupbycount(actor)
+  | where @q.count > 0
+time_range_s: 300
+run_frequency_s: 60
+event_sink_keys:
+- medium_severity_alerts
+tags:
+- techniques.t1567.exfiltration_over_web_service
+- source.github-telemetry
+- source.github
+- tactics.ta0010.exfiltration

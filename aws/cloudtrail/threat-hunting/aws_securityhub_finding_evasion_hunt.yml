@@ -1,0 +1,33 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS SecurityHub Findings Evasion
+description: |-
+  Detects the modification of the findings on SecurityHub.
+
+  References:
+  * https://docs.aws.amazon.com/cli/latest/reference/securityhub/
+
+  False Positives:
+  * System or Network administrator behaviors
+  * DEV, UAT, SAT environment. You should apply this rule with PROD environment only.
+query_text: |-
+  %ingest.source_type="aws:cloudtrail"
+  eventSource="securityhub.amazonaws.com"
+  eventName=(
+  BatchUpdateFindings
+  DeleteInsight
+  UpdateFindings
+  UpdateInsight
+  )
+  | stats
+  min(@scnr.datetime) as firstTime,
+  max(@scnr.datetime) as lastTime,
+  count() as eventCount
+  by
+  userIdentity.arn,
+  eventSource,
+  eventName,
+  awsRegion
+tags:
+- source.cloudtrail
+- tactics.ta0005.defense_evasion
+- techniques.t1562.impair_defenses

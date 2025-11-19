@@ -1,0 +1,11 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS GuardDuty Unauthorized Access Malicious IP Caller
+description: |-
+  Detects when an EC2 instance is communicating with a known malicious IP address.
+query_text: |-
+  %ingest.source_type:aws_guardduty
+  metadata.product_event_type:/UnauthorizedAccess:EC2\/MaliciousIPCaller/
+tags:
+- guardduty
+- aws
+- compromise

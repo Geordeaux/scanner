@@ -1,0 +1,10 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: GitHub User Blocked From Accessing Organization Repositories
+description: |-
+  Detects when a user is blocked from accessing repositories within a GitHub organization.
+query_text: |-
+  %ingest.source_type:github
+  action:org.block_user
+tags:
+- github
+- converted_yaral

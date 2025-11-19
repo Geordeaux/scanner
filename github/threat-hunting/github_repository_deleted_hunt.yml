@@ -1,0 +1,9 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: GitHub Repository Deleted
+description: |-
+  Detects the deletion of a GitHub repository.
+query_text: "%ingest.source_type:github\naction:repo.destroy "
+tags:
+- github
+- repository
+- availability

@@ -1,0 +1,20 @@
+name: Google Cloud logging sink modified Playbook
+description: Detect changes to Google Cloud logging sinks that may prevent audit logs from being sent.
+severity: Informational
+steps:
+- name: Investigation
+  description: 'Monitor Google Cloud admin activity audit logs for the following actions:
+
+
+    * Update sink
+
+    * Delete sink
+
+
+    ## Triage and response
+
+    Review the sink to ensure it is properly configured.'
+- name: Triage
+  description: ''
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

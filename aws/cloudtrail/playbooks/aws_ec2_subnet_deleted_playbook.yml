@@ -1,0 +1,14 @@
+name: AWS EC2 subnet deleted Playbook
+description: Detect when an attacker is destroying an EC2 subnet.
+severity: Informational
+steps:
+- name: Investigation
+  description: 'Monitor the API call to detect if an attacker is deleting an EC2 subnet.
+
+
+    * DeleteSubnet'
+- name: Triage
+  description: "1. Determine if the user should be deleting EC2 subnets.\n2. Contact\
+    \ the user to confirm if they intended to make this API call.\n3. If the user\
+    \ did not make the API call:\n   * Rotate the credentials.\n   * Investigate if\
+    \ the same credentials made other unauthorized API calls."

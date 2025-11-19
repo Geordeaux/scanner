@@ -1,0 +1,27 @@
+name: AWS GuardDuty Publishing Destination Deleted Playbook
+description: Detects when an Amazon GuardDuty detector's publishing destination is
+  deleted. This prevents exporting of GuardDuty findings and may indicate an attempt
+  to impair defences by disabling downstream monitoring, alerting, or archival.
+severity: High
+steps:
+- name: Investigation
+  description: 'Monitor AWS CloudTrail management events from `guardduty.amazonaws.com`
+    and alert on:
+
+    * `DeletePublishingDestination` events for any GuardDuty detector.
+
+
+    These actions should be rare, tightly controlled, and usually associated with
+    planned changes to central logging or SIEM integrations. Any unplanned change
+    warrants immediate investigation.'
+- name: Triage
+  description: "* Identify who initiated the change (IAM user or role), from where\
+    \ (IP, user agent), and in which account and region.\n* Confirm there is an approved\
+    \ change, maintenance window, or documented migration that explains deletion of\
+    \ the publishing destination.\n* If there is no valid justification:\n  * Treat\
+    \ as a high-severity incident (potential defence evasion / logging impairment).\n\
+    \  * Confirm whether GuardDuty findings are still being exported elsewhere (S3,\
+    \ EventBridge, SIEM).\n  * Recreate or restore the publishing destination as appropriate.\n\
+    \  * Review recent CloudTrail activity for the same principal and account (especially\
+    \ GuardDuty, CloudTrail, Config, IAM, logging, and network controls).\n  * Escalate\
+    \ according to the incident response process."

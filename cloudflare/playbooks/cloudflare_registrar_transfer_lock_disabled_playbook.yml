@@ -1,0 +1,14 @@
+name: Cloudflare Registrar Transfer Lock Disabled Playbook
+description: Detects when the domain transfer lock is disabled.
+severity: Critical
+steps:
+- name: Investigation
+  description: Monitor Cloudflare Audit Logs. Disabling the lock allows the domain to be transferred to another registrar (hijacking).
+- name: Triage
+  description: '1. Identify the domain and the user.
+
+    2. Re-enable the lock immediately.
+
+    3. Investigate if a transfer code was requested.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

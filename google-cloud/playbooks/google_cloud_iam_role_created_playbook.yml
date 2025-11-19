@@ -1,0 +1,20 @@
+name: Google Cloud IAM role created Playbook
+description: Detect when a Google Cloud IAM role is created.
+severity: Informational
+steps:
+- name: Investigation
+  description: 'Monitor Google Cloud IAM activity audit logs for the invocation of the method:
+
+
+    * `google.iam.admin.v1.CreateRole`
+
+
+    ## Triage and response
+
+    1. Investigate the user who created the IAM role and ensure the permissions in the response are scoped properly.
+
+    2. Review the users associated with the role to ensure they should have the attached permissions.'
+- name: Triage
+  description: ''
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

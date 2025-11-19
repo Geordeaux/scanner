@@ -1,0 +1,10 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS GuardDuty IAM User Network Permissions
+description: |-
+  Detects when an IAM user modifies network permissions to potentially allow unauthorized access.
+query_text: "%ingest.source_type:aws_guardduty\nmetadata.product_event_type:\"Persistence:IAMUser/NetworkPermissions\" "
+tags:
+- guardduty
+- aws
+- iam
+- persistence

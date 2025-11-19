@@ -1,0 +1,11 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS GuardDuty EKS Anonymous Access Granted
+description: |-
+  Detects when anonymous access is granted to the Kubernetes API server.
+query_text: "%ingest.source_type:aws_guardduty\nmetadata.product_event_type:\"Policy:Kubernetes/AnonymousAccessGranted\" "
+tags:
+- guardduty
+- aws
+- eks
+- kubernetes
+- misconfiguration

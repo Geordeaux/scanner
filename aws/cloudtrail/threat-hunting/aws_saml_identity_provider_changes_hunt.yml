@@ -1,0 +1,32 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS SAML Identity Provider Changes
+description: |-
+  Detect create, update, or delete events of a SAML provider in AWS. These actions can indicate potential security issues related to unauthorized access and manipulation of authentication mechanisms.
+query_text: |-
+  %ingest.source_type="aws:cloudtrail"
+  eventSource:"iam.amazonaws.com"
+  eventName:(
+  CreateSAMLProvider
+  UpdateSAMLProvider
+  DeleteSAMLProvider
+  )
+  not errorCode:*
+  | groupbycount(
+  recipientAccountId,
+  userIdentity.arn,
+  awsRegion,
+  eventName
+  )
+  | where @q.count > 0
+tags:
+- source.aws
+- domain.cloud
+- domain.iam
+- domain.auth
+- tactics.ta0001.initial_access
+- tactics.ta0003.persistence
+- tactics.ta0004.privilege_escalation
+- tactics.ta0005.defense_evasion
+- techniques.t1078.valid_accounts
+- use_case.aws_iam
+- use_case.saml_idp

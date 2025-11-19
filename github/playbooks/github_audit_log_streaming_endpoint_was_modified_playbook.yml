@@ -1,0 +1,18 @@
+name: GitHub audit log streaming endpoint was modified Playbook
+description: Detect modifications to GitHub audit log streaming settings.
+severity: Medium
+steps:
+- name: Investigation
+  description: 'This rule monitors changes to GitHub audit log streaming settings, as alterations could degrade an organization''s security posture by disrupting the flow of audit logs into centralized storage.
+
+
+    ## Triage and response
+
+
+    1. Determine if the change made by the actor is authorized.
+
+    2. If the change was not authorized or was unexpected, initiate the organization''s incident response process and conduct an investigation.'
+- name: Triage
+  description: ''
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

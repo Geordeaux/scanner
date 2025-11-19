@@ -1,0 +1,13 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Google Cloud IAM role created
+description: |-
+  Detect when a Google Cloud IAM role is created.
+query_text: |-
+  %ingest.source_type:gcp
+  protoPayload.methodName:google.iam.admin.v1.CreateRole
+  | groupbycount(protoPayload.authenticationInfo.principalEmail)
+  | where @q.count > 0
+tags:
+- source.gcp
+- techniques.t1098.account_manipulation
+- tactics.ta0003.persistence

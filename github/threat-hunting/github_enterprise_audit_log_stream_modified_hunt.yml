@@ -1,0 +1,10 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: GitHub Enterprise Audit Log Stream Modified
+description: |-
+  Detects when a GitHub audit log stream is modified (e.g. paused, enabled, or disabled). An adversary may attempt to interrupt audit logging to erase their tracks.
+query_text: |-
+  %ingest.source_type:github
+  action:audit_log_streaming.update
+tags:
+- github
+- converted_yaral

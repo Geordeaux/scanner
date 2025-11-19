@@ -1,0 +1,61 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+
+name: GCP Identity Low And Medium Severity Alert Escalation
+description: |-
+  ## Goal
+  Detect when a Google Cloud identity experiences a low severity event followed by a medium severity event within 24 hours. This can indicate potential security escalation attempts, such as an attacker first probing the system and then escalating their access.
+
+  ## Strategy
+  Monitor Security Command Center Threat logs for sequences of events where a user triggers both low and medium severity alerts within a 24-hour window. Capture relevant details such as the principal IP, user, and event timestamps to assess potential threats. Set a high risk score to indicate the severity of this event.
+
+  ## Triage and Response
+  Investigate the detected sequence of events to determine if they were authorized. Review the principal IPs, users, and other details to ensure that no unauthorized actions have been taken. Ensure that all identities are compliant with company policies and monitor for further suspicious activities.
+
+enabled: true
+severity: High
+
+query_text: |-
+  %ingest.source_type:gcp_scc_threat
+  metadata.product_name:"Security Command Center"
+  security_result.severity:(LOW MEDIUM)
+  | groupbycount(principal.user.email_addresses, security_result.severity)
+  | where @q.count > 1
+
+time_range_s: 86400   # 24 hours
+run_frequency_s: 300
+
+event_sink_keys:
+  - high_severity_alerts
+
+tags:
+  - source.gcp
+  - gcp_scc_threat
+  - gcp
+  - identity_alert_escalation
+  - techniques.t1078.valid_accounts
+  - tactics.ta0001.initial_access
+  - tactics.ta0003.persistence
+  - tactics.ta0004.privilege_escalation
+  - tactics.ta0005.defense_evasion
+
+# Additional context fields for alert graph
+context_fields:
+  - security_result.category
+  - security_result.category_details
+  - security_result.summary
+  - principal.user.userid
+  - principal.user.display_name
+  - principal.ip_geo_artifact.location.country_or_region
+  - principal.ip_geo_artifact.location.state
+
+# Outcome variables
+risk_score: 80
+
+event_count: count_distinct(gcp.metadata.id)
+security_category: array_distinct(gcp.security_result.category)
+security_category_details: array_distinct(gcp.security_result.category_details)
+security_summary: array_distinct(gcp.security_result.summary)
+affected_identity: array_distinct(gcp.principal.user.userid)
+principal_user_display_name: array_distinct(gcp.principal.user.display_name)
+principal_ip_country: array_distinct(gcp.principal.ip_geo_artifact.location.country_or_region)
+principal_ip_state: array_distinct(gcp.principal.ip_geo_artifact.location.state)

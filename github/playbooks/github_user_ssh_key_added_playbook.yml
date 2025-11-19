@@ -1,0 +1,14 @@
+name: GitHub User SSH Key Added Playbook
+description: Detects when an SSH key is added to a user account.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor GitHub audit logs for `public_key.create`. Adding an SSH key allows access to all repositories the user has permissions for.
+- name: Triage
+  description: '1. Identify the user and the key fingerprint.
+
+    2. Verify if the user added this key from a known device.
+
+    3. Revoke the key immediately if unauthorized.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

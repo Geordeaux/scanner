@@ -1,0 +1,14 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: An AWS account attempted to leave the AWS Organization
+description: |-
+  Detect an AWS account attempting to leave an AWS organization.
+query_text: |-
+  %ingest.source_type:"aws:cloudtrail"
+  eventName:LeaveOrganization
+  eventSource:organizations.amazonaws.com
+  | groupbycount(userIdentity.arn)
+  | where @q.count > 0
+tags:
+- source.cloudtrail
+- techniques.t1562.impair_defenses
+- tactics.ta0005.defense_evasion

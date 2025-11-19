@@ -1,0 +1,30 @@
+name: AWS EFS Fileshare Mount Modified or Deleted Playbook
+description: 'Detects when a EFS Fileshare Mount is modified or deleted. An adversary
+  breaking any file system using the mount target that is being deleted, which might
+  disrupt instances or applications using those mounts.
+
+
+  References:
+
+  * https://docs.aws.amazon.com/efs/latest/ug/API_DeleteMountTarget.html
+
+
+  False Positives:
+
+  * Unknown'
+severity: Medium
+steps:
+- name: Investigation
+  description: 'Detects when a EFS Fileshare Mount is modified or deleted. An adversary
+    breaking any file system using the mount target that is being deleted, which might
+    disrupt instances or applications using those mounts.
+
+
+    References:
+
+    * https://docs.aws.amazon.com/efs/latest/ug/API_DeleteMountTarget.html
+
+
+    False Positives:
+
+    * Unknown'

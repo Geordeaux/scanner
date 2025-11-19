@@ -1,0 +1,10 @@
+name: AWS GuardDuty Tor Network Activity Detected Playbook
+description: Detects when Amazon GuardDuty identifies Tor network activity in an AWS account. This could indicate that an actor is using the Tor network to mask their identity, which may be used for command and control (C2) activities or other malicious purposes.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor GuardDuty findings for events related to Tor network activity (`TorIPCaller`, `TorRelay`, `TorClient`). Capture relevant details such as the principal IP, user, and location to assess potential threats.
+- name: Triage
+  description: Investigate the detected Tor network activity to determine if it is benign or malicious. Review the principal IPs, users, and other details to ensure that no unauthorized access or C2 activities are occurring. Ensure that all Tor network usage is conducted in compliance with company policies.
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

@@ -1,0 +1,9 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Cloudflare Spectrum Application Deleted
+description: |-
+  Detects the deletion of a Cloudflare Spectrum application.
+query_text: "%ingest.source_type:cloudflare\nAction:spectrum_app_delete "
+tags:
+- cloudflare
+- spectrum
+- availability

@@ -1,0 +1,24 @@
+name: AWS Unusual Number Of Failed Authentication Attempts From The Same IP Playbook
+description: Detect when there are an unusual number (for example, more than 5) of
+  failed authentication attempts from the same IP address for valid users within a
+  5-minute window. This can indicate a brute force attack or credential stuffing attempt.
+severity: Medium
+steps:
+- name: Investigation
+  description: Monitor AWS CloudTrail sign-in events from `signin.amazonaws.com` where
+    `eventName=ConsoleLogin` and the result is a failure. Exclude failures where no
+    username is present (for example, `No username found in supplied account`) to
+    focus on valid users. Aggregate these events over a 5-minute window and flag IP
+    addresses with more than 5 failed attempts.
+- name: Triage
+  description: '* Confirm whether the source IP is expected for the affected users
+    (VPN, office ranges, etc.).
+
+    * Check whether any subsequent successful logins occurred from the same IP or
+    for the same users.
+
+    * If suspicious, temporarily block or rate-limit the source IP, and consider enforcing
+    MFA or password resets for affected accounts.
+
+    * Review other activity from the IP in CloudTrail, WAF, or other telemetry to
+    identify broader malicious behavior.'

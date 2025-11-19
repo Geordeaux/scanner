@@ -1,0 +1,13 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Google Workspace user forwarding email out of non Google Workspace domain
+description: |-
+  Create a signal when Google Workspace detects a user setting up mail forwarding to a non-Google Workspace domain.
+query_text: |-
+  %ingest.source_type:gsuite
+  event.name:email_forwarding_out_of_domain
+  | groupbycount(actor.email)
+  | where @q.count > 0
+tags:
+- source.gsuite
+- tactics.ta0009.collection
+- techniques.t1114.email_collection

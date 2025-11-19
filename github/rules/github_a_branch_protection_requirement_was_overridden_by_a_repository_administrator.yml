@@ -1,0 +1,28 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: GitHub a branch protection requirement was overridden by a repository administrator
+description: |-
+  ## Goal
+  Detect when GitHub branch protection has been overridden by a repository administrator.
+
+  ## Strategy
+  This rule monitors GitHub audit logs for instances when branch protection is overridden by a repository administrator. By default, branch protection rules do not apply to users with administrative permissions or those with roles allowing "bypass branch protections." Overriding this protection could weaken an organization's security posture.
+
+  ## Triage and response
+  1. Determine if the change made by the actor is authorized.
+  2. If the change was unauthorized or unexpected, initiate your organization's incident response process and investigate.
+enabled: true
+severity: Low
+query_text: |-
+  %ingest.source_type:github
+  action:protected_branch.policy_override
+  | groupbycount(actor)
+  | where @q.count > 0
+time_range_s: 300
+run_frequency_s: 60
+event_sink_keys:
+- low_severity_alerts
+tags:
+- source.github-telemetry
+- source.github
+- techniques.t1562.impair_defenses
+- tactics.ta0005.defense_evasion

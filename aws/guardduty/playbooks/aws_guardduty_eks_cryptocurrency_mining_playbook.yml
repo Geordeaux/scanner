@@ -1,0 +1,14 @@
+name: AWS GuardDuty EKS Cryptocurrency Mining Playbook
+description: Detects cryptocurrency mining activity within an EKS cluster.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor GuardDuty findings for `Impact:Kubernetes/BitcoinTool.B` or similar crypto-mining signatures.
+- name: Triage
+  description: '1. Identify the pod consuming high resources.
+
+    2. Terminate the pod.
+
+    3. Investigate how the mining software was deployed (compromised image, RCE).'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

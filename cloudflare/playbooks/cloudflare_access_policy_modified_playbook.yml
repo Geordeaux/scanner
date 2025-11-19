@@ -1,0 +1,14 @@
+name: Cloudflare Access Policy Modified Playbook
+description: Detects changes to Cloudflare Access policies (Zero Trust).
+severity: High
+steps:
+- name: Investigation
+  description: Monitor Cloudflare Audit Logs for `access_policy_update`. Changes here can allow unauthorized users to access internal applications.
+- name: Triage
+  description: '1. Identify the policy and the change.
+
+    2. Verify if the change loosens restrictions (e.g., adding a broad email domain).
+
+    3. Revert if unauthorized.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

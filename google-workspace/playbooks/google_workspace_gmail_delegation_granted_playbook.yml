@@ -1,0 +1,14 @@
+name: Google Workspace Gmail Delegation Granted Playbook
+description: Detects when a user grants Gmail access delegation to another account.
+severity: Critical
+steps:
+- name: Investigation
+  description: Monitor Google Workspace Gmail audit logs for `grant_delegated_access`. Attackers use delegation to access mailboxes without needing the victim's credentials for every login, often bypassing MFA checks during access.
+- name: Triage
+  description: '1. Identify the delegator and the delegate.
+
+    2. Verify if the delegation is business-justified (e.g., executive assistant).
+
+    3. Remove the delegation and investigate the delegate account if unauthorized.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

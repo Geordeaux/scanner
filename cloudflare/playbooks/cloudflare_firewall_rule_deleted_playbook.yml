@@ -1,0 +1,14 @@
+name: Cloudflare Firewall Rule Deleted Playbook
+description: Detects the deletion of a Cloudflare Firewall rule.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor Cloudflare Audit Logs for `firewall_custom_rule_delete`. Deleting firewall rules can expose the application to attacks previously mitigated.
+- name: Triage
+  description: '1. Identify the deleted rule and the user.
+
+    2. Verify authorization.
+
+    3. Re-create the rule if it was a critical control.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

@@ -1,0 +1,43 @@
+name: AWS Identity Center Identity Provider Change Playbook
+description: 'Detects a change in the AWS Identity Center (FKA AWS SSO) identity provider.
+
+  A change in identity provider allows an attacker to establish persistent access
+  or escalate privileges via user impersonation.
+
+
+
+  References:
+
+  * https://docs.aws.amazon.com/singlesignon/latest/userguide/app-enablement.html
+
+  * https://docs.aws.amazon.com/singlesignon/latest/userguide/sso-info-in-cloudtrail.html
+
+  * https://docs.aws.amazon.com/service-authorization/latest/reference/list_awsiamidentitycentersuccessortoawssinglesign-on.html
+
+
+  False Positives:
+
+  * Authorized changes to the AWS account''s identity provider'
+severity: High
+steps:
+- name: Investigation
+  description: 'Detects a change in the AWS Identity Center (FKA AWS SSO) identity
+    provider.
+
+    A change in identity provider allows an attacker to establish persistent access
+    or escalate privileges via user impersonation.
+
+
+
+    References:
+
+    * https://docs.aws.amazon.com/singlesignon/latest/userguide/app-enablement.html
+
+    * https://docs.aws.amazon.com/singlesignon/latest/userguide/sso-info-in-cloudtrail.html
+
+    * https://docs.aws.amazon.com/service-authorization/latest/reference/list_awsiamidentitycentersuccessortoawssinglesign-on.html
+
+
+    False Positives:
+
+    * Authorized changes to the AWS account''s identity provider'

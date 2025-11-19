@@ -1,0 +1,17 @@
+name: GitHub SSH certificate requirement disabled Playbook
+description: Detect when the GitHub SSH certificate requirement has been disabled.
+severity: Low
+steps:
+- name: Investigation
+  description: 'This rule monitors GitHub audit logs for instances when the SSH certificate requirement is disabled. Administrators can enforce the use of SSH certificates for access to organizational resources. Disabling this requirement may weaken the organization''s security posture.
+
+
+    ## Triage and response
+
+    1. Determine if the change made by the actor is authorized.
+
+    2. If the change was unauthorized or unexpected, initiate the organization''s incident response process and conduct an investigation.'
+- name: Triage
+  description: ''
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

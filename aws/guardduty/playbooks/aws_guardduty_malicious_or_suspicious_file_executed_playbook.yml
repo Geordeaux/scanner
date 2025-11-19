@@ -1,0 +1,21 @@
+name: AWS GuardDuty Malicious Or Suspicious File Executed Playbook
+description: Detects when Amazon GuardDuty identifies the execution of a malicious or suspicious file on an EC2 instance or a container workload. This could indicate that a threat actor has successfully executed harmful code within your environment.
+severity: High
+steps:
+- name: Investigation
+  description: 'Monitor GuardDuty findings for the detection of malicious or suspicious files (finding types containing `MaliciousFile` or `SuspiciousFile`). Capture relevant details such as the principal IP, user, and location to assess potential threats.
+
+
+    ## Triage and response
+
+    * Investigate the detected malicious or suspicious file execution to determine if it was authorized or expected.
+
+    * Review the file name, hash, affected workload, IAM role, and network activity.
+
+    * Correlate with EDR, VPC Flow Logs, DNS logs, and other GuardDuty findings.
+
+    * If malicious, isolate the workload, block C2 infrastructure, rotate credentials, and perform full incident response and forensics.'
+- name: Triage
+  description: ''
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

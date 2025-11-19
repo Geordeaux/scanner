@@ -1,0 +1,27 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: AWS GuardDuty EC2 Data Drop Point
+description: |-
+  ## Goal
+  Detects when an EC2 instance uploads data to a known drop point (e.g., a site used for data exfiltration).
+
+  ## Strategy
+  Monitor GuardDuty findings for `Trojan:EC2/DropPoint`.
+
+  ## Triage and Response
+  1. Identify the instance and the destination URL/IP.
+  2. Isolate the instance.
+  3. Investigate what data was uploaded.
+  4. Check for other signs of compromise.
+enabled: true
+severity: High
+query_text: "%ingest.source_type:aws_guardduty\nmetadata.product_event_type:\"Trojan:EC2/DropPoint\" "
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- high_severity_alerts
+tags:
+- guardduty
+- aws
+- ec2
+- exfiltration

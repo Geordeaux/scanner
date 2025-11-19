@@ -1,0 +1,10 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: GitHub Repository Branch Protection Rules Disabled
+description: |-
+  Detects when branch protection rules are disabled for a GitHub repository.
+query_text: |-
+  %ingest.source_type:github
+  action:repository_branch_protection_evaluation.disable
+tags:
+- github
+- converted_yaral

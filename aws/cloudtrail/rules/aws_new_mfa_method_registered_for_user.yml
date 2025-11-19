@@ -1,0 +1,38 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: AWS New MFA Method Registered For User
+description: |-
+  ## Goal
+  Detects the registration of a new Multi-Factor Authentication (MFA) method for an AWS IAM user, which could indicate an attempt to add unauthorized or unexpected MFA methods.
+
+  ## Strategy
+  Monitor AWS CloudTrail events for actions that register new MFA methods, such as `CreateVirtualMFADevice` and `EnableMFADevice`.
+
+  ## Triage and Response
+  Investigate further to confirm whether the actions were authorized by checking with relevant stakeholders. Verify that no unauthorized changes have been made to IAM user settings. Consider reviewing access controls and logging to ensure no unauthorized modifications have occurred.
+enabled: true
+severity: Medium
+query_text: |-
+  %ingest.source_type="aws:cloudtrail"
+  metadata.vendor_name:AMAZON
+  metadata.product_name:"AWS CloudTrail"
+  (
+  metadata.product_event_type:CreateVirtualMFADevice or
+  metadata.product_event_type:EnableMFADevice
+  )
+  security_result.action:ALLOW
+  | groupbycount(
+  additional.fields.recipientAccountId,
+  principal.user.user_display_name
+  )
+  | where @q.count > 0
+time_range_s: 3600
+run_frequency_s: 3600
+event_sink_keys:
+- medium_severity_alerts
+tags:
+- source.aws
+- domain.iam
+- techniques.t1556.modify_authentication_process
+- tactics.ta0006.credential_access
+- tactics.ta0005.defense_evasion
+- tactics.ta0003.persistence

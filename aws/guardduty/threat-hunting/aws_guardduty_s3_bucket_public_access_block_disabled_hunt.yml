@@ -1,0 +1,10 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS GuardDuty S3 Bucket Public Access Block Disabled
+description: |-
+  Detects when the S3 Block Public Access setting is disabled for a bucket.
+query_text: "%ingest.source_type:aws_guardduty\nmetadata.product_event_type:\"Policy:S3/BucketPublicAccessBlock\" "
+tags:
+- guardduty
+- aws
+- s3
+- misconfiguration

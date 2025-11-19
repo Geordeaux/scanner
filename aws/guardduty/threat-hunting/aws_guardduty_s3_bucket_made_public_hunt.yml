@@ -1,0 +1,10 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS GuardDuty S3 Bucket Made Public
+description: |-
+  Detects when an S3 bucket's permissions are modified to make it publicly accessible.
+query_text: "%ingest.source_type:aws_guardduty\nmetadata.product_event_type:\"Impact:S3/PermissionsModification.Public\" "
+tags:
+- guardduty
+- aws
+- s3
+- misconfiguration

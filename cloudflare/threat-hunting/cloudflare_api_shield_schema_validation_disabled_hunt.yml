@@ -1,0 +1,9 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Cloudflare API Shield Schema Validation Disabled
+description: |-
+  Detects when API Shield schema validation is disabled.
+query_text: "%ingest.source_type:cloudflare\nAction:api_shield_schema_update\nNewValue:\"off\" "
+tags:
+- cloudflare
+- api_shield
+- misconfiguration

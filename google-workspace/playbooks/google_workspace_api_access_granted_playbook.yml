@@ -1,0 +1,14 @@
+name: Google Workspace API Access Granted Playbook
+description: Detects when a user grants API access to a third-party application.
+severity: Medium
+steps:
+- name: Investigation
+  description: Monitor Google Workspace Token audit logs for `authorize` events. Malicious apps can use OAuth tokens to access data.
+- name: Triage
+  description: '1. Identify the user and the application.
+
+    2. Verify the reputation of the application.
+
+    3. Revoke the token if the app is suspicious.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

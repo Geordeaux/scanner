@@ -1,0 +1,20 @@
+name: AWS EventBridge rule disabled or deleted Playbook
+description: Detect attempts to evade defenses by deleting or disabling EventBridge
+  rules.
+severity: Informational
+steps:
+- name: Investigation
+  description: 'Monitor specific CloudTrail API calls to detect modifications or disabling
+    of EventBridge rules:
+
+
+    * DeleteRule
+
+    * DisableRule'
+- name: Triage
+  description: "1. Determine if the user identity should have made the API call for\
+    \ the event name.\n2. Contact the user to verify their intent regarding the API\
+    \ call.\n3. If the user denies making the API call:\n    * Rotate the credentials.\n\
+    \    * Investigate any other unauthorized API calls made with the same credentials.\n\
+    \n**NOTE:** Tune out valid user agents that trigger this alert. For guidance,\
+    \ refer to relevant tuning resources."

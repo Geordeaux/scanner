@@ -1,0 +1,13 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS principal added to multiple EKS clusters
+description: |-
+  Detect when an AWS principal is granted permissions on multiple Amazon EKS clusters in a short period, indicating a potential compromise of your AWS environment.
+query_text: |-
+  %ingest.source_type:"aws:cloudtrail"
+  eventName:(CreateAccessEntry AssociateAccessPolicy)
+  | stats countdistinct(requestParameters.name) as num_distinct_values by requestParameters.principalArn, recipientAccountId
+  | where num_distinct_values > 5
+tags:
+- tactics.ta0004.privilege_escalation
+- tactics.ta0008.lateral_movement
+- source.cloudtrail

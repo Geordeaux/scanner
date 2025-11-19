@@ -1,0 +1,9 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Cloudflare Under Attack Mode Disabled
+description: |-
+  Detects when 'Under Attack Mode' is disabled.
+query_text: "%ingest.source_type:cloudflare\nAction:zone_setting_edit\nNewValue:\"medium\" OR NewValue:\"high\"\nOldValue:\"under_attack\" "
+tags:
+- cloudflare
+- configuration
+- ddos

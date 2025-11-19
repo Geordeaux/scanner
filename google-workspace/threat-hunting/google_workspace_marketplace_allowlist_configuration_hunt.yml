@@ -1,0 +1,10 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Google Workspace Marketplace Allowlist Configuration
+description: |-
+  Identifies when the Google Workspace Marketplace allowlist is configured to allow users to install and run any apps from the Marketplace. Allowing users to install and run any apps may increase the organization's risk of data exfiltration/leakage and increase its attack surface.
+query_text: |-
+  %ingest.source_type:google_workspace
+  action:CHANGE_APPLICATION_SETTING
+tags:
+- google_workspace
+- converted_yaral

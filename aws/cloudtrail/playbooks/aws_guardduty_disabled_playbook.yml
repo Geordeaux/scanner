@@ -1,0 +1,28 @@
+name: AWS GuardDuty Disabled Playbook
+description: Detects when an Amazon GuardDuty detector is disabled or deleted. This
+  may indicate an attempt to impair defences by turning off threat detection and monitoring.
+severity: High
+steps:
+- name: Investigation
+  description: 'Monitor AWS CloudTrail management events from `guardduty.amazonaws.com`
+    and alert on:
+
+    * `DeleteDetector` events, or
+
+    * `UpdateDetector` events where the detector is explicitly disabled (for example,
+    `enable=false` in the request parameters).
+
+
+    These actions should be rare, tightly controlled, and usually associated with
+    planned maintenance or onboarding/offsboarding workflows. Any unplanned change
+    warrants investigation.'
+- name: Triage
+  description: "* Identify who initiated the change (IAM user or role), from where\
+    \ (IP, user agent), and in which account and region.\n* Confirm there is an approved\
+    \ change, maintenance window, or documented migration that explains disabling\
+    \ or deleting GuardDuty.\n* If there is no valid justification:\n  * Treat as\
+    \ a high-severity incident (potential defence evasion).\n  * Immediately re-enable\
+    \ GuardDuty (or recreate the detector) where appropriate.\n  * Review other recent\
+    \ CloudTrail activity for the same principal and account (especially around IAM,\
+    \ CloudTrail, Config, logging, and network controls).\n  * Escalate according\
+    \ to the incident response process."

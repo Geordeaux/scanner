@@ -1,0 +1,35 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Auth0 Role Created
+description: |-
+  ## Goal
+  Detect when a role is created in Auth0. Roles can be used to grant
+  specific permissions and should be monitored for potential privilege
+  escalation.
+
+  ## Strategy
+  1. Determine if this was authorized.
+  2. Review the permissions assigned to the new role.
+  3. Check who was assigned to this role (if anyone).
+
+  ## Triage and Response
+  1. Identify the user (`data.user_id`) who created the role.
+  2. Check the timestamp.
+  1. If unauthorized, delete the role immediately.
+  2. Investigate the user account.
+  3. Audit other roles created by this user.
+enabled: true
+severity: High
+query_text: |-
+  %ingest.source_type:auth0
+  data.description:'Create a role'
+  data.details.request.channel:'https://manage.auth0.com'
+  | groupbycount(data.user_id)
+  | where @q.count > 0
+time_range_s: 300
+run_frequency_s: 60
+event_sink_keys:
+- high_severity_alerts
+tags:
+- tactics.ta0004.privilege_escalation
+- techniques.t1078.valid_accounts
+- source.auth0

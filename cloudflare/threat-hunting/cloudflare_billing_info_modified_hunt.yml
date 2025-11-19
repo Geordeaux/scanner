@@ -1,0 +1,9 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Cloudflare Billing Information Modified
+description: |-
+  Detects changes to billing information.
+query_text: "%ingest.source_type:cloudflare\nAction:billing_update "
+tags:
+- cloudflare
+- account
+- billing

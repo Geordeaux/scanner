@@ -1,0 +1,24 @@
+name: AWS API Call Outside Of Organisation Playbook
+description: Detect API calls from AWS accounts that are not part of the approved
+  AWS Organisation account set.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor AWS CloudTrail events and flag any API activity where the `recipientAccountId`
+    (or equivalent account identifier) does not match a known, approved AWS account
+    ID. This helps identify API calls originating from unmanaged, misconfigured, or
+    potentially compromised accounts outside the organisation boundary.
+- name: Triage
+  description: '* Validate whether the account ID is truly unknown or has recently
+    been on-boarded but not yet added to the approved list.
+
+    * Confirm with the cloud/platform team whether the activity relates to legitimate
+    testing, third-party services, or partner accounts.
+
+    * If the account is confirmed as unauthorised, treat the activity as a potential
+    compromise or misconfiguration and initiate the appropriate incident response
+    playbook.
+
+
+    Note: Update the list of approved AWS account IDs in the query before enabling
+    this rule.'

@@ -1,0 +1,28 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: AWS GuardDuty Unauthorized Access Malicious IP Caller
+description: |-
+  ## Goal
+  Detects when an EC2 instance is communicating with a known malicious IP address.
+
+  ## Strategy
+  Monitor GuardDuty findings for `UnauthorizedAccess:EC2/MaliciousIPCaller.Custom` or `UnauthorizedAccess:EC2/MaliciousIPCaller`. These indicate that an EC2 instance is communicating with an IP address included in a threat intelligence list.
+
+  ## Triage and Response
+  1. Identify the instance and the malicious IP.
+  2. Check the direction of traffic (inbound/outbound).
+  3. If outbound, the instance may be compromised and calling home.
+  4. Isolate the instance and investigate running processes.
+enabled: true
+severity: High
+query_text: |-
+  %ingest.source_type:aws_guardduty
+  metadata.product_event_type:/UnauthorizedAccess:EC2\/MaliciousIPCaller/
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- high_severity_alerts
+tags:
+- guardduty
+- aws
+- compromise

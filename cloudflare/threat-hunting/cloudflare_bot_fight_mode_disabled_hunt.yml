@@ -1,0 +1,9 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Cloudflare Bot Fight Mode Disabled
+description: |-
+  Detects when Bot Fight Mode is disabled.
+query_text: "%ingest.source_type:cloudflare\nAction:zone_setting_edit\nSetting:\"bot_fight_mode\"\nNewValue:\"off\" "
+tags:
+- cloudflare
+- bot_management
+- misconfiguration

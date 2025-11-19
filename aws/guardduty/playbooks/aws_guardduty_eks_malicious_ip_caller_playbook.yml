@@ -1,0 +1,16 @@
+name: AWS GuardDuty EKS Malicious IP Caller Playbook
+description: Detects when a Kubernetes pod or node is communicating with a known malicious IP address.
+severity: Critical
+steps:
+- name: Investigation
+  description: Monitor GuardDuty findings for `UnauthorizedAccess:Kubernetes/MaliciousIPCaller`. This indicates that a pod in your EKS cluster is communicating with an IP address included in a threat intelligence list.
+- name: Triage
+  description: '1. Identify the affected pod and node.
+
+    2. Check the direction of traffic.
+
+    3. Isolate the pod/node.
+
+    4. Investigate the container image for vulnerabilities or malware.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

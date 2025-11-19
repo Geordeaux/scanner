@@ -1,0 +1,14 @@
+name: Cloudflare Security Level Lowered Playbook
+description: Detects when the Cloudflare Security Level is lowered (e.g., from 'High' to 'Essentially Off').
+severity: Medium
+steps:
+- name: Investigation
+  description: Monitor Cloudflare Audit Logs for changes to the `security_level` setting.
+- name: Triage
+  description: '1. Identify the user and the new level.
+
+    2. If unauthorized, restore the previous security level.
+
+    3. Investigate why the protection was lowered.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

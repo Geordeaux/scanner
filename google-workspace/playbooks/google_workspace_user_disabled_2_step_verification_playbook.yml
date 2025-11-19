@@ -1,0 +1,10 @@
+name: Google Workspace user disabled 2-step verification Playbook
+description: Detect when a Google Workspace user disables 2-step verification (2SV).
+severity: Low
+steps:
+- name: Investigation
+  description: "Monitor Google Workspace logs for instances of users disabling 2SV, as this may indicate a compromised account.\n\n## Triage and response\n1. Review other signals and logs linked to the affected user, looking for deviations in:\n    - Application\n    - Device\n    - Geolocation\n    - IP address\n2. Contact the user to confirm if they recognize the activity.\n3. If the activity is unauthorized, block the user from signing in and initiate the Incident Response process."
+- name: Triage
+  description: ''
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

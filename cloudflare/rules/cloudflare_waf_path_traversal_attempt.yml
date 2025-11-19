@@ -1,0 +1,26 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Cloudflare WAF Path Traversal Attempt
+description: |-
+  ## Goal
+  Detects Path Traversal (LFI) attempts blocked by Cloudflare WAF.
+
+  ## Strategy
+  Monitor Cloudflare WAF logs for rule matches related to directory traversal (e.g., `../`).
+
+  ## Triage and Response
+  1. Identify the source IP and the targeted file path.
+  2. Verify if the WAF blocked the request.
+  3. If not blocked, check backend logs for file access.
+  4. Block the IP.
+enabled: true
+severity: Critical
+query_text: "%ingest.source_type:cloudflare\nWAFAction:block\nRuleId:981244 OR RuleId:981245 OR RuleId:981246 "
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- critical_severity_alerts
+tags:
+- cloudflare
+- waf
+- lfi

@@ -1,0 +1,28 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: GitHub audit log streaming endpoint was modified
+description: |-
+  ## Goal
+  Detect modifications to GitHub audit log streaming settings.
+
+  ## Strategy
+  This rule monitors changes to GitHub audit log streaming settings, as alterations could degrade an organization's security posture by disrupting the flow of audit logs into centralized storage.
+
+  ## Triage and response
+  1. Determine if the change made by the actor is authorized.
+  2. If the change was not authorized or was unexpected, initiate the organization's incident response process and conduct an investigation.
+enabled: true
+severity: Medium
+query_text: |-
+  %ingest.source_type:github
+  action:audit_log_streaming.update
+  | groupbycount(actor)
+  | where @q.count > 0
+time_range_s: 300
+run_frequency_s: 60
+event_sink_keys:
+- medium_severity_alerts
+tags:
+- source.github-telemetry
+- source.github
+- techniques.t1562.impair_defenses
+- tactics.ta0005.defense_evasion

@@ -1,0 +1,40 @@
+name: AWS SES Service Modification Playbook
+description: Detect when the Amazon Simple Email Service (SES) has been modified in
+  ways that could allow an attacker to propagate phishing email campaigns. This includes
+  actions like creating, deleting, and verifying identities, as well as enabling or
+  configuring SES sending.
+severity: Medium
+steps:
+- name: Investigation
+  description: 'Monitor AWS CloudTrail management events from `ses.amazonaws.com`
+    for the following API calls:
+
+    * `CreateEmailIdentity`
+
+    * `DeleteEmailIdentity`
+
+    * `VerifyEmailIdentity`
+
+    * `VerifyDomainIdentity`
+
+    * `VerifyDomainDkim`
+
+    * `UpdateAccountSendingEnabled`
+
+    * `UpdateConfigurationSetSendingEnabled`
+
+    * `PutAccountSendingAttributes`
+
+    * `PutConfigurationSetSendingOptions`'
+- name: Triage
+  description: '* Confirm whether the SES configuration change was part of an approved
+    change request.
+
+    * Identify which identities, domains, or configuration sets were created, deleted,
+    or modified.
+
+    * If unapproved, disable or roll back the change (for example, disable sending
+    or remove the new identity) and rotate any related credentials.
+
+    * Review other recent changes and activity by the same principal for additional
+    signs of abuse or phishing setup.'

@@ -1,0 +1,15 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Google Workspace administrator has disabled 2-step verification for organizational unit
+description: |-
+  Detect when a Google Workspace administrator disables 2-step verification (2SV) for an organizational unit.
+query_text: |-
+  %ingest.source_type:gsuite
+  id.applicationName:admin
+  event.name:(ALLOW_STRONG_AUTHENTICATION ENFORCE_STRONG_AUTHENTICATION)
+  event.parameters.NEW_VALUE:false
+  | groupbycount(actor.email)
+  | where @q.count > 0
+tags:
+- source.gsuite
+- techniques.t1556.modify_authentication_process
+- tactics.ta0003.persistence

@@ -1,0 +1,13 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Amazon S3 bucket policy modified
+description: |-
+  Detect modifications to S3 Bucket policies.
+query_text: |-
+  %ingest.source_type:"aws:cloudtrail"
+  eventName:(PutBucketAcl PutBucketPolicy PutBucketCors PutBucketLifecycle PutBucketReplication DeleteBucketPolicy DeleteBucketCors DeleteBucketReplication)
+  | groupbycount(userIdentity.arn)
+  | where @q.count > 0
+tags:
+- techniques.t1485.data_destruction
+- tactics.ta0040.impact
+- source.cloudtrail

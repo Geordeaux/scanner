@@ -1,0 +1,9 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Cloudflare R2 Bucket Public Access Enabled
+description: |-
+  Detects when public access is enabled for an R2 bucket.
+query_text: "%ingest.source_type:cloudflare\nAction:r2_bucket_update\nNewValue:*public* "
+tags:
+- cloudflare
+- r2
+- data_leak

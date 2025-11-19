@@ -1,0 +1,53 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+
+name: GCP Multiple KMS Keys Disabled Or Destroyed
+description: |-
+  ## Goal
+  Detect when multiple KMS crypto key versions are disabled or destroyed from GCP Cloud KMS. This behavior may indicate an attempt to compromise data integrity or availability, which could be malicious.
+
+  ## Strategy
+  Monitor Cloud Audit Logs for DestroyCryptoKeyVersion and UpdateCryptoKeyVersion events. Detect if more than ten such events occur within a 1-hour window by the same user. Capture relevant details such as the event count, user information, and IP addresses involved, and set a high severity risk score to indicate the potential threat.
+
+  ## Triage and Response
+  Investigate the detected disable or destroy attempts to determine if they were authorized. Review the user and IP addresses involved to ensure that no unauthorized data destruction has occurred. Monitor for further suspicious activities involving this user or IP address.
+
+enabled: true
+severity: High
+
+query_text: |-
+  %ingest.source_type:gcp
+  protoPayload.serviceName:cloudkms.googleapis.com
+  protoPayload.methodName:(google.cloud.kms.v1.KeyManagementService.DestroyCryptoKeyVersion google.cloud.kms.v1.KeyManagementService.UpdateCryptoKeyVersion)
+  | groupbycount(project_id, protoPayload.authenticationInfo.principalEmail)
+  | where @q.count >= 10
+
+time_range_s: 3600      # Look back 1 hour
+run_frequency_s: 300     # Run every 5 minutes
+
+event_sink_keys:
+  - high_severity_alerts
+
+tags:
+  - source.gcp
+  - gcp
+  - gcp_kms
+  - gcp_audit
+  - multiple_kms_keys_disabled_or_destroyed
+  - techniques.t1485.data_destruction
+  - tactics.ta0040.impact
+
+# Additional context fields for alert graph
+context_fields:
+  - project_id
+  - protoPayload.authenticationInfo.principalEmail
+  - protoPayload.requestMetadata.callerIp
+  - protoPayload.serviceName
+  - protoPayload.methodName
+  - resource.type
+  - resource.labels.location
+  - resource.labels.key_ring_id
+  - resource.labels.crypto_key_id
+
+# Outcome variables
+risk_score: 75
+event_count: "@q.count"

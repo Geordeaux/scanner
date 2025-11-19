@@ -1,0 +1,12 @@
+name: AWS Java_Ghost security group creation attempt Playbook
+description: Detect attempts to create an AWS security group named "Java_Ghost."
+severity: Critical
+steps:
+- name: Investigation
+  description: Monitor CloudTrail for the creation of the security group "Java_Ghost."
+    A high-confidence assessment indicates that this event likely signifies a compromised
+    identity. An attacker may create a security group to maintain access to EC2 instances.
+- name: Triage
+  description: '1. Review past activity and API calls made by the compromised identity.
+
+    2. Initiate your company''s incident response process and conduct an investigation.'

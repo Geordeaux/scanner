@@ -1,0 +1,31 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS IAM S3Browser User or AccessKey Creation
+description: |-
+  Detects S3 Browser utility creating IAM User or AccessKey.
+
+  References:
+  * https://permiso.io/blog/s/unmasking-guivil-new-cloud-threat-actor
+
+  False Positives:
+  * Valid usage of S3 Browser for IAM User and/or AccessKey creation
+query_text: |-
+  %ingest.source_type="aws:cloudtrail"
+  eventSource="iam.amazonaws.com"
+  eventName=(CreateUser CreateAccessKey)
+  userAgent:'S3 Browser'
+  | stats
+  min(@scnr.datetime) as firstTime,
+  max(@scnr.datetime) as lastTime,
+  count() as eventCount
+  by
+  userIdentity.arn,
+  eventSource,
+  eventName,
+  awsRegion
+tags:
+- source.cloudtrail
+- tactics.ta0003.persistence
+- tactics.ta0004.privilege_escalation
+- tactics.ta0006.credential_access
+- techniques.t1136.create_account
+- techniques.t1098.account_manipulation

@@ -1,0 +1,19 @@
+name: TruffleHog user agent observed in AWS Playbook
+description: Detect when a TruffleHog user agent is detected in AWS CloudTrail management
+  logs.
+severity: High
+steps:
+- name: Investigation
+  description: This rule monitors AWS CloudTrail management logs for the `GetCallerIdentity`
+    API call with the user agent `TruffleHog`. TruffleHog is a tool that scans source
+    code repositories for leaked secrets, using the credential verification feature
+    to check if credentials are active. While it can be used legitimately by teams,
+    it may also indicate unauthorized access attempts.
+- name: Triage
+  description: "1. Determine if your organization is using TruffleHog to scan for\
+    \ secrets.\n2. If it is an internal tool, notify the relevant team to address\
+    \ the leaked key appropriately.\n3. If the triage indicates that this tool is\
+    \ not used by your organization, initiate the incident response process and investigation.\n\
+    \    * If necessary, disable or rotate the affected credential.\n    * Investigate\
+    \ any actions taken by the identity.\n    * Collaborate with relevant teams to\
+    \ remove the key from source code repositories."

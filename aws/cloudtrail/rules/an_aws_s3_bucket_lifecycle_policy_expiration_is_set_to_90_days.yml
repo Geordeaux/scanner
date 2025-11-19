@@ -1,0 +1,31 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: An AWS S3 bucket lifecycle policy expiration is set to < 90 days
+description: |-
+  ## Goal
+  Detect when an S3 bucket has a lifecycle configuration with an expiration policy of less than 90 days.
+
+  ## Strategy
+  Look for lifecycle configuration rules with expiration days set to less than 90 in your logs.
+
+  **NOTE**: This rule should target the relevant logs. The expiration days key must be used to perform the query.
+
+  ## Triage and Response
+  1. Determine if the event should have occurred on the specified bucket by the username, account ID, and type, and verify that the bucket has a file expiration of less than 90 days.
+  2. If the bucket is the CloudTrail bucket, consider escalating to higher severity and investigating further.
+enabled: true
+severity: Low
+query_text: |-
+  eventName:PutBucketLifecycle
+  (not errorCode:*)
+  eventSource:s3.amazonaws.com
+  requestParameters.LifecycleConfiguration.Rule.Expiration.Days < 90
+  | groupbycount(requestParameters.bucketName)
+  | where @q.count > 0
+time_range_s: 300
+run_frequency_s: 60
+event_sink_keys:
+- low_severity_alerts
+tags:
+- source.cloudtrail
+- techniques.t1562.impair_defenses
+- tactics.ta0005.defense_evasion

@@ -1,0 +1,15 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Auth0 Multiple Failed MFA Attempts
+description: |-
+  Detects multiple failed Multi-Factor Authentication (MFA) attempts for a single
+  user. This may indicate an attacker attempting to bypass MFA or a user
+  experiencing issues with their MFA device.
+query_text: |-
+  %ingest.source_type:auth0
+  data.type:gd_auth_failed
+  | groupbycount(data.user_id)
+  | where @q.count > 3
+tags:
+- tactics.ta0006.credential_access
+- techniques.t1110.brute_force
+- source.auth0

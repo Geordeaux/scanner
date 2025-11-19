@@ -1,0 +1,32 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: AWS ECS CreateCluster API calls in multiple regions
+description: |-
+  ## Goal
+  Detect attempts to create AWS ECS clusters in multiple regions.
+
+  ## Strategy
+  Monitor CloudTrail for attempts to create AWS ECS clusters in multiple regions. This could indicate malicious activities like cryptocurrency mining.
+
+  ## Triage and Response
+  1. Determine if the user identity should have performed this operation.
+  2. If the API calls were unauthorized:
+    * Rotate user credentials.
+    * Remove the newly created cluster and any associated tasks or services.
+    * Investigate what other API calls were made by the user.
+    * Initiate your organization's incident response process.
+enabled: true
+severity: High
+query_text: |-
+  %ingest.source_type:"aws:cloudtrail"
+  eventName:CreateCluster
+  eventSource:ecs.amazonaws.com
+  | stats countdistinct(awsRegion) as num_distinct_values by userIdentity.arn
+  | where num_distinct_values > 7
+time_range_s: 300
+run_frequency_s: 60
+event_sink_keys:
+- high_severity_alerts
+tags:
+- tactics.ta0040.impact
+- source.cloudtrail
+- techniques.t1496.resource_hijacking

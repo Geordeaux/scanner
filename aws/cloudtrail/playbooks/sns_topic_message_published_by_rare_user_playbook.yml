@@ -1,0 +1,11 @@
+name: SNS Topic Message Published by Rare User Playbook
+description: This hunting query gathers evidence of an SNS topic message published
+  by a user who does not typically perform this action. Adversaries may publish messages
+  to SNS topics to stage capabilities for data exfiltration or other malicious activities.
+severity: Medium
+steps:
+- name: Investigation
+  description: This hunting query gathers evidence of an SNS topic message published
+    by a user who does not typically perform this action. Adversaries may publish
+    messages to SNS topics to stage capabilities for data exfiltration or other malicious
+    activities.

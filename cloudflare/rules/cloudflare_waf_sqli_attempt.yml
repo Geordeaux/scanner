@@ -1,0 +1,26 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Cloudflare WAF SQL Injection Attempt
+description: |-
+  ## Goal
+  Detects SQL Injection (SQLi) attempts blocked by Cloudflare WAF.
+
+  ## Strategy
+  Monitor Cloudflare WAF logs for rule matches related to SQL injection. High volumes of these alerts from a single IP indicate a targeted attack.
+
+  ## Triage and Response
+  1. Identify the source IP and the targeted URL.
+  2. Verify if the request was blocked.
+  3. If not blocked (e.g., Log mode), check the backend logs for successful execution.
+  4. Block the IP permanently if confirmed malicious.
+enabled: true
+severity: High
+query_text: "%ingest.source_type:cloudflare\nClientRequestPath:*.php OR ClientRequestPath:*.asp OR ClientRequestPath:*.jsp\nWAFAction:block\nRuleId:981231 OR RuleId:981242 OR RuleId:981243 "
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- high_severity_alerts
+tags:
+- cloudflare
+- waf
+- sqli

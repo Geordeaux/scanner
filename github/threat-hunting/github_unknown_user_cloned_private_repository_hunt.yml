@@ -1,0 +1,16 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: GitHub unknown user cloned private repository
+description: |-
+  Detect when an unknown actor clones a GitHub repository.
+query_text: |-
+  %ingest.source_type:github
+  action:git.clone
+  (not repository_public:true)
+  (not actor:*)
+  | groupbycount(actor)
+  | where @q.count > 0
+tags:
+- techniques.t1567.exfiltration_over_web_service
+- source.github-telemetry
+- source.github
+- tactics.ta0010.exfiltration

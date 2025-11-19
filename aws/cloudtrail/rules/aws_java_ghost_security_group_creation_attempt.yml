@@ -1,0 +1,28 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: AWS Java_Ghost security group creation attempt
+description: |-
+  ## Goal
+  Detect attempts to create an AWS security group named "Java_Ghost."
+
+  ## Strategy
+  Monitor CloudTrail for the creation of the security group "Java_Ghost." A high-confidence assessment indicates that this event likely signifies a compromised identity. An attacker may create a security group to maintain access to EC2 instances.
+
+  ## Triage and Response
+  1. Review past activity and API calls made by the compromised identity.
+  2. Initiate your company's incident response process and conduct an investigation.
+enabled: true
+severity: Critical
+query_text: |-
+  %ingest.source_type:"aws:cloudtrail"
+  eventName:CreateSecurityGroup
+  requestParameters.groupName:"Java_Ghost"
+  | groupbycount(userIdentity.arn)
+  | where @q.count > 0
+time_range_s: 300
+run_frequency_s: 60
+event_sink_keys:
+- critical_severity_alerts
+tags:
+- source.cloudtrail
+- techniques.t1562.impair_defenses
+- tactics.ta0005.defense_evasion

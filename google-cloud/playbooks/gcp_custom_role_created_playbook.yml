@@ -1,0 +1,14 @@
+name: GCP Custom Role Created Playbook
+description: Detects the creation of a custom IAM role.
+severity: Medium
+steps:
+- name: Investigation
+  description: Monitor Google Cloud audit logs for `google.iam.admin.v1.CreateRole`. Attackers may create custom roles with specific, sensitive permissions to maintain persistence or evade detection.
+- name: Triage
+  description: '1. Identify the user and the permissions assigned to the new role.
+
+    2. Verify if the role creation is authorized.
+
+    3. Delete the role if unauthorized.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

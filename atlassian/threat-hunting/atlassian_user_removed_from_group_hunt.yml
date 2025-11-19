@@ -1,0 +1,10 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Hunt - Atlassian User Group Removals
+description: |-
+  Hunt for user group removals.
+query_text: |-
+  %ingest.source_type:atlassian
+  message.content:'User removed from group'
+tags:
+- hunt
+- source.atlassian

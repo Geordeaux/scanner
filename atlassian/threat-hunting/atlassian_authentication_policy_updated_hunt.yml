@@ -1,0 +1,10 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Hunt - Atlassian Authentication Policy Updates
+description: |-
+  Hunt for authentication policy updates.
+query_text: |-
+  %ingest.source_type:atlassian
+  attributes.action:(authentication_policy_updated ip_allowlist_disabled)
+tags:
+- hunt
+- source.atlassian

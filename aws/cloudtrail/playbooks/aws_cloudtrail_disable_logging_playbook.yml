@@ -1,0 +1,26 @@
+name: AWS CloudTrail Important Change Playbook
+description: 'Detects disabling, deleting and updating of a Trail
+
+
+  References:
+
+  * https://docs.aws.amazon.com/awscloudtrail/latest/userguide/best-practices-security.html
+
+
+  False Positives:
+
+  * Valid change in a Trail'
+severity: Medium
+steps:
+- name: Investigation
+  description: 'Detects disabling, deleting and updating of a Trail
+
+
+    References:
+
+    * https://docs.aws.amazon.com/awscloudtrail/latest/userguide/best-practices-security.html
+
+
+    False Positives:
+
+    * Valid change in a Trail'

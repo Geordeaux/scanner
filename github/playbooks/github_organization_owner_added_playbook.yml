@@ -1,0 +1,14 @@
+name: GitHub Organization Owner Added Playbook
+description: Detects when a new owner is added to a GitHub organization.
+severity: Critical
+steps:
+- name: Investigation
+  description: Monitor GitHub audit logs for `org.add_member` with role `admin`. Owners have full control over the organization.
+- name: Triage
+  description: '1. Identify the new owner and the actor who added them.
+
+    2. Verify authorization.
+
+    3. Revoke access if unauthorized.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

@@ -1,0 +1,22 @@
+name: AWS Successful Login After Multiple Failed Attempts Playbook
+description: Detect multiple failed AWS console authentication attempts (for example,
+  four or more) for the same user within a short window. This pattern often precedes
+  a successful login and can indicate brute force activity or account compromise.
+severity: Medium
+steps:
+- name: Investigation
+  description: Monitor AWS CloudTrail sign-in events from `signin.amazonaws.com` with
+    `eventName=ConsoleLogin` where the login result is a failure. Aggregate these
+    events over a 15-minute window and flag users with four or more failed attempts.
+- name: Triage
+  description: '* Confirm whether the failed attempts originated from expected locations,
+    IP addresses, and devices for the user.
+
+    * Check whether there was a subsequent successful login by the same user around
+    the same time.
+
+    * If suspicious, force a password reset, revoke sessions/keys as appropriate,
+    and review other activity for the user in the same time window.
+
+    * Consider tightening authentication controls (MFA, conditional access, IP allow-listing)
+    for sensitive accounts.'

@@ -1,0 +1,26 @@
+name: AWS IAM S3Browser User or AccessKey Creation Playbook
+description: 'Detects S3 Browser utility creating IAM User or AccessKey.
+
+
+  References:
+
+  * https://permiso.io/blog/s/unmasking-guivil-new-cloud-threat-actor
+
+
+  False Positives:
+
+  * Valid usage of S3 Browser for IAM User and/or AccessKey creation'
+severity: High
+steps:
+- name: Investigation
+  description: 'Detects S3 Browser utility creating IAM User or AccessKey.
+
+
+    References:
+
+    * https://permiso.io/blog/s/unmasking-guivil-new-cloud-threat-actor
+
+
+    False Positives:
+
+    * Valid usage of S3 Browser for IAM User and/or AccessKey creation'

@@ -1,0 +1,14 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Report - Daily Atlassian Activity Summary
+description: |-
+  Daily summary of Atlassian activity, including total events, unique users, and administrative actions.
+query_text: |-
+  %ingest.source_type:atlassian
+  | stats
+      count() as total_events,
+      countdistinct(attributes.actor.email) as unique_users,
+      count(attributes.action in ("user_logged_in_as_user", "api_token_created", "global_permission_added")) as admin_actions
+    by bin(time, 1d)
+tags:
+- report
+- source.atlassian

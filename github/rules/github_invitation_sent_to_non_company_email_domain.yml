@@ -1,0 +1,26 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: GitHub Invitation Sent To Non Company Email Domain
+description: |-
+  ## Goal
+  Detects when an invitation to join a GitHub enterprise or organization is sent to a non-company email address. This rule can be customized to alert you when a GitHub invitation is sent to an unexpected domain i.e. not one of your company's domains used for email.
+
+  ## Strategy
+  Monitor for invitations sent to non-company domains.
+
+  ## Triage and Response
+  1. Identify the invited email and the inviter.
+  2. Verify if the external collaboration is authorized.
+  3. Revoke the invitation if unauthorized.
+enabled: true
+severity: High
+query_text: |-
+  %ingest.source_type:github
+  action:business.invite_admin OR action:business.invite_billing_manager OR action:org.invite_member
+time_range_s: 1800
+run_frequency_s: 300
+event_sink_keys:
+- high_severity_alerts
+tags:
+- github
+- converted_yaral

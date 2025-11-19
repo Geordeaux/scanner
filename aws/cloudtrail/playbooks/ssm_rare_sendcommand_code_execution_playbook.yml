@@ -1,0 +1,16 @@
+name: SSM Rare SendCommand Code Execution by EC2 Instance Playbook
+description: This hunting query identifies when a single `SendCommand` API call is
+  made by an EC2 instance to execute a command via the AWS Systems Manager (SSM) service
+  within the last 7 days. The `SendCommand` API call allows users to remotely execute
+  commands on EC2 instances. Default documents like `AWS-RunPowerShellScript` and
+  `AWS-RunShellScript` are commonly used for this purpose. Adversaries may abuse this
+  API to execute arbitrary commands on compromised EC2 instances.
+severity: Medium
+steps:
+- name: Investigation
+  description: This hunting query identifies when a single `SendCommand` API call
+    is made by an EC2 instance to execute a command via the AWS Systems Manager (SSM)
+    service within the last 7 days. The `SendCommand` API call allows users to remotely
+    execute commands on EC2 instances. Default documents like `AWS-RunPowerShellScript`
+    and `AWS-RunShellScript` are commonly used for this purpose. Adversaries may abuse
+    this API to execute arbitrary commands on compromised EC2 instances.

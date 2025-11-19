@@ -1,0 +1,52 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: AWS EC2 User Data Modified
+enabled: true
+severity: High
+description: |-
+  ## Goal
+  Detects modifications to the user data script of an EC2 instance. This can indicate unauthorised changes that might be used for privilege escalation, persistence, or other malicious activity.
+
+  ## Strategy
+  Monitor AWS CloudTrail management events for `ModifyInstanceAttribute` calls against EC2 where the user data attribute is present. Any change to user data is high-risk because it can introduce arbitrary scripts that execute at boot.
+
+  ## Triage and Response
+  * Identify the instance, role, and caller that modified user data.
+  * Confirm whether the change is associated with a planned deployment, automation pipeline, or break-glass procedure.
+  * Review the new user data content (for example, in the EC2 console or via API) for:
+    * Credential harvesting, reverse shells, or additional agents.
+    * Changes to monitoring/EDR, network configuration, or persistence.
+  * If the activity is not clearly legitimate:
+    * Treat as a potential compromise of the modifying principal and/or instance.
+    * Capture forensic data (CloudTrail, system logs, EDR telemetry, network flows).
+    * Consider reverting user data, rotating credentials, and isolating the instance according to your incident response process.
+query_text: |-
+  %ingest.source_type="aws:cloudtrail"
+  eventSource:"ec2.amazonaws.com"
+  eventName:"ModifyInstanceAttribute"
+  requestParameters.userData:*
+  (not errorCode:*)
+time_range_s: 3600
+run_frequency_s: 3600
+event_sink_keys:
+- high_severity_alerts
+tags:
+- source.aws
+- domain.cloud
+- domain.aws_ec2
+- tactics.ta0004.privilege_escalation
+- techniques.t1037.boot_or_logon_initialization_scripts
+- use_case.ec2_user_data_change
+- use_case.persistence_priv_esc
+context_fields:
+- userIdentity.type
+- userIdentity.arn
+- userIdentity.principalId
+- sourceIPAddress
+- userAgent
+- awsRegion
+- eventTime
+- recipientAccountId
+- requestParameters.instanceId
+- additional.fields["Request Parameters User Data"]
+- target.resource.name
+- target.resource.product_object_id

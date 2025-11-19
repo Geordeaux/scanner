@@ -1,0 +1,10 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Hunt - Atlassian Permission Scheme Updates
+description: |-
+  Hunt for permission scheme updates.
+query_text: |-
+  %ingest.source_type:atlassian
+  message.content:'Permission scheme updated'
+tags:
+- hunt
+- source.atlassian

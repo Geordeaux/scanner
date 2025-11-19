@@ -1,0 +1,25 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Cloudflare Access Policy Modified
+description: |-
+  ## Goal
+  Detects changes to Cloudflare Access policies (Zero Trust).
+
+  ## Strategy
+  Monitor Cloudflare Audit Logs for `access_policy_update`. Changes here can allow unauthorized users to access internal applications.
+
+  ## Triage and Response
+  1. Identify the policy and the change.
+  2. Verify if the change loosens restrictions (e.g., adding a broad email domain).
+  3. Revert if unauthorized.
+enabled: true
+severity: High
+query_text: "%ingest.source_type:cloudflare\nAction:access_policy_update OR Action:access_policy_create "
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- high_severity_alerts
+tags:
+- cloudflare
+- access
+- zero_trust

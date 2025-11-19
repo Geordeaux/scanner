@@ -1,0 +1,26 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: GitHub SSO Configuration Modified
+description: |-
+  ## Goal
+  Detects when changes are made to a GitHub enterprise or organization's Single Sign-On (SSO) configuration.
+
+  ## Strategy
+  Monitor GitHub audit logs for specific event types.
+
+  ## Triage and Response
+  1. Identify the actor and the target resource.
+  2. Verify if the action was authorized.
+  3. If unauthorized, revert the change and rotate credentials.
+enabled: true
+severity: High
+query_text: |-
+  %ingest.source_type:github
+  action:business.disable_oidc OR action:business.disable_saml OR action:business.update_saml_provider_settings OR action:org.disable_saml OR action:org.update_saml_provider_settings OR action:org_credential_authorization.deauthorize OR action:org_credential_authorization.grant OR action:org_credential_authorization.revoke OR action:sso_redirect.disable
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- high_severity_alerts
+tags:
+- github
+- converted_yaral

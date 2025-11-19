@@ -1,0 +1,25 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: GitHub Repository Transferred
+description: |-
+  ## Goal
+  Detects the transfer of a repository to another user or organization.
+
+  ## Strategy
+  Monitor GitHub audit logs for `repo.transfer`. Transferring a repository can be a method of data exfiltration.
+
+  ## Triage and Response
+  1. Identify the repository and the destination.
+  2. Verify authorization.
+  3. Contact GitHub support to reverse the transfer if malicious.
+enabled: true
+severity: High
+query_text: "%ingest.source_type:github\naction:repo.transfer "
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- high_severity_alerts
+tags:
+- github
+- repository
+- exfiltration

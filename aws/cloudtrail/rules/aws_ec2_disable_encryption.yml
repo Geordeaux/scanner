@@ -1,0 +1,52 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: AWS EC2 Disable EBS Encryption
+enabled: true
+description: |-
+  ## Goal
+  Identifies disabling of default Amazon Elastic Block Store (EBS) encryption in the current region.
+  Disabling default encryption does not change the encryption status of your existing volumes.
+
+
+  References:
+  * https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DisableEbsEncryptionByDefault.html
+
+  False Positives:
+  * System Administrator Activities
+  * DEV, UAT, SAT environment. You should apply this rule with PROD account only.
+
+  ## Strategy
+  Identifies disabling of default Amazon Elastic Block Store (EBS) encryption in the current region.
+  Disabling default encryption does not change the encryption status of your existing volumes.
+
+
+  References:
+  * https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DisableEbsEncryptionByDefault.html
+
+  False Positives:
+  * System Administrator Activities
+  * DEV, UAT, SAT environment. You should apply this rule with PROD account only.
+
+  ## Triage and Response
+  Investigate and remediate as appropriate.
+severity: Medium
+query_text: |-
+  %ingest.source_type="aws:cloudtrail"
+  eventSource="ec2.amazonaws.com"
+  eventName="DisableEbsEncryptionByDefault"
+  | stats
+  min(@scnr.datetime) as firstTime,
+  max(@scnr.datetime) as lastTime,
+  count() as eventCount
+  by
+  userIdentity.arn,
+  eventSource,
+  eventName,
+  awsRegion
+time_range_s: 300
+run_frequency_s: 60
+event_sink_keys:
+- medium_severity_alerts
+tags:
+- tactics.ta0005.defense_evasion
+- techniques.t1562.impair_defenses
+- source.cloudtrail

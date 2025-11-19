@@ -1,0 +1,19 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Auth0 Log Stream Deleted or Disabled
+description: |-
+  Detects when an Auth0 log stream is deleted or disabled. Attackers may disable
+  logging to evade detection and hide their activities.
+query_text: |-
+  %ingest.source_type:auth0
+  data.type:sapi
+  (
+  (data.description:"Delete a log stream") or
+  (data.description:"Update a log stream" data.details.request.body.status:paused)
+  )
+  data.details.request.path:/api/v2/log-streams/*
+  | groupbycount(data.user_id)
+  | where @q.count > 0
+tags:
+- tactics.ta0005.defense_evasion
+- techniques.t1562.impair_defenses
+- source.auth0

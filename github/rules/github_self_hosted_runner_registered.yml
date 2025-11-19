@@ -1,0 +1,25 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: GitHub Self-Hosted Runner Registered
+description: |-
+  ## Goal
+  Detects the registration of a new self-hosted runner.
+
+  ## Strategy
+  Monitor GitHub audit logs for `runner_group.register`. Unauthorized runners can be used to execute malicious code or exfiltrate secrets from the environment.
+
+  ## Triage and Response
+  1. Identify the runner and the user who registered it.
+  2. Verify if the runner is authorized.
+  3. Remove the runner immediately if unauthorized.
+enabled: true
+severity: High
+query_text: "%ingest.source_type:github\naction:runner_group.register OR action:org.register_self_hosted_runner "
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- high_severity_alerts
+tags:
+- github
+- actions
+- execution

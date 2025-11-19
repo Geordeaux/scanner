@@ -1,0 +1,10 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Hunt - Atlassian API Token Activity
+description: |-
+  Hunt for API token creation and revocation events.
+query_text: |-
+  %ingest.source_type:atlassian
+  attributes.action:(api_token_created api_token_revoked)
+tags:
+- hunt
+- source.atlassian

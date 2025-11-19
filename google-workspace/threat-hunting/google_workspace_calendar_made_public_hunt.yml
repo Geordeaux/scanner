@@ -1,0 +1,9 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Google Workspace Calendar Made Public
+description: |-
+  Detects when a user's primary calendar is shared publicly.
+query_text: "%ingest.source_type:google_workspace\naction:change_calendar_setting "
+tags:
+- google_workspace
+- calendar
+- exposure

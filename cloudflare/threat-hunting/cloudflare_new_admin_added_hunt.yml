@@ -1,0 +1,9 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Cloudflare New Admin Added
+description: |-
+  Detects when a new member is invited to the Cloudflare account.
+query_text: "%ingest.source_type:cloudflare\nAction:member_invite "
+tags:
+- cloudflare
+- iam
+- persistence

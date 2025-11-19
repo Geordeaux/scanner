@@ -1,0 +1,29 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS CloudTrail Logging Tampered
+description: |-
+  Detect when AWS CloudTrail logging is updated, stopped, deleted, or when event selectors are modified. These actions can indicate attempts to disable or impair logging of security-relevant events.
+query_text: |-
+  %ingest.source_type="aws:cloudtrail"
+  eventSource="cloudtrail.amazonaws.com"
+  eventName:(
+  "UpdateTrail"
+  "StopLogging"
+  "DeleteTrail"
+  "PutEventSelectors"
+  )
+  | groupbycount(
+  recipientAccountId,
+  requestParameters.name,
+  userIdentity.arn,
+  awsRegion
+  )
+  | where @q.count > 0
+tags:
+- source.aws
+- domain.cloud
+- domain.logging
+- domain.cloudtrail
+- tactics.ta0005.defence_evasion
+- techniques.t1562.008.impair_defences_disable_cloud_logs
+- use_case.aws_cloudtrail
+- use_case.logging_integrity

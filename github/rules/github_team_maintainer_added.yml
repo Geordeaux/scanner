@@ -1,0 +1,25 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: GitHub Team Maintainer Added
+description: |-
+  ## Goal
+  Detects when a user is promoted to team maintainer.
+
+  ## Strategy
+  Monitor GitHub audit logs for `team.add_maintainer`. Maintainers can manage team membership and settings.
+
+  ## Triage and Response
+  1. Identify the user and the team.
+  2. Verify authorization.
+  3. Revert if necessary.
+enabled: true
+severity: Medium
+query_text: "%ingest.source_type:github\naction:team.add_maintainer "
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- medium_severity_alerts
+tags:
+- github
+- iam
+- privilege_escalation

@@ -1,0 +1,20 @@
+name: Auth0 Guardian MFA Push Notifications Rejected Playbook
+description: |-
+  Response steps for when a user rejects multiple MFA push notifications.
+  This strongly suggests an attacker has the user's password and is spamming MFA requests (MFA Fatigue).
+severity: High
+steps:
+  - name: Triage
+    description: |-
+      1. Identify the user (`data.user_id`) and the source IP of the login attempts.
+      2. Check the number of rejected attempts.
+  - name: Investigation
+    description: |-
+      1. Confirm if the user is actively rejecting these requests (contact them).
+      2. Check if there was eventually a successful login (MFA bypass).
+      3. Investigate the source IP of the login attempts.
+  - name: Remediation
+    description: |-
+      1. Reset the user's password immediately (since the attacker likely has it).
+      2. Block the attacking IP.
+      3. Educate the user about MFA fatigue attacks.

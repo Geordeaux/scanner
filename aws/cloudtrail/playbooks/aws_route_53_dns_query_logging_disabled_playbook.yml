@@ -1,0 +1,16 @@
+name: AWS Route 53 DNS query logging disabled Playbook
+description: Detect when a user deletes a Route 53 query logging configuration.
+severity: Low
+steps:
+- name: Investigation
+  description: Monitor cloudtrail logs for the event name "DeleteResolverQueryLogConfig,"
+    which stops Route 53 Query logging for all associated Amazon VPCs.
+- name: Triage
+  description: '1. Determine if the user identity is expected to perform the "DeleteResolverQueryLogConfig"
+    API call.
+
+    2. Contact the principal owner to verify if the API call was initiated by the
+    user.
+
+    3. If the API call was not user-initiated, rotate user credentials and investigate
+    other successfully accessed APIs.'

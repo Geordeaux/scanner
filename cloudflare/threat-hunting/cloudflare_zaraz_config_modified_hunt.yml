@@ -1,0 +1,9 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Cloudflare Zaraz Configuration Modified
+description: |-
+  Detects modifications to Cloudflare Zaraz configuration.
+query_text: "%ingest.source_type:cloudflare\nAction:zaraz_config_update "
+tags:
+- cloudflare
+- zaraz
+- supply_chain

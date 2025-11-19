@@ -1,0 +1,69 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: AWS GuardDuty Trusted Or Threat IP Lists Tampered
+enabled: true
+severity: High
+description: |-
+  ## Goal
+  Detects when an Amazon GuardDuty detector's trusted IP sets or threat intelligence IP sets are deleted or deactivated. This may indicate an attempt to impair defences by weakening GuardDuty's detection capability.
+
+  ## Strategy
+  Monitor AWS CloudTrail management events from `guardduty.amazonaws.com` and alert on:
+  * `DeleteIPSet`
+  * `DeleteThreatIntelSet`
+  * `UpdateIPSet` with `activate=false`
+  * `UpdateThreatIntelSet` with `activate=false`
+
+  These actions should be rare, tightly controlled, and usually associated with planned changes to GuardDuty configuration. Any unplanned change warrants immediate investigation.
+
+  ## Triage and Response
+  * Identify who initiated the change (IAM user or role), from where (IP, user agent), and in which account and region.
+  * Determine whether there is an approved change, maintenance window, or documented configuration update that explains the IP set or threat intel set change.
+  * If there is no valid justification:
+    * Treat as a high-severity incident (potential defence evasion / logging impairment).
+    * Confirm whether other GuardDuty configuration has been modified (detectors, publishing destinations, findings export).
+    * Restore the trusted or threat intel IP set configuration as appropriate (from infrastructure-as-code, backup, or documentation).
+    * Review recent CloudTrail activity for the same principal and account, focusing on GuardDuty, CloudTrail, Config, IAM, networking, and logging controls.
+    * Escalate according to the incident response process.
+query_text: |-
+  %ingest.source_type="aws:cloudtrail"
+  eventSource:"guardduty.amazonaws.com"
+  (
+  eventName:"DeleteIPSet"
+  or eventName:"DeleteThreatIntelSet"
+  or (
+  (
+  eventName:"UpdateIPSet"
+  or eventName:"UpdateThreatIntelSet"
+  )
+  and requestParameters.activate:"false"
+  )
+  )
+  | where errorCode IS NULL
+time_range_s: 3600
+run_frequency_s: 3600
+event_sink_keys:
+- high_severity_alerts
+tags:
+- source.aws
+- domain.cloud
+- domain.guardduty
+- domain.logging_and_monitoring
+- tactics.ta0005.defence_evasion
+- techniques.t1562.impair_defences
+- use_case.control_plane_hardening
+- use_case.guardduty_configuration
+context_fields:
+- userIdentity.type
+- userIdentity.arn
+- userIdentity.userName
+- sourceIPAddress
+- userAgent
+- awsRegion
+- requestParameters
+- responseElements
+- recipientAccountId
+- eventID
+- eventTime
+- requestParameters.detectorId
+- requestParameters.ipSetId
+- requestParameters.threatIntelSetId

@@ -1,0 +1,43 @@
+name: AWS Config Service Modified Playbook
+description: Detect when AWS Config recorders or delivery channels are stopped, deleted,
+  or modified. These actions may indicate an attempt to disable or impair configuration
+  auditing and security monitoring.
+severity: High
+steps:
+- name: Investigation
+  description: 'Monitor AWS CloudTrail management events from `config.amazonaws.com`
+    for:
+
+    * `StopConfigurationRecorder`
+
+    * `DeleteConfigurationRecorder`
+
+    * `DeleteDeliveryChannel`
+
+    * `PutDeliveryChannel`
+
+    * `PutConfigurationRecorder`
+
+
+    These changes may be:
+
+    * Legitimate configuration maintenance, or
+
+    * Malicious attempts to tamper with AWS Config so that future changes are no longer
+    recorded or delivered.'
+- name: Triage
+  description: '* Confirm whether the change aligns with an approved change request
+    or maintenance window.
+
+    * Validate that the initiating principal is authorised to administer AWS Config
+    at the account and/or organisation level.
+
+    * Review the before/after state of the recorder and delivery channel (status,
+    included resources, global resources, SNS/S3 destinations, encryption configuration).
+
+    * Investigate other recent activity from the same principal and source IP for
+    signs of broader compromise.
+
+    * If unauthorised or suspicious, treat as a high-severity incident: restore known-good
+    AWS Config settings, constrain affected credentials, and perform a wider compromise
+    assessment.'

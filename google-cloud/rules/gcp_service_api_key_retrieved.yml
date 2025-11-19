@@ -1,0 +1,54 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+
+name: GCP Service API Key Retrieved
+description: |-
+  ## Goal
+  Detect when there is a successful attempt to retrieve Google Cloud service API keys. This behavior may indicate unauthorized access or an attempt to misuse credentials.
+
+  ## Strategy
+  Monitor Cloud Audit Logs for events where the `GetKeyString` method is called on the `apikeys.googleapis.com` service, indicating that an API key has been retrieved. If such events are detected within an hour, trigger an alert to investigate potential unauthorized access.
+
+  ## Triage and Response
+  Investigate the detected use cases to determine if they were authorized. Review the user and IP addresses involved to ensure that no unauthorized access has occurred. Monitor for further suspicious activities involving this API key or user.
+
+enabled: true
+severity: High
+
+query_text: |-
+  %ingest.source_type:gcp
+  protoPayload.serviceName:apikeys.googleapis.com
+  protoPayload.methodName:google.api.apikeys.v2.ApiKeys.GetKeyString
+  (not protoPayload.status.message:ERROR)
+  | groupbycount(project_id, protoPayload.authenticationInfo.principalEmail)
+  | where @q.count > 0
+
+time_range_s: 3600
+run_frequency_s: 300
+
+event_sink_keys:
+  - gcp_service_api_key_retrieved_alerts
+
+tags:
+  - source.gcp
+  - gcp
+  - gcp_audit
+  - service_api_key_retrieved
+  - techniques.t1555.credentials_from_password_stores
+  - tactics.ta0006.credential_access
+
+# Additional context fields for alert graph
+context_fields:
+  - project_id
+  - protoPayload.authenticationInfo.principalEmail
+  - protoPayload.requestMetadata.callerIp
+  - protoPayload.requestMetadata.callerIp_geo.country
+  - protoPayload.requestMetadata.callerIp_geo.state
+  - protoPayload.requestMetadata.callerIp_geo.organization
+  - protoPayload.requestMetadata.callerSuppliedUserAgent
+  - protoPayload.serviceName
+  - protoPayload.methodName
+  - protoPayload.resourceName
+
+# Outcome variables
+risk_score: 75
+event_count: "@q.count"

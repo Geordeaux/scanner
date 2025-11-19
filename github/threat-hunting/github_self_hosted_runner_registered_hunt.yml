@@ -1,0 +1,9 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: GitHub Self-Hosted Runner Registered
+description: |-
+  Detects the registration of a new self-hosted runner.
+query_text: "%ingest.source_type:github\naction:runner_group.register OR action:org.register_self_hosted_runner "
+tags:
+- github
+- actions
+- execution

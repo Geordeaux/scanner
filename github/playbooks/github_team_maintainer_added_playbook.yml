@@ -1,0 +1,14 @@
+name: GitHub Team Maintainer Added Playbook
+description: Detects when a user is promoted to team maintainer.
+severity: Medium
+steps:
+- name: Investigation
+  description: Monitor GitHub audit logs for `team.add_maintainer`. Maintainers can manage team membership and settings.
+- name: Triage
+  description: '1. Identify the user and the team.
+
+    2. Verify authorization.
+
+    3. Revert if necessary.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

@@ -1,0 +1,21 @@
+name: Google Cloud Storage Bucket enumerated Playbook
+description: Detect when a service account lists GCS buckets.
+severity: Informational
+steps:
+- name: Investigation
+  description: 'Monitor GCS bucket admin activity audit logs to identify when a service account invokes the method:
+
+    * `storage.buckets.list`
+
+
+    ## Triage and response
+
+    Determine whether the service account should be making list bucket calls.
+
+    * If the account was compromised, secure it and investigate the compromise and any unauthorized activity.
+
+    * If the service account owner intended to make the list buckets call, evaluate the necessity of the call, as it could pose a security risk. If it''s unnecessary, adjust the rule''s filter to stop generating signals for this account.'
+- name: Triage
+  description: ''
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

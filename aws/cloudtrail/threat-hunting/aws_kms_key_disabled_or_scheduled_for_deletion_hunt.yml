@@ -1,0 +1,20 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS KMS Key Disabled Or Scheduled For Deletion
+description: |-
+  Detects when an AWS KMS key is disabled or scheduled for deletion. This can indicate an attempt to disrupt data availability or destroy sensitive information.
+query_text: |-
+  %ingest.source_type="aws:cloudtrail"
+  eventSource:"kms.amazonaws.com"
+  eventName:(
+  "DisableKey"
+  "ScheduleKeyDeletion"
+  )
+tags:
+- source.aws
+- domain.cloud
+- domain.kms
+- domain.key_management
+- tactics.ta0040.impact
+- techniques.t1485.data_destruction
+- use_case.kms_key_lifecycle
+- use_case.data_destruction

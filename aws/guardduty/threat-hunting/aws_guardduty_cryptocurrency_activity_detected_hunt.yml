@@ -1,0 +1,28 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS GuardDuty Cryptocurrency Activity Detected
+description: |-
+  Detects when Amazon GuardDuty identifies cryptocurrency-related activity in Amazon EC2, AWS Lambda, or Amazon EKS runtimes. This could indicate an attempt to hijack resources for mining cryptocurrencies.
+query_text: |-
+  %ingest.source_type="aws:guardduty"
+  metadata.vendor_name:AMAZON
+  metadata.product_name:"AWS GuardDuty"
+  (
+  metadata.product_event_type:*CryptoCurrency*
+  or metadata.product_event_type:*CryptoMinerExecuted*
+  or metadata.product_event_type:*BitcoinDomainRequest*
+  )
+  not security_result.about.labels.Sample:"true"
+  | groupbycount(
+  recipientAccountId,
+  principal.ip,
+  target.resource.product_object_id
+  )
+  | where @q.count > 0
+tags:
+- source.aws
+- domain.cloud
+- domain.guardduty
+- tactics.ta0040.impact
+- techniques.t1496.resource_hijacking
+- use_case.aws_guardduty
+- use_case.cryptomining

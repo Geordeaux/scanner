@@ -1,0 +1,18 @@
+name: Atlassian Global Permission Added Playbook
+description: |-
+  Response steps for when a global permission is added.
+  This can significantly expand access and should be verified.
+severity: Medium
+steps:
+  - name: Triage
+    description: |-
+      1. Identify the user (`attributes.actor.email`) who added the permission.
+      2. Identify the permission added and the target group/user.
+  - name: Investigation
+    description: |-
+      1. Determine if this change was authorized via change management.
+      2. Verify the necessity of the permission.
+  - name: Remediation
+    description: |-
+      1. If unauthorized, revert the permission change.
+      2. Investigate the actor's account.

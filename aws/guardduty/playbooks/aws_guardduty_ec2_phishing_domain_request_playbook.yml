@@ -1,0 +1,14 @@
+name: AWS GuardDuty EC2 Phishing Domain Request Playbook
+description: Detects when an EC2 instance queries a domain associated with phishing.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor GuardDuty findings for `Trojan:EC2/PhishingDomainRequest`. This could indicate a user on the instance clicked a phishing link or a process is reaching out to a phishing site.
+- name: Triage
+  description: '1. Identify the instance and the domain.
+
+    2. Check if any credentials were entered or data submitted.
+
+    3. Reset credentials if necessary.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

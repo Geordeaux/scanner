@@ -1,0 +1,14 @@
+name: Cloudflare Bad Client IP Playbook
+description: 'Detect requests from IP addresses that have been classified as having a bad reputation,
+
+  including unknown, badHost, greylist, securityScanner, scan, or tor classifications.'
+severity: Medium
+steps:
+- name: Investigation
+  description: Monitor for requests from IPs with poor reputation or known malicious history.
+- name: Triage
+  description: '1. Check the IP reputation in Cloudflare or external threat intel.
+
+    2. If confirmed malicious, add to the IP Access Rules blocklist.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

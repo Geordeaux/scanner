@@ -1,0 +1,9 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS GuardDuty IAM Privilege Escalation
+description: |-
+  Detects attempts by an IAM user to escalate their privileges.
+query_text: "%ingest.source_type:aws_guardduty\nmetadata.product_event_type:\"PrivilegeEscalation:IAMUser/AdministrativePermissions\" "
+tags:
+- guardduty
+- aws
+- privilege_escalation

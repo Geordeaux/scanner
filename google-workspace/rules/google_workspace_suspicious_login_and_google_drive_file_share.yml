@@ -1,0 +1,26 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Google Workspace Suspicious Login and Google Drive File Share
+description: |-
+  ## Goal
+  Identifies when a Google Workspace user shares a file on Google Drive after a suspicious login event occurred.
+
+  ## Strategy
+  Monitor for mass downloads, deletions, or external sharing of files.
+
+  ## Triage and Response
+  1. Identify the user and the files involved.
+  2. Verify if the activity is business-justified.
+  3. Revoke sharing or suspend the user if data exfiltration is suspected.
+enabled: true
+severity: High
+query_text: |-
+  %ingest.source_type:google_workspace
+  action:change_acl_editors OR action:change_document_access_scope OR action:change_document_visibility OR action:change_user_access OR action:login_success
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- high_severity_alerts
+tags:
+- google_workspace
+- converted_yaral

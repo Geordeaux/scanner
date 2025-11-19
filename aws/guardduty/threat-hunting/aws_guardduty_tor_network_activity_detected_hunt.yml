@@ -1,0 +1,18 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS GuardDuty Tor Network Activity Detected
+description: |-
+  Detects when Amazon GuardDuty identifies Tor network activity in an AWS account. This could indicate that an actor is using the Tor network to mask their identity, which may be used for command and control (C2) activities or other malicious purposes.
+query_text: |-
+  %ingest.source_type:aws_guardduty
+  metadata.vendor_name:AMAZON
+  metadata.product_name:"AWS GuardDuty"
+  (
+  metadata.product_event_type:/TorIPCaller/ or
+  metadata.product_event_type:/TorRelay/ or
+  metadata.product_event_type:/TorClient/
+  )
+tags:
+- tor_network_activity
+- guardduty
+- aws
+- command_and_control

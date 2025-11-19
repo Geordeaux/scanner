@@ -1,0 +1,27 @@
+name: AWS IAM Compromised Key Quarantine Policy Attached Playbook
+description: Detects when the AWS managed policy `AWSCompromisedKeyQuarantine` is
+  attached to a user, role, or group. This policy is typically applied by AWS when
+  the credentials of an IAM user have been compromised or publicly exposed.
+severity: High
+steps:
+- name: Investigation
+  description: "Monitor AWS CloudTrail management events where:\n* The service is\
+    \ IAM (`iam.amazonaws.com`), and\n* The action is one of:\n  * `AttachUserPolicy`\n\
+    \  * `AttachGroupPolicy`\n  * `AttachRolePolicy`\n* The `policyArn` in the request\
+    \ contains `AWSCompromisedKeyQuarantine`.\n\nThese events strongly suggest that\
+    \ AWS has detected potentially compromised access keys or credentials for the\
+    \ affected IAM principal."
+- name: Triage
+  description: "* Identify:\n  * The IAM principal to which `AWSCompromisedKeyQuarantine`\
+    \ was attached (user, role, or group).\n  * The AWS account and region.\n  * The\
+    \ actor who invoked the API call (userIdentity.arn and type), if not an AWS internal\
+    \ actor.\n* Immediately:\n  * Treat as a high-severity indicator of compromise\
+    \ for the affected IAM identity.\n  * Revoke and rotate any associated access\
+    \ keys and credentials.\n  * Validate whether the affected access keys or credentials\
+    \ were ever committed to source control, shared in tickets, or exposed in logs.\n\
+    * Hunt and review:\n  * Recent activity by the affected principal (CloudTrail,\
+    \ access to critical resources, data access).\n  * Any corresponding AWS Security\
+    \ Hub, GuardDuty, or Abuse reports.\n* If confirmed unauthorised:\n  * Contain\
+    \ by disabling or deleting the affected IAM user or role as appropriate.\n  *\
+    \ Implement preventive controls to avoid future exposure (for example, pre-commit\
+    \ scanning, CI secret scanning, tighter key lifecycle)."

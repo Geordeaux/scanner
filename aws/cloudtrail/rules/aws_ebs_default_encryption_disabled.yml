@@ -1,0 +1,29 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: AWS EBS default encryption disabled
+description: |-
+  ## Goal
+  Detect when EBS encryption is disabled by default.
+
+  ## Strategy
+  Monitor CloudTrail for instances of EBS encryption being disabled by default using the DisableEbsEncryptionByDefault API call.
+
+  ## Triage and Response
+  1. Identify the user in your organization who owns the API key that executed this call.
+  2. Inform the user about the best practice of enabling EBS encryption by default.
+  3. Re-enable EBS encryption by default.
+
+  For more information about Amazon EBS Encryption, refer to the Amazon EBS Encryption documentation.
+enabled: true
+severity: Medium
+query_text: |-
+  %ingest.source_type:"aws:cloudtrail"
+  eventSource:ec2.amazonaws.com
+  eventName:DisableEbsEncryptionByDefault
+  | groupbycount(userIdentity.arn)
+  | where @q.count > 0
+time_range_s: 300
+run_frequency_s: 60
+event_sink_keys:
+- medium_severity_alerts
+tags:
+- source.cloudtrail

@@ -1,0 +1,27 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Auth0 Action, Rule, or Hook Modified
+description: |-
+  Detects when an Auth0 Action, Rule, or Hook is created, updated, or deleted.
+  These components execute custom code during the authentication pipeline.
+  Unauthorized changes could introduce malicious code (code injection) or bypass
+  security controls.
+query_text: |-
+  %ingest.source_type:auth0
+  data.type:sapi
+  (
+  (data.description:"Create an action") or
+  (data.description:"Update an action") or
+  (data.description:"Delete an action") or
+  (data.description:"Create a rule") or
+  (data.description:"Update a rule") or
+  (data.description:"Delete a rule") or
+  (data.description:"Create a hook") or
+  (data.description:"Update a hook") or
+  (data.description:"Delete a hook")
+  )
+  | groupbycount(data.user_id)
+  | where @q.count > 0
+tags:
+- tactics.ta0003.persistence
+- techniques.t1556.modify_authentication_process
+- source.auth0

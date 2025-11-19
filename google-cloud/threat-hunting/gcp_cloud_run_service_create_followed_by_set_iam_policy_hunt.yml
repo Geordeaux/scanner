@@ -1,0 +1,9 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: GCP Cloud Run Service Created FOLLOWED BY Set IAM Policy
+description: |-
+  Detects run.services.create method for privilege escalation in GCP. The exploit creates a new Cloud Run Service that, when invoked, returns the Service Account's access token by accessing the metadata API of the server it is running on.
+query_text: |-
+  %ingest.source_type:google_cloud_audit
+  protoPayload.methodName:"google.cloud.run.v1.Services.CreateService" OR protoPayload.methodName:"google.iam.v1.IAMPolicy.SetIamPolicy"
+tags:
+- panther_migration

@@ -1,0 +1,20 @@
+name: AWS Successful Console Authentication From Multiple IPs Playbook
+description: Detect when an AWS user successfully authenticates from more than one
+  unique IP address within 5 minutes, which may indicate account compromise or unauthorized
+  access.
+severity: Medium
+steps:
+- name: Investigation
+  description: Monitor AWS CloudTrail console sign-in events from `signin.amazonaws.com`
+    where the console login succeeded. Within a 5-minute window, group events by user
+    and count how many distinct source IPs were used. Raise a signal when a single
+    user authenticates successfully from more than one unique IP in that short time
+    window.
+- name: Triage
+  description: "* Confirm whether the multiple-IP sign-ins are expected (e.g., SSO\
+    \ redirectors, VPN/proxy hops, corporate egress vs home IP).\n* Review the user\u2019\
+    s recent activity (services, API calls, IAM changes, data access) around the time\
+    \ of the logins.\n* Check device / browser fingerprints (user agent, MFA details,\
+    \ IdP logs) for signs of session hijacking or credential theft.\n* If suspicious,\
+    \ revoke sessions, rotate credentials, enforce MFA, and increase monitoring for\
+    \ the affected user."

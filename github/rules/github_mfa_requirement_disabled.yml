@@ -1,0 +1,28 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: GitHub MFA requirement disabled
+description: |-
+  ## Goal
+  Detect when GitHub multi-factor authentication (MFA) requirements have been disabled.
+
+  ## Strategy
+  This rule monitors GitHub audit logs for instances when MFA requirements are disabled, allowing members to access an enterprise or organization without two-factor authentication. This action could enable attackers to maintain persistent access to compromised accounts.
+
+  ## Triage and Response
+  1. Determine if the change made by the actor is authorized.
+  2. If the change is unauthorized or unexpected, initiate your organization's incident response process and investigate.
+enabled: true
+severity: High
+query_text: |-
+  %ingest.source_type:github
+  action:(org.disable_two_factor_requirement business.disable_two_factor_requirement)
+  | groupbycount(actor)
+  | where @q.count > 0
+time_range_s: 300
+run_frequency_s: 60
+event_sink_keys:
+- high_severity_alerts
+tags:
+- techniques.t1556.modify_authentication_process
+- source.github-telemetry
+- source.github
+- tactics.ta0005.defense_evasion

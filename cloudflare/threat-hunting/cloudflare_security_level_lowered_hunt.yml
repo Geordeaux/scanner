@@ -1,0 +1,9 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Cloudflare Security Level Lowered
+description: |-
+  Detects when the Cloudflare Security Level is lowered (e.g., from 'High' to 'Essentially Off').
+query_text: "%ingest.source_type:cloudflare\nAction:zone_setting_edit\nNewValue:\"essentially_off\" OR NewValue:\"low\" "
+tags:
+- cloudflare
+- configuration
+- security_posture

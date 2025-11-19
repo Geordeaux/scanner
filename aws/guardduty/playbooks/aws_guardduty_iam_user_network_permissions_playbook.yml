@@ -1,0 +1,16 @@
+name: AWS GuardDuty IAM User Network Permissions Playbook
+description: Detects when an IAM user modifies network permissions to potentially allow unauthorized access.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor GuardDuty findings for `Persistence:IAMUser/NetworkPermissions`. This finding indicates that an IAM user has modified security groups, NACLs, or route tables in a way that weakens network security.
+- name: Triage
+  description: '1. Identify the user and the specific changes made.
+
+    2. Verify if the changes were authorized.
+
+    3. If unauthorized, revert the changes immediately.
+
+    4. Revoke the user''s permissions and investigate for compromise.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

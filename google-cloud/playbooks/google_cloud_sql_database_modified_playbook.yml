@@ -1,0 +1,22 @@
+name: Google Cloud SQL database modified Playbook
+description: Detect when a Google Cloud SQL database has been modified.
+severity: Informational
+steps:
+- name: Investigation
+  description: 'Monitor Google Cloud SQL admin activity audit logs to identify when any of the following methods are invoked:
+
+
+    * Creating an instance
+
+    * Updating an instance
+
+    * Updating a user
+
+
+    ## Triage and response
+
+    1. Review the Google Cloud SQL database to ensure it is properly configured with the correct permissions.'
+- name: Triage
+  description: ''
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

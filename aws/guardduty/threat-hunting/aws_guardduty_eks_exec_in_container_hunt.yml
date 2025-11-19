@@ -1,0 +1,11 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS GuardDuty EKS Exec in Container
+description: |-
+  Detects the execution of commands inside a running container in an EKS cluster.
+query_text: "%ingest.source_type:aws_guardduty\nmetadata.product_event_type:\"Execution:Kubernetes/ExecInContainer\" "
+tags:
+- guardduty
+- aws
+- eks
+- kubernetes
+- execution

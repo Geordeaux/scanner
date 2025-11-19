@@ -1,0 +1,14 @@
+name: Cloudflare WAF Java Deserialization Attempt Playbook
+description: Detects Java Deserialization attempts blocked by Cloudflare WAF.
+severity: Critical
+steps:
+- name: Investigation
+  description: Monitor Cloudflare WAF logs for serialized Java objects in payloads.
+- name: Triage
+  description: '1. Identify the source IP.
+
+    2. Confirm the block.
+
+    3. Ensure backend Java applications are patched.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

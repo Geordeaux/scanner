@@ -1,0 +1,10 @@
+name: GCP Cloud Audit Logging Removed From All Services Playbook
+description: Detect when GCP Cloud Audit logs are removed from all services at the project or organization level. Audit logging helps organizations maintain security and minimize risk.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor GCP Cloud Audit logs for events where the `SetIamPolicy` action is taken to remove audit logging from all services (`allServices`). Capture relevant details such as the principal IP, user, and target resource to assess potential threats.
+- name: Triage
+  description: Investigate the detected event to determine if it was authorized. Review the principal IPs, users, and other details to ensure that no unauthorized actions have been taken. Ensure that all audit logging policies are compliant with company policies.
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

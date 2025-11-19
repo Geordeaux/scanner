@@ -1,0 +1,15 @@
+name: AWS KMS key deleted or scheduled for deletion Playbook
+description: Detect when a KMS key is deleted or scheduled for deletion.
+severity: Low
+steps:
+- name: Investigation
+  description: 'Monitor the following CloudTrail API calls to identify potential KMS
+    key deletions:
+
+    * DisableKey
+
+    * ScheduleKeyDeletion'
+- name: Triage
+  description: "1. Check if the user ARN in your organization should be making this\
+    \ call.\n2. If the user did not make the API call:\n    * Rotate the credentials.\n\
+    \    * Investigate other potential unauthorized API calls from this user."

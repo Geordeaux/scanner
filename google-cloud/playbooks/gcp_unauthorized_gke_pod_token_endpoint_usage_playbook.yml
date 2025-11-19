@@ -1,0 +1,16 @@
+name: Unauthorized GKE Pod Token Endpoint Usage Playbook
+description: Alert when an authorization token likely originating from GKE activity is subsequently used within a command line on an endpoint system, suggesting potential credential exfiltration and reuse.
+severity: Medium
+steps:
+- name: Investigation
+  description: Monitor EDR/process telemetry for command lines that contain a Bearer token and appear to be accessing Kubernetes or GKE APIs (for example, kubernetes.default.svc or container.googleapis.com). This approximates the case where a GKE pod token is copied and then reused from an endpoint. Group by host, user, and command line to surface distinct uses.
+- name: Triage
+  description: '1. Identify the process, user, and host where the token was observed.
+
+    2. Confirm if this was an authorized administrative action (for example, a kubeconfig or token being tested locally).
+
+    3. If suspicious, search for related activity by the same user, host, and token (API calls, new credentials, privilege escalation).
+
+    4. Rotate the affected Kubernetes service account tokens and investigate for further compromise.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

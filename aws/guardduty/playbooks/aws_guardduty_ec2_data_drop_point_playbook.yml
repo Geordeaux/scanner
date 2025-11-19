@@ -1,0 +1,16 @@
+name: AWS GuardDuty EC2 Data Drop Point Playbook
+description: Detects when an EC2 instance uploads data to a known drop point (e.g., a site used for data exfiltration).
+severity: High
+steps:
+- name: Investigation
+  description: Monitor GuardDuty findings for `Trojan:EC2/DropPoint`.
+- name: Triage
+  description: '1. Identify the instance and the destination URL/IP.
+
+    2. Isolate the instance.
+
+    3. Investigate what data was uploaded.
+
+    4. Check for other signs of compromise.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

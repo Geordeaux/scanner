@@ -1,0 +1,25 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Google Workspace API Access Granted
+description: |-
+  ## Goal
+  Detects when a user grants API access to a third-party application.
+
+  ## Strategy
+  Monitor Google Workspace Token audit logs for `authorize` events. Malicious apps can use OAuth tokens to access data.
+
+  ## Triage and Response
+  1. Identify the user and the application.
+  2. Verify the reputation of the application.
+  3. Revoke the token if the app is suspicious.
+enabled: true
+severity: Medium
+query_text: "%ingest.source_type:google_workspace\naction:authorize "
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- medium_severity_alerts
+tags:
+- google_workspace
+- oauth
+- credential_access

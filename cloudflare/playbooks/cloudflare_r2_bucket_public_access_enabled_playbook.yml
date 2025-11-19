@@ -1,0 +1,14 @@
+name: Cloudflare R2 Bucket Public Access Enabled Playbook
+description: Detects when public access is enabled for an R2 bucket.
+severity: Critical
+steps:
+- name: Investigation
+  description: Monitor Cloudflare Audit Logs for changes to R2 bucket permissions.
+- name: Triage
+  description: '1. Identify the bucket.
+
+    2. Verify if public access is intended.
+
+    3. If not, disable public access immediately.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

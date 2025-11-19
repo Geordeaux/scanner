@@ -1,0 +1,29 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Signin Single Factor Console Login via Federated Session
+enabled: true
+severity: Medium
+description: |-
+  ## Goal
+  This hunting query identifies when a user signs in to the AWS Management Console using a federated session and single-factor authentication. Federated sessions are typically used by users who are not directly managed by AWS IAM or have temporary credentials. Single-factor authentication without MFA may indicate a security risk, as MFA adds an additional layer of security to the authentication process. This could also indicate the abuse of STS tokens to bypass MFA requirements.
+
+  ## Strategy
+  This hunting query identifies when a user signs in to the AWS Management Console using a federated session and single-factor authentication. Federated sessions are typically used by users who are not directly managed by AWS IAM or have temporary credentials. Single-factor authentication without MFA may indicate a security risk, as MFA adds an additional layer of security to the authentication process. This could also indicate the abuse of STS tokens to bypass MFA requirements.
+
+  ## Triage and Response
+  Investigate and remediate as appropriate.
+query_text: |-
+  %ingest.source_type="aws:cloudtrail"
+  eventSource="signin.amazonaws.com"
+  eventName="GetSigninToken"
+  eventType="AwsConsoleSignIn"
+  userIdentity.type="FederatedUser"
+  | where additionalEventData.MFAUsed = "No"
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- medium_severity_alerts
+tags:
+- source.aws
+- domain.cloud
+- tactics.ta0005.defense_evasion
+- techniques.t1078.valid_accounts

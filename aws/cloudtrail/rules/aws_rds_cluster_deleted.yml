@@ -1,0 +1,34 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: AWS RDS Cluster deleted
+description: |-
+  ## Goal
+  Detect when a user deletes a database cluster in RDS.
+
+  ## Strategy
+  Monitor the relevant CloudTrail API call for RDS cluster deletions:
+
+  * DeleteDBCluster
+
+  ## Triage and Response
+  1. Determine if the API call (the event name) should have occurred.
+  2. If it shouldn't have been made:
+     * Contact the user (user identity) to confirm if they made the API call.
+  3. If the API call was not made by the user:
+     * Rotate the user credentials.
+     * Investigate other API calls made with the old credentials that were not authorized by the user.
+enabled: true
+severity: Informational
+query_text: |-
+  %ingest.source_type:"aws:cloudtrail"
+  (not errorCode:*)
+  eventName:DeleteDBCluster
+  | groupbycount(userIdentity.arn)
+  | where @q.count > 0
+time_range_s: 300
+run_frequency_s: 60
+event_sink_keys:
+- informational_severity_alerts
+tags:
+- techniques.t1485.data_destruction
+- tactics.ta0040.impact
+- source.cloudtrail

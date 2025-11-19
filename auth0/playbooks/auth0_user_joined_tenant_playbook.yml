@@ -1,0 +1,18 @@
+name: Auth0 User Joined Tenant Playbook
+description: |-
+  Response steps for when a user joins the tenant.
+  Monitor for unauthorized access.
+severity: Informational
+steps:
+  - name: Triage
+    description: |-
+      1. Identify the user (`data.user_id`) who joined.
+      2. Check the timestamp.
+  - name: Investigation
+    description: |-
+      1. Verify if this user was invited and authorized.
+      2. Check the user's email domain.
+  - name: Remediation
+    description: |-
+      1. If unauthorized, remove the user.
+      2. Investigate how they received an invitation.

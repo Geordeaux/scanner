@@ -1,0 +1,15 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: 'TTB Hunt: AWS GuardDuty TTB High Diversity Anomaly'
+description: |-
+  Hunt for users with high diversity in AWS Regions and Finding Types.
+query_text: |-
+  %ingest.source_type="aws:guardduty"
+  | stats
+    distinct_count(region) as terrain_score,
+    distinct_count(type) as behavior_score
+    by resource.instanceDetails.instanceId
+  | sort -terrain_score, -behavior_score
+tags:
+- source.guardduty
+- ttb.anomaly
+- impact

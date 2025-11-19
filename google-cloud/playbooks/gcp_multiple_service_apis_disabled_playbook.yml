@@ -1,0 +1,10 @@
+name: GCP Multiple Service APIs Disabled Playbook
+description: Detect when multiple GCP Service APIs are disabled in a short period of time. This behavior may indicate an attempt to disrupt services or compromise the functionality of the cloud environment, which could be malicious.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor Cloud Audit Logs for DisableService events related to Google API Service Usage. Detect if more than five such events occur within a 1-hour window by the same user. Capture relevant details such as the event count, user information, and IP addresses involved, and set a high severity risk score to indicate the potential threat.
+- name: Triage
+  description: Investigate the detected disable attempts to determine if they were authorized. Review the user and IP addresses involved to ensure that no unauthorized service disruption has occurred. Monitor for further suspicious activities involving this user or IP address.
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

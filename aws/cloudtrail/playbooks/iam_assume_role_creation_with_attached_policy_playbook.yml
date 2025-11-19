@@ -1,0 +1,12 @@
+name: IAM Assume Role Creation with Attached Policy Playbook
+description: 'Identifies the creation of an IAM role with an inline attached policy
+  that allows the role to assume another role in a different account.
+
+  This could indicate a potential backdoor IAM role.'
+severity: High
+steps:
+- name: Investigation
+  description: 'Identifies the creation of an IAM role with an inline attached policy
+    that allows the role to assume another role in a different account.
+
+    This could indicate a potential backdoor IAM role.'

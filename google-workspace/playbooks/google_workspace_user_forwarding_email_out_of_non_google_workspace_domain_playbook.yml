@@ -1,0 +1,17 @@
+name: Google Workspace user forwarding email out of non Google Workspace domain Playbook
+description: Create a signal when Google Workspace detects a user setting up mail forwarding to a non-Google Workspace domain.
+severity: Low
+steps:
+- name: Investigation
+  description: 'Monitor Google Workspace logs for email forwarding events to non-Google domains.
+
+
+    ## Triage and response
+
+    1. Verify if the forwarding destination email address is legitimate.
+
+    2. If the address is not legitimate, review all activity for the user and all activity related to the specified IP address.'
+- name: Triage
+  description: ''
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

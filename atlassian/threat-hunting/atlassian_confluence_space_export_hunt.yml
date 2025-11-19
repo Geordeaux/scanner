@@ -1,0 +1,10 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Hunt - Atlassian Confluence Space Exports
+description: |-
+  Hunt for Confluence space exports.
+query_text: |-
+  %ingest.source_type:atlassian
+  attributes.action:space_export
+tags:
+- hunt
+- source.atlassian

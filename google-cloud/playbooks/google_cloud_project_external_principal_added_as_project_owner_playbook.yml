@@ -1,0 +1,22 @@
+name: Google Cloud Project external principal added as project owner Playbook
+description: Detect attempts to add an external principal as a project owner in Google Cloud.
+severity: High
+steps:
+- name: Investigation
+  description: 'This rule monitors Google Cloud Audit Logs for attempts to add an external principal as a project owner. An attacker who has gained initial access may try to maintain access by adding an external principal.
+
+
+    **Notes:**
+
+
+    * The rule triggers when a principal with an email address from the domains `gmail.com` or `googlemail.com` is added to a project.'
+- name: Triage
+  description: '1. Contact the user or owner of the service account to verify the legitimacy of the action.
+
+    2. If the action is legitimate, consider adding the user or service account to a suppression list.
+
+    3. Otherwise, review the User Investigation dashboard to see if the user or service account has taken other actions.
+
+    4. If the triage indicates the action was taken by an attacker, initiate your company''s incident response process and investigate.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

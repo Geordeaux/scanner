@@ -1,0 +1,14 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: GitHub enterprise owner added
+description: |-
+  Detect when a GitHub enterprise owner has been added.
+query_text: |-
+  %ingest.source_type:github
+  action:business.add_admin
+  | groupbycount(actor)
+  | where @q.count > 0
+tags:
+- source.github-telemetry
+- techniques.t1098.account_manipulation
+- source.github
+- tactics.ta0003.persistence

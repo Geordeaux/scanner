@@ -1,0 +1,25 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Google Workspace Suspicious App Script Created
+description: |-
+  ## Goal
+  Detects the creation or modification of Google App Scripts.
+
+  ## Strategy
+  Monitor Google Workspace Drive/Script audit logs for `create_script` or `edit_script`. App Scripts can be used to automate data theft, send phishing emails, or modify files.
+
+  ## Triage and Response
+  1. Identify the user and the script content.
+  2. Review the script's permissions and code.
+  3. Delete the script and suspend the user if malicious.
+enabled: true
+severity: Medium
+query_text: "%ingest.source_type:google_workspace\ndoc_type:script AND (action:create OR action:edit) "
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- medium_severity_alerts
+tags:
+- google_workspace
+- scripting
+- execution

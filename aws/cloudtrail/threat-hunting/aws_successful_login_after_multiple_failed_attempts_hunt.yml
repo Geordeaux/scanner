@@ -1,0 +1,21 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS Successful Login After Multiple Failed Attempts
+description: |-
+  Detect multiple failed AWS console authentication attempts (for example, four or more) for the same user within a short window. This pattern often precedes a successful login and can indicate brute force activity or account compromise.
+query_text: |-
+  %ingest.source_type="aws:cloudtrail"
+  eventSource:"signin.amazonaws.com"
+  eventName:ConsoleLogin
+  responseElements.ConsoleLogin:"Failure"
+  | groupbycount(
+  userIdentity.arn
+  )
+  | where @q.count >= 4
+tags:
+- source.aws
+- domain.identity
+- domain.authentication
+- tactics.ta0006.credential_access
+- tactics.ta0001.initial_access
+- techniques.t1110.brute_force
+- techniques.t1078.valid_accounts

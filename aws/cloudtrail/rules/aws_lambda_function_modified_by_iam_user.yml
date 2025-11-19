@@ -1,0 +1,35 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: AWS Lambda function modified by IAM user
+description: |-
+  ## Goal
+  Detect when an IAM user modifies an AWS Lambda function, which could indicate an attempt to maintain persistence or exfiltrate data in an AWS environment.
+
+  ## Strategy
+  Monitor the `UpdateFunctionCode` CloudTrail API call to identify modifications to an AWS Lambda Function.
+
+  ## Triage and Response
+  1. Verify if the IAM user is expected to update the Lambda function specified by the function name.
+  2. If the action is legitimate, consider adding the user to a suppression list.
+  3. If the action is unauthorized:
+     * Contact the user to confirm if they made the API call.
+     * Check the User Investigation dashboard for other actions taken by the user.
+     * Review the IP Investigation dashboard for additional traffic from the client's IP.
+  4. If an attack is suspected, initiate your organization's incident response process and investigation.
+enabled: true
+severity: Informational
+query_text: |-
+  %ingest.source_type:"aws:cloudtrail"
+  eventSource:lambda.amazonaws.com
+  eventName:UpdateFunctionCode*
+  userIdentity.type:IAMUser
+  (not userIdentity.invokedBy:(cloudformation.amazonaws.com "AWS Internal"))
+  | stats countdistinct(requestParameters.functionName) as num_distinct_values by userIdentity.arn
+  | where num_distinct_values > 0
+time_range_s: 300
+run_frequency_s: 60
+event_sink_keys:
+- informational_severity_alerts
+tags:
+- techniques.t1098.account_manipulation
+- source.cloudtrail
+- tactics.ta0003.persistence

@@ -1,0 +1,33 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS API Gateway Keys Accessed
+description: |-
+  Detect when AWS API Gateway keys are accessed, particularly when their values are returned to the caller.
+query_text: |-
+  %ingest.source_type="aws:cloudtrail"
+  eventSource="apigateway.amazonaws.com"
+  eventName:(
+  "GetApiKey"
+  "GetApiKeys"
+  )
+  (
+  requestParameters.includeValue=true or
+  requestParameters.includeValues=true
+  )
+  and not errorCode:*
+  | stats
+  min(timestamp) as firstTime,
+  max(timestamp) as lastTime,
+  count() as eventCount
+  by
+  recipientAccountId,
+  userIdentity.arn,
+  eventSource,
+  eventName,
+  awsRegion
+tags:
+- source.aws
+- domain.cloud
+- tactics.ta0006.credential_access
+- techniques.t1555.credentials_from_password_stores
+- use_case.aws_apigw_keys
+- use_case.governance

@@ -1,0 +1,25 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Cloudflare API Token Created
+description: |-
+  ## Goal
+  Detects the creation of a new API Token.
+
+  ## Strategy
+  Monitor Cloudflare Audit Logs for `user_api_token_create`.
+
+  ## Triage and Response
+  1. Identify the user and the token permissions.
+  2. Verify if the token follows least privilege.
+  3. Revoke if unnecessary or too permissive.
+enabled: true
+severity: High
+query_text: "%ingest.source_type:cloudflare\nAction:user_api_token_create "
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- high_severity_alerts
+tags:
+- cloudflare
+- iam
+- api_token

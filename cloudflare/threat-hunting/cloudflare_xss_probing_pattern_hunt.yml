@@ -1,0 +1,16 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Cloudflare XSS Probing Pattern
+description: |-
+  Detect XSS (Cross-Site Scripting) probing patterns in web requests,
+  which may indicate attack attempts against web applications.
+query_text: |-
+  %ingest.source_type:cloudflare
+  ClientRequestMethod:(POST PUT)
+  ClientRequestURI:('alert(' 'alert%28' 'String.fromCharCode(' 'expression(alert')
+  | groupbycount(ClientIP)
+  | where @q.count > 0
+tags:
+- tactics.ta0001.initial_access
+- techniques.t1190.exploit_public_facing_application
+- techniques.t1133.external_remote_services
+- source.cloudflare

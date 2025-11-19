@@ -1,0 +1,14 @@
+name: GitHub IP Allow List Disabled Playbook
+description: Detects when the IP allow list is disabled for an organization.
+severity: Critical
+steps:
+- name: Investigation
+  description: Monitor GitHub audit logs for `org.disable_ip_allow_list`. This removes network restrictions, allowing access from any IP.
+- name: Triage
+  description: '1. Identify the user.
+
+    2. Re-enable the IP allow list immediately.
+
+    3. Investigate any access from unknown IPs during the exposure window.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

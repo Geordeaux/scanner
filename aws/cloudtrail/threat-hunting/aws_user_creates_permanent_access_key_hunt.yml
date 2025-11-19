@@ -1,0 +1,27 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS User Creates Permanent Access Key
+description: |-
+  Detects when an AWS IAM user creates an AWS Access Key for programmatic calls. This could indicate an attempt to gain unauthorized or persistent access.
+query_text: |-
+  %ingest.source_type="aws:cloudtrail"
+  metadata.vendor_name:AMAZON
+  metadata.product_name:"AWS CloudTrail"
+  metadata.product_event_type:CreateAccessKey
+  security_result.action:ALLOW
+  | groupbycount(
+  additional.fields.recipientAccountId,
+  principal.user.user_display_name,
+  principal.ip
+  )
+  | where @q.count > 0
+tags:
+- source.aws
+- domain.cloud
+- domain.iam
+- tactics.ta0005.defense_evasion
+- tactics.ta0003.persistence
+- tactics.ta0004.privilege_escalation
+- tactics.ta0001.initial_access
+- techniques.t1078.valid_accounts
+- techniques.t1078.004.valid_accounts_cloud_accounts
+- use_case.aws_iam_access_keys

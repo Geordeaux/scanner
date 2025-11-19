@@ -1,0 +1,37 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS Identity Center Identity Provider Change
+description: |-
+  Detects a change in the AWS Identity Center (FKA AWS SSO) identity provider.
+  A change in identity provider allows an attacker to establish persistent access or escalate privileges via user impersonation.
+
+
+  References:
+  * https://docs.aws.amazon.com/singlesignon/latest/userguide/app-enablement.html
+  * https://docs.aws.amazon.com/singlesignon/latest/userguide/sso-info-in-cloudtrail.html
+  * https://docs.aws.amazon.com/service-authorization/latest/reference/list_awsiamidentitycentersuccessortoawssinglesign-on.html
+
+  False Positives:
+  * Authorized changes to the AWS account's identity provider
+query_text: |-
+  %ingest.source_type="aws:cloudtrail"
+  eventSource=("sso-directory.amazonaws.com" "sso.amazonaws.com")
+  eventName=(
+  AssociateDirectory
+  DisableExternalIdPConfigurationForDirectory
+  DisassociateDirectory
+  EnableExternalIdPConfigurationForDirectory
+  )
+  | stats
+  min(@scnr.datetime) as firstTime,
+  max(@scnr.datetime) as lastTime,
+  count() as eventCount
+  by
+  userIdentity.arn,
+  eventSource,
+  eventName,
+  awsRegion
+tags:
+- tactics.ta0003.persistence
+- tactics.ta0004.privilege_escalation
+- techniques.t1556.modify_authentication_process
+- source.cloudtrail

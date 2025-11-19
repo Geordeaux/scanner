@@ -1,0 +1,15 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Auth0 suspicious IP throttling disabled
+description: |-
+  Detect when suspicious IP throttling is disabled in Auth0.
+query_text: |-
+  %ingest.source_type:auth0
+  data.type:sapi
+  data.details.request.path:/api/v2/attack-protection/suspicious-ip-throttling
+  data.details.response.body.enabled:false
+  | groupbycount(data.client_id)
+  | where @q.count > 0
+tags:
+- source.auth0
+- techniques.t1562.impair_defenses
+- tactics.ta0005.defense_evasion

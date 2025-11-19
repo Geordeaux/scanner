@@ -1,0 +1,15 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: 'TTB Hunt: Cloudflare TTB High Diversity Anomaly'
+description: |-
+  Hunt for users with high diversity in Zones and URIs.
+query_text: |-
+  %ingest.source_type="cloudflare"
+  | stats
+    distinct_count(ZoneName) as terrain_score,
+    distinct_count(ClientRequestURI) as behavior_score
+    by ClientIP
+  | sort -terrain_score, -behavior_score
+tags:
+- source.cloudflare
+- ttb.anomaly
+- discovery

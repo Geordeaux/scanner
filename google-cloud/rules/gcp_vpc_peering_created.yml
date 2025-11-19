@@ -1,0 +1,25 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: GCP VPC Peering Created
+description: |-
+  ## Goal
+  Detects the creation of a VPC peering connection.
+
+  ## Strategy
+  Monitor Google Cloud audit logs for `compute.networks.addPeering`. Unauthorized peering can expose internal networks to external or malicious networks.
+
+  ## Triage and Response
+  1. Identify the user and the peer network.
+  2. Verify if the peering is authorized and secure.
+  3. Remove the peering connection if unauthorized.
+enabled: true
+severity: High
+query_text: "%ingest.source_type:google_cloud_audit\nprotoPayload.methodName:\"v1.compute.networks.addPeering\" "
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- high_severity_alerts
+tags:
+- google_cloud
+- network
+- exfiltration

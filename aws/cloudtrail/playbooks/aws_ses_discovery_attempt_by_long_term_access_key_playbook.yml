@@ -1,0 +1,17 @@
+name: AWS SES discovery attempt by long term access key Playbook
+description: Detect attempts to check the status of an organization's Amazon SES account.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor CloudTrail for attempts to assess the status of an organization's
+    Amazon SES account. Attackers typically target AWS SES for phishing. They may
+    use the API calls "GetAccount" or "ListServiceQuotas" to check the sending quota
+    or to see if the account is in a sandbox.
+- name: Triage
+  description: "1. Verify if the API call should have been made by the user from the\
+    \ specified IP address.\n2. If the action is legitimate, consider adding the user\
+    \ to a suppression list.\n3. If the action is unauthorized:\n   * Contact the\
+    \ user to confirm if they made the API call.\n   * Check the user investigation\
+    \ dashboard for other actions taken by the user.\n   * Check the IP investigation\
+    \ dashboard for additional traffic from the IP.\n4. If the triage results suggest\
+    \ an attack, initiate your company's incident response process and investigation."

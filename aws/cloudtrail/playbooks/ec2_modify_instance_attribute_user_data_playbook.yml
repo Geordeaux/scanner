@@ -1,0 +1,13 @@
+name: EC2 Modify Instance Attribute User Data Playbook
+description: 'Identifies when a user modifies the user data attribute of an EC2 instance.
+
+  Modifying the user data attribute could indicate an adversary attempting to gain
+  persistence or execute malicious code on the instance.'
+severity: High
+steps:
+- name: Investigation
+  description: 'Identifies when a user modifies the user data attribute of an EC2
+    instance.
+
+    Modifying the user data attribute could indicate an adversary attempting to gain
+    persistence or execute malicious code on the instance.'

@@ -1,0 +1,12 @@
+name: Cloudflare Under Attack Mode Disabled Playbook
+description: Detects when 'Under Attack Mode' is disabled.
+severity: Medium
+steps:
+- name: Investigation
+  description: Monitor Cloudflare Audit Logs. If this mode was enabled during an active attack, disabling it prematurely could expose the origin.
+- name: Triage
+  description: '1. Confirm if the attack has subsided.
+
+    2. If not, re-enable Under Attack Mode.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

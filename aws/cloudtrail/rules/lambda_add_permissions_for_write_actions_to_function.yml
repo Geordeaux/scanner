@@ -1,0 +1,29 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Lambda Add Permissions for Write Actions to Function
+description: |-
+  ## Goal
+  Identifies when permissions allowing write actions (Invoke, Update, Put) are added to a Lambda function.
+  Adversaries may use this to grant themselves ability to execute code or modify functions.
+
+  ## Strategy
+  Identifies when permissions allowing write actions (Invoke, Update, Put) are added to a Lambda function.
+  Adversaries may use this to grant themselves ability to execute code or modify functions.
+
+  ## Triage and Response
+  Investigate and remediate as appropriate.
+enabled: true
+severity: High
+query_text: |-
+  %ingest.source_type:aws:cloudtrail
+  eventName:AddPermission
+  eventSource:"lambda.amazonaws.com"
+  | parse_json requestParameters "Action" as action_value
+  | where action_value matches "^(lambda:)?(Invoke|Update|Put)"
+time_range_s: 3600
+run_frequency_s: 60
+event_sink_keys:
+- high_severity_alerts
+tags:
+- tactics.ta0003.persistence
+- techniques.t1584.007.compromise_infrastructure
+- source.aws.cloudtrail

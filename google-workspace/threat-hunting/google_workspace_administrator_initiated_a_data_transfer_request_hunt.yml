@@ -1,0 +1,13 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Google Workspace administrator initiated a data transfer request
+description: |-
+  Detect when a Google Workspace administrator initiates a data transfer request.
+query_text: |-
+  %ingest.source_type:gsuite
+  event.name:CREATE_DATA_TRANSFER_REQUEST
+  | groupbycount(actor.email)
+  | where @q.count > 0
+tags:
+- techniques.t1567.exfiltration_over_web_service
+- source.gsuite
+- tactics.ta0010.exfiltration

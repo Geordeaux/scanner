@@ -1,0 +1,32 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: TruffleHog user agent observed in AWS
+description: |-
+  ## Goal
+  Detect when a TruffleHog user agent is detected in AWS CloudTrail management logs.
+
+  ## Strategy
+  This rule monitors AWS CloudTrail management logs for the `GetCallerIdentity` API call with the user agent `TruffleHog`. TruffleHog is a tool that scans source code repositories for leaked secrets, using the credential verification feature to check if credentials are active. While it can be used legitimately by teams, it may also indicate unauthorized access attempts.
+
+  ## Triage and Response
+  1. Determine if your organization is using TruffleHog to scan for secrets.
+  2. If it is an internal tool, notify the relevant team to address the leaked key appropriately.
+  3. If the triage indicates that this tool is not used by your organization, initiate the incident response process and investigation.
+      * If necessary, disable or rotate the affected credential.
+      * Investigate any actions taken by the identity.
+      * Collaborate with relevant teams to remove the key from source code repositories.
+enabled: true
+severity: High
+query_text: |-
+  %ingest.source_type:"aws:cloudtrail"
+  userAgent:TruffleHog
+  eventName:GetCallerIdentity
+  | groupbycount(userIdentity.arn)
+  | where @q.count > 0
+time_range_s: 300
+run_frequency_s: 60
+event_sink_keys:
+- high_severity_alerts
+tags:
+- techniques.t1552.unsecured_credentials
+- tactics.ta0006.credential_access
+- source.cloudtrail

@@ -1,0 +1,19 @@
+name: Auth0 Suspicious IP Throttling Disabled Playbook
+description: |-
+  Response steps for when suspicious IP throttling is disabled.
+  This removes protection against high-velocity attacks.
+severity: Medium
+steps:
+  - name: Triage
+    description: |-
+      1. Identify the client ID (`data.client_id`) and user (`data.user_id`) responsible.
+      2. Check the timestamp and source IP.
+  - name: Investigation
+    description: |-
+      1. Determine if this was authorized.
+      2. Check if other security settings were disabled.
+  - name: Remediation
+    description: |-
+      1. If unauthorized, re-enable throttling immediately.
+      2. Investigate the user account.
+      3. Review logs for high-velocity attacks during the disabled window.

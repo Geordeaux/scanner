@@ -1,0 +1,9 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Cloudflare SSL/TLS Encryption Mode Downgraded
+description: |-
+  Detects when the SSL/TLS encryption mode is downgraded (e.g., to Flexible or Off).
+query_text: "%ingest.source_type:cloudflare\nAction:zone_setting_edit\nSetting:\"ssl\"\nNewValue:\"flexible\" OR NewValue:\"off\" "
+tags:
+- cloudflare
+- ssl
+- misconfiguration

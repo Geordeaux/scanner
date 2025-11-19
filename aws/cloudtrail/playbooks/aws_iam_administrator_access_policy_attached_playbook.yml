@@ -1,0 +1,27 @@
+name: AWS IAM Administrator Access Policy Attached Playbook
+description: Detects when the AWS IAM `AdministratorAccess` policy is attached to
+  a user, group, or role, which can be used for privilege escalation. This is a high-severity
+  concern as it may indicate unauthorised access or an attempt to gain elevated privileges.
+severity: High
+steps:
+- name: Investigation
+  description: "Monitor AWS CloudTrail management events where:\n* The service is\
+    \ IAM (`iam.amazonaws.com`), and\n* The action is one of:\n  * `AttachUserPolicy`\n\
+    \  * `AttachGroupPolicy`\n  * `AttachRolePolicy`\n* The attached policy ARN is\
+    \ `arn:aws:iam::aws:policy/AdministratorAccess`.\n\nA single matching event is\
+    \ sufficient to generate an alert, as attaching `AdministratorAccess` grants full\
+    \ administrative permissions."
+- name: Triage
+  description: "* Identify:\n  * The calling principal (ARN, type, and user/role name).\n\
+    \  * The target principal (user, group, or role) receiving `AdministratorAccess`.\n\
+    \  * The AWS account and region.\n* Confirm whether:\n  * This change is covered\
+    \ by an approved change request or break-glass process.\n  * The actor is a known\
+    \ automation role or trusted administrator.\n* If not clearly authorised:\n  *\
+    \ Treat as suspected privilege escalation.\n  * Immediately revoke or detach the\
+    \ `AdministratorAccess` policy from the target principal.\n  * Review:\n    *\
+    \ Recent activity by the calling principal (new keys, role assumptions, policy\
+    \ edits).\n    * Any actions performed by the newly privileged identity.\n  *\
+    \ Consider temporarily disabling or restricting the calling principal until investigation\
+    \ is complete.\n* If confirmed legitimate:\n  * Ensure long-term use of `AdministratorAccess`\
+    \ is minimised in favour of scoped, least-privilege roles.\n  * Add explicit guardrails\
+    \ (for example, SCPs or approval workflows) around future use of `AdministratorAccess`."

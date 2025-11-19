@@ -1,0 +1,36 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: AWS EventBridge rule disabled or deleted
+description: |-
+  ## Goal
+  Detect attempts to evade defenses by deleting or disabling EventBridge rules.
+
+  ## Strategy
+  Monitor specific CloudTrail API calls to detect modifications or disabling of EventBridge rules:
+
+  * DeleteRule
+  * DisableRule
+
+  ## Triage and Response
+  1. Determine if the user identity should have made the API call for the event name.
+  2. Contact the user to verify their intent regarding the API call.
+  3. If the user denies making the API call:
+      * Rotate the credentials.
+      * Investigate any other unauthorized API calls made with the same credentials.
+
+  **NOTE:** Tune out valid user agents that trigger this alert. For guidance, refer to relevant tuning resources.
+enabled: true
+severity: Informational
+query_text: |-
+  %ingest.source_type:"aws:cloudtrail"
+  eventSource:events.amazonaws.com
+  eventName:(DeleteRule DisableRule)
+  | groupbycount(userIdentity.arn, requestParameters.name)
+  | where @q.count > 0
+time_range_s: 300
+run_frequency_s: 60
+event_sink_keys:
+- informational_severity_alerts
+tags:
+- techniques.t1562.impair_defenses
+- source.cloudtrail
+- tactics.ta0005.defense_evasion

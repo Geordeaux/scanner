@@ -1,0 +1,28 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: GitHub audit log streaming endpoint was deleted
+description: |-
+  ## Goal
+  Detect when a GitHub audit log stream has been deleted.
+
+  ## Strategy
+  This rule monitors GitHub audit logs for the deletion of an audit log stream. An attacker may remove a stream to evade defenses set up by a security team.
+
+  ## Triage and Response
+  1. Determine if the change made by the actor is authorized.
+  2. If the change was unauthorized or unexpected, initiate your organization's incident response process and investigate.
+enabled: true
+severity: High
+query_text: |-
+  %ingest.source_type:github
+  action:audit_log_streaming.destroy
+  | groupbycount(actor)
+  | where @q.count > 0
+time_range_s: 300
+run_frequency_s: 60
+event_sink_keys:
+- high_severity_alerts
+tags:
+- source.github-telemetry
+- source.github
+- techniques.t1562.impair_defenses
+- tactics.ta0005.defense_evasion

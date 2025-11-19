@@ -1,0 +1,20 @@
+name: Auth0 Post-Login Trigger Bindings Updated Playbook
+description: |-
+  Response steps for when post-login trigger bindings are updated.
+  This changes the logic executed after a user logs in.
+severity: Medium
+steps:
+  - name: Triage
+    description: |-
+      1. Identify the user (`data.user_id`) who updated the bindings.
+      2. Check the timestamp.
+  - name: Investigation
+    description: |-
+      1. Determine if this was part of a planned deployment.
+      2. Verify the new bindings (actions) are correct and safe.
+      3. Check for any unauthorized actions added to the flow.
+  - name: Remediation
+    description: |-
+      1. If unauthorized, revert the bindings immediately.
+      2. Investigate the user account.
+      3. Audit the code of the actions bound to the trigger.

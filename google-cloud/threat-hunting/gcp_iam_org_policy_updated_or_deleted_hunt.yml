@@ -1,0 +1,23 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: GCP IAM Organization Policy Updated Or Deleted
+description: |-
+  Detect when a GCP IAM Organization Policy is updated or deleted. This can indicate an attempt to manipulate account permissions, which can lead to unauthorized access and privilege escalation.
+query_text: |-
+  %ingest.source_type:gcp_audit
+  metadata.log_type:"GCP_CLOUDAUDIT"
+  target.application:"orgpolicy.googleapis.com"
+  security_result.action:"ALLOW"
+  metadata.event_type:(RESOURCE_WRITTEN RESOURCE_DELETION)
+  metadata.product_event_type:(
+    google.cloud.orgpolicy.v2.OrgPolicy.UpdatePolicy
+    google.cloud.orgpolicy.v2.OrgPolicy.DeletePolicy
+  )
+tags:
+- source.gcp
+- gcp_audit
+- gcp
+- iam_policy
+- iam_policy_violation
+- techniques.t1098.account_manipulation
+- tactics.ta0003.persistence
+- tactics.ta0004.privilege_escalation

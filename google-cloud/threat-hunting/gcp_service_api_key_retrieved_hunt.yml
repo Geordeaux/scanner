@@ -1,0 +1,18 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: GCP Service API Key Retrieved
+description: |-
+  Detect when there is a successful attempt to retrieve Google Cloud service API keys. This behavior may indicate unauthorized access or an attempt to misuse credentials.
+query_text: |-
+  %ingest.source_type:gcp
+  protoPayload.serviceName:apikeys.googleapis.com
+  protoPayload.methodName:google.api.apikeys.v2.ApiKeys.GetKeyString
+  (not protoPayload.status.message:ERROR)
+  | groupbycount(project_id, protoPayload.authenticationInfo.principalEmail)
+  | where @q.count > 0
+tags:
+- source.gcp
+- gcp
+- gcp_audit
+- service_api_key_retrieved
+- techniques.t1555.credentials_from_password_stores
+- tactics.ta0006.credential_access

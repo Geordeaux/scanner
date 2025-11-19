@@ -1,0 +1,14 @@
+name: Google Workspace Chat Attachment Downloaded Playbook
+description: Detects downloads of attachments from Google Chat.
+severity: Low
+steps:
+- name: Investigation
+  description: Monitor Google Workspace Chat audit logs for `download_attachment`. Large volumes of downloads may indicate data exfiltration via Chat.
+- name: Triage
+  description: '1. Identify the user and the file.
+
+    2. Verify if the download is business-related.
+
+    3. Investigate further if the file is sensitive.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

@@ -1,0 +1,14 @@
+name: AWS GuardDuty EC2 Port Sweep Playbook
+description: Detects a port sweep against an EC2 instance.
+severity: Medium
+steps:
+- name: Investigation
+  description: Monitor GuardDuty findings for `Recon:EC2/Portsweep`. A port sweep involves scanning multiple ports on a single host to identify running services.
+- name: Triage
+  description: '1. Identify the source and destination instances.
+
+    2. If the source is internal, it may be a compromised host attempting lateral movement.
+
+    3. Isolate the source instance and investigate.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

@@ -1,0 +1,10 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: GitHub Enterprise Deleted
+description: |-
+  Detects when a GitHub enterprise is deleted.
+query_text: |-
+  %ingest.source_type:github
+  action:business.delete
+tags:
+- github
+- converted_yaral

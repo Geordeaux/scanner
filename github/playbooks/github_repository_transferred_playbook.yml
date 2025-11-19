@@ -1,0 +1,14 @@
+name: GitHub Repository Transferred Playbook
+description: Detects the transfer of a repository to another user or organization.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor GitHub audit logs for `repo.transfer`. Transferring a repository can be a method of data exfiltration.
+- name: Triage
+  description: '1. Identify the repository and the destination.
+
+    2. Verify authorization.
+
+    3. Contact GitHub support to reverse the transfer if malicious.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

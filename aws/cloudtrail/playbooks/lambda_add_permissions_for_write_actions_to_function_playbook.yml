@@ -1,0 +1,13 @@
+name: Lambda Add Permissions for Write Actions to Function Playbook
+description: 'Identifies when permissions allowing write actions (Invoke, Update,
+  Put) are added to a Lambda function.
+
+  Adversaries may use this to grant themselves ability to execute code or modify functions.'
+severity: High
+steps:
+- name: Investigation
+  description: 'Identifies when permissions allowing write actions (Invoke, Update,
+    Put) are added to a Lambda function.
+
+    Adversaries may use this to grant themselves ability to execute code or modify
+    functions.'

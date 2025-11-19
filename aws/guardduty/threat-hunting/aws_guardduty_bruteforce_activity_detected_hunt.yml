@@ -1,0 +1,24 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS GuardDuty Bruteforce Activity Detected
+description: |-
+  Detects when Amazon GuardDuty identifies brute force activity on an Amazon EC2 or Amazon RDS instance. This could indicate an attempt to gain unauthorized access through credential guessing.
+query_text: |-
+  %ingest.source_type="aws:guardduty"
+  metadata.vendor_name:AMAZON
+  metadata.product_name:"AWS GuardDuty"
+  metadata.product_event_type:*BruteForce*
+  not security_result.about.labels.Sample:"true"
+  | groupbycount(
+  recipientAccountId,
+  principal.ip,
+  target.resource.product_object_id
+  )
+  | where @q.count > 0
+tags:
+- source.aws
+- domain.cloud
+- domain.guardduty
+- tactics.ta0006.credential_access
+- techniques.t1110.brute_force
+- use_case.aws_guardduty
+- use_case.bruteforce_activity

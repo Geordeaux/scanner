@@ -1,0 +1,21 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS S3 Bucket ACL made public
+description: |-
+  Detect when an S3 bucket ACL is made public.
+query_text: |-
+  %ingest.source_type: "aws:cloudtrail"
+  eventName: PutBucketAcl
+  ( not errorCode: * )
+  (
+  requestParameters.AccessControlPolicy.AccessControlList.Grant.Grantee.URI: (
+  "http://acs.amazonaws.com/groups/global/AuthenticatedUsers"
+  "http://acs.amazonaws.com/groups/global/AllUsers"
+  ) or
+  requestParameters.x-amz-acl = ( "public-read" "public-read-write" )
+  )
+  | groupbycount ( requestParameters.bucketName )
+  | where @q.count > 0
+tags:
+- source.cloudtrail
+- techniques.t1562.impair_defenses
+- tactics.ta0005.defense_evasion

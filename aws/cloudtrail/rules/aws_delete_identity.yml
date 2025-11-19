@@ -1,0 +1,46 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: SES Identity Has Been Deleted
+enabled: true
+description: |-
+  ## Goal
+  Detects an instance of an SES identity being deleted via the "DeleteIdentity" event. This may be an indicator of an adversary removing the account that carried out suspicious or malicious activities
+
+  References:
+  * https://unit42.paloaltonetworks.com/compromised-cloud-compute-credentials/
+
+  False Positives:
+  * Unknown
+
+  ## Strategy
+  Detects an instance of an SES identity being deleted via the "DeleteIdentity" event. This may be an indicator of an adversary removing the account that carried out suspicious or malicious activities
+
+  References:
+  * https://unit42.paloaltonetworks.com/compromised-cloud-compute-credentials/
+
+  False Positives:
+  * Unknown
+
+  ## Triage and Response
+  Investigate and remediate as appropriate.
+severity: Medium
+query_text: |-
+  %ingest.source_type="aws:cloudtrail"
+  eventSource="ses.amazonaws.com"
+  eventName="DeleteIdentity"
+  | stats
+  min(@scnr.datetime) as firstTime,
+  max(@scnr.datetime) as lastTime,
+  count() as eventCount
+  by
+  userIdentity.arn,
+  eventSource,
+  eventName,
+  awsRegion
+time_range_s: 300
+run_frequency_s: 60
+event_sink_keys:
+- medium_severity_alerts
+tags:
+- tactics.ta0005.defense_evasion
+- techniques.t1070.indicator_removal_on_host
+- source.cloudtrail

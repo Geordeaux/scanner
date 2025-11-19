@@ -1,0 +1,26 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: AWS GuardDuty EC2 Port Sweep
+description: |-
+  ## Goal
+  Detects a port sweep against an EC2 instance.
+
+  ## Strategy
+  Monitor GuardDuty findings for `Recon:EC2/Portsweep`. A port sweep involves scanning multiple ports on a single host to identify running services.
+
+  ## Triage and Response
+  1. Identify the source and destination instances.
+  2. If the source is internal, it may be a compromised host attempting lateral movement.
+  3. Isolate the source instance and investigate.
+enabled: true
+severity: Medium
+query_text: "%ingest.source_type:aws_guardduty\nmetadata.product_event_type:\"Recon:EC2/Portsweep\" "
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- medium_severity_alerts
+tags:
+- guardduty
+- aws
+- ec2
+- reconnaissance

@@ -1,0 +1,17 @@
+name: AWS GuardDuty threat intel set deleted Playbook
+description: Detect when an attacker is trying to evade defenses by deleting a ThreatIntelSet.
+severity: Medium
+steps:
+- name: Investigation
+  description: 'Monitor the CloudTrail API call to detect if an attacker is deleting
+    a ThreatIntelSet:
+
+
+    * DeleteThreatIntelSet'
+- name: Triage
+  description: "1. Determine if the user should have made the API call.\n2. If the\
+    \ API call was not made by the user:\n  * Rotate user credentials.\n  * Investigate\
+    \ other API calls made by the user.\n  * Restore deleted ThreatIntelSets using\
+    \ AWS CLI or the AWS Console.\n3. If the API call was made by the user:\n  * Verify\
+    \ if the user was authorized to perform this API call.\n  * If not authorized,\
+    \ check for additional API calls by the user and assess for further investigation."

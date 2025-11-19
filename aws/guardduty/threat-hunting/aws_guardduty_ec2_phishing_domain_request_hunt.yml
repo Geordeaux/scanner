@@ -1,0 +1,10 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS GuardDuty EC2 Phishing Domain Request
+description: |-
+  Detects when an EC2 instance queries a domain associated with phishing.
+query_text: "%ingest.source_type:aws_guardduty\nmetadata.product_event_type:\"Trojan:EC2/PhishingDomainRequest\" "
+tags:
+- guardduty
+- aws
+- ec2
+- phishing

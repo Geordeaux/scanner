@@ -1,0 +1,14 @@
+name: Google Workspace Group Settings Modified to Public Playbook
+description: Detects when a Google Group's settings are changed to allow public access.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor Google Workspace Groups audit logs for changes that allow "Public" or "External" access to group content or membership.
+- name: Triage
+  description: '1. Identify the admin and the group.
+
+    2. Verify if public access is intended.
+
+    3. Revert settings immediately if unauthorized.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

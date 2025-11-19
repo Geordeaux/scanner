@@ -1,0 +1,9 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Cloudflare Firewall Rule Deleted
+description: |-
+  Detects the deletion of a Cloudflare Firewall rule.
+query_text: "%ingest.source_type:cloudflare\nAction:firewall_custom_rule_delete "
+tags:
+- cloudflare
+- firewall
+- configuration

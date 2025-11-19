@@ -1,0 +1,27 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS Lateral Movement Using IAM Session Token
+description: |-
+  Detect when an IAM session token is created and then used from a different IP address, indicating potential lateral movement.
+query_text: |-
+  %ingest.source_type="aws:cloudtrail"
+  metadata.vendor_name:AMAZON
+  metadata.product_name:"AWS CloudTrail"
+  security_result.action:ALLOW
+  (
+  metadata.product_event_type:GetSessionToken or
+  additional.fields.accessKeyId:*
+  )
+  | groupbycount(
+  additional.fields.recipientAccountId,
+  additional.fields.accessKeyId,
+  principal.user.user_display_name,
+  principal.ip
+  )
+  | where @q.count > 1
+tags:
+- source.aws
+- domain.cloud
+- domain.iam
+- tactics.ta0008.lateral_movement
+- techniques.t1550.use_alternate_authentication_material
+- use_case.session_token_lateral_movement

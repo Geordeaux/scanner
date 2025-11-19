@@ -1,0 +1,25 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: GitHub Repository Deleted
+description: |-
+  ## Goal
+  Detects the deletion of a GitHub repository.
+
+  ## Strategy
+  Monitor GitHub audit logs for `repo.destroy`.
+
+  ## Triage and Response
+  1. Identify the repository and the user.
+  2. Verify if this was a planned deletion.
+  3. Restore the repository within the grace period if accidental/malicious.
+enabled: true
+severity: High
+query_text: "%ingest.source_type:github\naction:repo.destroy "
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- high_severity_alerts
+tags:
+- github
+- repository
+- availability

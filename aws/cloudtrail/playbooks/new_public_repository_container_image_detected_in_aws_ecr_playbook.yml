@@ -1,0 +1,14 @@
+name: New Public Repository Container Image detected in AWS ECR Playbook
+description: Detect new image uploads to public ECR, which may indicate potential
+  data exfiltration or supply chain risks.
+severity: Informational
+steps:
+- name: Investigation
+  description: Monitor when an event named "PutImage" is used against the public ECR
+    API.
+- name: Triage
+  description: '1. Verify that the image ID is a valid SHA256 hash for the container
+    image with the specified tag in the designated repository on the AWS account.
+
+    2. If the hash is invalid, investigate whether the container image was uploaded
+    for malicious reasons.'

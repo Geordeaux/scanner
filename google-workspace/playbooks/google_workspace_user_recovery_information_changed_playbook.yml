@@ -1,0 +1,14 @@
+name: Google Workspace User Recovery Information Changed Playbook
+description: Detects changes to a user's account recovery email or phone number.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor Google Workspace User audit logs for `change_recovery_email` or `change_recovery_phone`. Attackers modify this to maintain persistence and regain access if the password is reset.
+- name: Triage
+  description: '1. Identify the user.
+
+    2. Contact the user via an out-of-band method (e.g., Slack, Manager) to verify the change.
+
+    3. Revert the change and reset credentials if unauthorized.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

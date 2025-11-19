@@ -1,0 +1,23 @@
+name: Auth0 Action, Rule, or Hook Modified Playbook
+description: |-
+  Response steps for when an Auth0 Action, Rule, or Hook is modified.
+  This indicates potential code injection or persistence mechanisms.
+severity: Critical
+steps:
+  - name: Triage
+    description: |-
+      1. Identify the user who performed the action (`data.user_id`).
+      2. Determine the component modified (Action, Rule, or Hook) and the specific operation (Create, Update, Delete).
+      3. Check the timestamp and source IP of the request.
+  - name: Investigation
+    description: |-
+      1. Review the code changes if available in the logs or by comparing with a known good state.
+      2. Check for any suspicious code patterns (e.g., data exfiltration, backdoors, hardcoded credentials).
+      3. Investigate other actions performed by the same user around the same time.
+      4. Contact the user to verify if the change was authorized and part of a planned deployment.
+  - name: Remediation
+    description: |-
+      1. If unauthorized, revert the change immediately.
+      2. Rotate the credentials of the user account used to make the change.
+      3. If the account is a service account (M2M), rotate the client secret.
+      4. Audit all other recent changes to ensure no other malicious modifications were made.

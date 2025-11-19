@@ -1,0 +1,26 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: AWS GuardDuty Lambda Cryptocurrency Mining
+description: |-
+  ## Goal
+  Detects cryptocurrency mining activity within a Lambda function.
+
+  ## Strategy
+  Monitor GuardDuty findings for `CryptoCurrency:Lambda/BitcoinTool.B`.
+
+  ## Triage and Response
+  1. Identify the Lambda function.
+  2. Disable the function immediately to stop billing impact.
+  3. Investigate the source of the mining code.
+enabled: true
+severity: High
+query_text: "%ingest.source_type:aws_guardduty\nmetadata.product_event_type:\"CryptoCurrency:Lambda/BitcoinTool.B\" "
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- high_severity_alerts
+tags:
+- guardduty
+- aws
+- lambda
+- crypto_mining

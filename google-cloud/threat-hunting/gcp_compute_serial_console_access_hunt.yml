@@ -1,0 +1,9 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: GCP Compute Serial Console Access
+description: |-
+  Detects access to the interactive serial console of a VM instance.
+query_text: "%ingest.source_type:google_cloud_audit\nprotoPayload.methodName:\"v1.compute.instances.serialPortOutput\" "
+tags:
+- google_cloud
+- compute
+- access

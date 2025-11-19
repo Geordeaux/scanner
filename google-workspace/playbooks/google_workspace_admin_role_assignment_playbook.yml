@@ -1,0 +1,14 @@
+name: Google Workspace Admin Role Assignment Playbook
+description: Identifies when an administrator role is assigned to a user account in Google Workspace. Security teams can monitor for the malicious or accidental assignment of administrator privileges to prevent unauthorized access to data.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor for assignment of administrative privileges.
+- name: Triage
+  description: '1. Identify the admin and the target user.
+
+    2. Verify if the privilege grant is authorized.
+
+    3. Revoke privileges immediately if unauthorized.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

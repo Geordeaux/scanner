@@ -1,0 +1,44 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: AWS Successful Console Authentication From Multiple IPs
+enabled: true
+severity: Medium
+description: "## Goal\nDetect when an AWS user successfully authenticates from more than one unique IP address within 5 minutes, which may indicate account compromise or unauthorized access.\n\n## Strategy\nMonitor AWS CloudTrail console sign-in events from `signin.amazonaws.com` where the console login succeeded. Within a 5-minute window, group events by user and count how many distinct source IPs were used. Raise a signal when a single user authenticates successfully from more than one unique IP in that short time window.\n\n## Triage and Response\n* Confirm whether the multiple-IP sign-ins are expected (e.g., SSO redirectors, VPN/proxy hops, corporate egress vs home IP).\n* Review the user\u2019s recent activity (services, API calls, IAM changes, data access) around the time of the logins.\n* Check device / browser fingerprints (user agent, MFA details, IdP logs) for signs of session hijacking or credential theft.\n* If suspicious, revoke sessions, rotate credentials, enforce MFA, and\
+  \ increase monitoring for the affected user."
+query_text: |-
+  %ingest.source_type="aws:cloudtrail"
+  eventSource:"signin.amazonaws.com"
+  eventName:ConsoleLogin
+  responseElements.ConsoleLogin:"Success"
+  | groupbycount(
+  userIdentity.arn,
+  sourceIPAddress
+  )
+  | groupbycount(
+  userIdentity.arn
+  )
+  | where @q.count > 1
+time_range_s: 300
+run_frequency_s: 300
+event_sink_keys:
+- medium_severity_alerts
+tags:
+- source.aws
+- domain.cloud
+- domain.auth
+- tactics.ta0042.resource_development
+- techniques.t1586.compromise_accounts
+- use_case.account_compromise
+- use_case.impossible_travel_like
+context_fields:
+- recipientAccountId
+- awsRegion
+- eventSource
+- eventName
+- eventTime
+- sourceIPAddress
+- userAgent
+- userIdentity.type
+- userIdentity.arn
+- userIdentity.accountId
+- responseElements.ConsoleLogin
+- additionalEventData

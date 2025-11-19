@@ -1,0 +1,13 @@
+name: AWS ECS CreateCluster API calls in multiple regions Playbook
+description: Detect attempts to create AWS ECS clusters in multiple regions.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor CloudTrail for attempts to create AWS ECS clusters in multiple
+    regions. This could indicate malicious activities like cryptocurrency mining.
+- name: Triage
+  description: "1. Determine if the user identity should have performed this operation.\n\
+    2. If the API calls were unauthorized:\n  * Rotate user credentials.\n  * Remove\
+    \ the newly created cluster and any associated tasks or services.\n  * Investigate\
+    \ what other API calls were made by the user.\n  * Initiate your organization's\
+    \ incident response process."

@@ -1,0 +1,16 @@
+name: AWS GuardDuty IAM User Tor Access Playbook
+description: Detects AWS API calls made by an IAM user from a Tor exit node.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor GuardDuty findings for `UnauthorizedAccess:IAMUser/TorIPCaller`. Accessing AWS APIs via Tor is highly suspicious and often indicates compromised credentials.
+- name: Triage
+  description: '1. Identify the IAM user.
+
+    2. Confirm if the user has a legitimate reason to use Tor (unlikely).
+
+    3. Revoke the user''s credentials immediately.
+
+    4. Audit all actions taken by this user.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

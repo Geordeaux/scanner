@@ -1,0 +1,10 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: GitHub Two-Factor Authentication Requirement Disabled
+description: |-
+  Detects when two-factor authentication requirements are disabled for a GitHub enterprise or organization.
+query_text: |-
+  %ingest.source_type:github
+  action:business.disable_two_factor_requirement OR action:org.disable_two_factor_requirement
+tags:
+- github
+- converted_yaral

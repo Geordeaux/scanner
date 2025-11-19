@@ -1,0 +1,14 @@
+name: Google Workspace Vault Retention Policy Modified Playbook
+description: Detects changes to Google Vault retention policies.
+severity: Critical
+steps:
+- name: Investigation
+  description: Monitor Google Workspace Vault audit logs for `change_retention_policy`. Malicious actors may shorten retention periods to destroy evidence of their activities (Defense Evasion).
+- name: Triage
+  description: '1. Identify the admin performing the change.
+
+    2. Verify if the policy change was authorized by Legal/Compliance.
+
+    3. Revert the policy immediately to preserve data if unauthorized.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

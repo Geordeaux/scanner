@@ -1,0 +1,19 @@
+name: Google Workspace accessed by Google Playbook
+description: Create a signal when Google accesses your Google Workspace tenant using administrative tools.
+severity: Medium
+steps:
+- name: Investigation
+  description: 'Monitor Google Workspace logs to detect access events, which are part of Google''s Access Transparency logs.
+
+
+    ## Triage and response
+
+    1. Determine the scope of Google''s access activity, which can be found in the access event in the Google Workspace event log.
+
+    2. Review which Google Workspace user and resources were accessed by Google.
+
+    3. Investigate the resources being accessed to determine if there is a legitimate reason for Google to review them.'
+- name: Triage
+  description: ''
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

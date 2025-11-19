@@ -1,0 +1,9 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Cloudflare Registrar Transfer Lock Disabled
+description: |-
+  Detects when the domain transfer lock is disabled.
+query_text: "%ingest.source_type:cloudflare\nAction:registrar_domain_update\nSetting:\"transfer_lock\"\nNewValue:\"off\" "
+tags:
+- cloudflare
+- registrar
+- domain_hijacking

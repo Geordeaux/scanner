@@ -1,0 +1,41 @@
+name: AWS CloudTrail Logging Tampered Playbook
+description: Detect when AWS CloudTrail logging is updated, stopped, deleted, or when
+  event selectors are modified. These actions can indicate attempts to disable or
+  impair logging of security-relevant events.
+severity: High
+steps:
+- name: Investigation
+  description: 'Monitor AWS CloudTrail management events from `cloudtrail.amazonaws.com`
+    for:
+
+    * `UpdateTrail`
+
+    * `StopLogging`
+
+    * `DeleteTrail`
+
+    * `PutEventSelectors`
+
+
+    These changes may be:
+
+    * Legitimate administrative maintenance of logging configuration, or
+
+    * Malicious attempts to inhibit detection by disabling, limiting, or redirecting
+    CloudTrail logging.'
+- name: Triage
+  description: '* Confirm whether the change aligns with an approved change request
+    or maintenance window.
+
+    * Validate that the initiating principal is authorised to modify CloudTrail trails
+    and organisation-level logging.
+
+    * Review the before/after configuration (trail status, destinations, event selectors,
+    encryption, multi-region and organisation-trail flags).
+
+    * Investigate other recent activity by the same principal and from the same source
+    IP for signs of broader compromise.
+
+    * If unauthorised or suspicious, treat as a high-severity incident: restore known-good
+    CloudTrail configuration, lock down relevant credentials, and perform wider compromise
+    assessment.'

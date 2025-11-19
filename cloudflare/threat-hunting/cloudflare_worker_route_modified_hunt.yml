@@ -1,0 +1,9 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Cloudflare Worker Route Modified
+description: |-
+  Detects modifications to Cloudflare Worker routes.
+query_text: "%ingest.source_type:cloudflare\nAction:worker_route_update "
+tags:
+- cloudflare
+- workers
+- configuration

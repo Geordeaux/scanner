@@ -1,0 +1,35 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Auth0 Post-Login Trigger Bindings Updated
+description: |-
+  ## Goal
+  Detect when post-login trigger bindings are updated in Auth0. This can affect
+  authentication behavior and should be monitored for security implications.
+
+  ## Strategy
+  1. Determine if this was part of a planned deployment.
+  2. Verify the new bindings (actions) are correct and safe.
+  3. Check for any unauthorized actions added to the flow.
+
+  ## Triage and Response
+  1. Identify the user (`data.user_id`) who updated the bindings.
+  2. Check the timestamp.
+  1. If unauthorized, revert the bindings immediately.
+  2. Investigate the user account.
+  3. Audit the code of the actions bound to the trigger.
+enabled: true
+severity: Medium
+query_text: |-
+  %ingest.source_type:auth0
+  data.description:'Update trigger bindings'
+  data.details.request.path:/api/v2/actions/triggers/post-login/bindings
+  data.details.request.channel:'https://manage.auth0.com'
+  | groupbycount(data.user_id)
+  | where @q.count > 0
+time_range_s: 300
+run_frequency_s: 60
+event_sink_keys:
+- medium_severity_alerts
+tags:
+- tactics.ta0005.defense_evasion
+- techniques.t1556.modify_authentication_process
+- source.auth0

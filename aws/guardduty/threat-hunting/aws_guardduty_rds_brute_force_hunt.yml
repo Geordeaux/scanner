@@ -1,0 +1,10 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS GuardDuty RDS Brute Force
+description: |-
+  Detects brute force attacks against an RDS database.
+query_text: "%ingest.source_type:aws_guardduty\nmetadata.product_event_type:\"CredentialAccess:RDS/AnomalousBehavior.BruteForce\" "
+tags:
+- guardduty
+- aws
+- rds
+- brute_force

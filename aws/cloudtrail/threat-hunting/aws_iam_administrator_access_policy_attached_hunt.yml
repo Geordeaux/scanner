@@ -1,0 +1,25 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS IAM Administrator Access Policy Attached
+description: |-
+  Detects when the AWS IAM `AdministratorAccess` policy is attached to a user, group, or role, which can be used for privilege escalation. This is a high-severity concern as it may indicate unauthorised access or an attempt to gain elevated privileges.
+query_text: |-
+  %ingest.source_type="aws:cloudtrail"
+  eventSource:"iam.amazonaws.com"
+  eventName:(
+  "AttachUserPolicy"
+  "AttachGroupPolicy"
+  "AttachRolePolicy"
+  )
+  requestParameters.policyArn:"arn:aws:iam::aws:policy/AdministratorAccess"
+tags:
+- source.aws
+- domain.cloud
+- domain.identity_and_access
+- domain.iam
+- tactics.ta0005.defence_evasion
+- tactics.ta0003.persistence
+- tactics.ta0004.privilege_escalation
+- tactics.ta0001.initial_access
+- techniques.t1078.004.valid_accounts_cloud_accounts
+- use_case.iam_admin_policy
+- use_case.privilege_escalation

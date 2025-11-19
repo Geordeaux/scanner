@@ -1,0 +1,69 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: AWS GuardDuty DGA Domain Activity Detected
+enabled: true
+severity: High
+description: |-
+  ## Goal
+  Detects when Amazon GuardDuty identifies an EC2 instance or a container querying algorithmically generated domains (DGA). This could indicate the use of command and control mechanisms by malicious actors.
+
+  ## Strategy
+  Monitor GuardDuty findings for the detection of DGA domain requests (finding types containing `DGADomainRequest`). Capture relevant details such as the principal IP, user, and location to assess potential threats.
+
+  ## Triage and response
+  * Investigate the detected DGA activity to determine if it was authorized or expected.
+  * Review the affected workload (EC2 instance, container, or pod) and associated IAM roles, network paths, and DNS logs.
+  * Correlate with other GuardDuty findings, VPC Flow Logs, DNS logs, and EDR telemetry for related suspicious activity.
+  * If malicious, isolate the workload, block the suspicious domains / IPs, rotate credentials, and perform full incident response.
+query_text: |-
+  %ingest.source_type="aws:guardduty"
+  metadata.vendor_name:AMAZON
+  metadata.product_name:"AWS GuardDuty"
+  metadata.product_event_type:*DGADomainRequest*
+  not security_result.about.labels.Sample:"true"
+  | groupbycount(
+  recipientAccountId,
+  principal.ip,
+  target.resource.product_object_id
+  )
+  | where @q.count > 0
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- high_severity_alerts
+tags:
+- source.aws
+- domain.cloud
+- domain.guardduty
+- domain.dns
+- tactics.ta0011.command_and_control
+- techniques.t1568.002.dynamic_resolution_domain_generation_algorithms
+- use_case.aws_guardduty
+- use_case.dga_domain_activity
+context_fields:
+- recipientAccountId
+- awsRegion
+- principal.ip
+- principal.ip_geo_artifact.location.country_or_region
+- principal.ip_geo_artifact.location.state
+- principal.user.user_display_name
+- target.resource.name
+- target.resource.product_object_id
+- security_result.summary
+- security_result.description
+- security_result.severity
+- security_result.severity_details
+- metadata.product_event_type
+risk_score: 35
+event_count: count_distinct(metadata.id)
+principal_ip: array_distinct(principal.ip)
+principal_ip_country: array_distinct(principal.ip_geo_artifact.location.country_or_region)
+principal_ip_state: array_distinct(principal.ip_geo_artifact.location.state)
+principal_user_display_name: array_distinct(principal.user.user_display_name)
+aws_region: array_distinct(awsRegion)
+target_resource_name: array_distinct(target.resource.name)
+target_resource_product_object_id: array_distinct(target.resource.product_object_id)
+security_result_summary: array_distinct(security_result.summary)
+security_result_description: array_distinct(security_result.description)
+security_result_severity: array_distinct(security_result.severity)
+security_result_severity_details: array_distinct(security_result.severity_details)
+metadata_product_event_type: array_distinct(metadata.product_event_type)

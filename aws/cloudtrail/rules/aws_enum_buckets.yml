@@ -1,0 +1,51 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Potential Bucket Enumeration on AWS
+enabled: true
+description: |-
+  ## Goal
+  Looks for potential enumeration of AWS buckets via ListBuckets.
+
+  References:
+  * https://github.com/Lifka/hacking-resources/blob/c2ae355d381bd0c9f0b32c4ead049f44e5b1573f/cloud-hacking-cheat-sheets.md
+  * https://jamesonhacking.blogspot.com/2020/12/pivoting-to-private-aws-s3-buckets.html
+  * https://securitycafe.ro/2022/12/14/aws-enumeration-part-ii-practical-enumeration/
+
+  False Positives:
+  * Administrators listing buckets, it may be necessary to filter out users who commonly conduct this activity.
+
+  ## Strategy
+  Looks for potential enumeration of AWS buckets via ListBuckets.
+
+  References:
+  * https://github.com/Lifka/hacking-resources/blob/c2ae355d381bd0c9f0b32c4ead049f44e5b1573f/cloud-hacking-cheat-sheets.md
+  * https://jamesonhacking.blogspot.com/2020/12/pivoting-to-private-aws-s3-buckets.html
+  * https://securitycafe.ro/2022/12/14/aws-enumeration-part-ii-practical-enumeration/
+
+  False Positives:
+  * Administrators listing buckets, it may be necessary to filter out users who commonly conduct this activity.
+
+  ## Triage and Response
+  Investigate and remediate as appropriate.
+severity: Low
+query_text: |-
+  %ingest.source_type="aws:cloudtrail"
+  eventSource="s3.amazonaws.com"
+  eventName="ListBuckets"
+  (not userIdentity.type="AssumedRole")
+  | stats
+  min(@scnr.datetime) as firstTime,
+  max(@scnr.datetime) as lastTime,
+  count() as eventCount
+  by
+  userIdentity.arn,
+  eventSource,
+  eventName,
+  awsRegion
+time_range_s: 300
+run_frequency_s: 60
+event_sink_keys:
+- low_severity_alerts
+tags:
+- tactics.ta0007.discovery
+- techniques.t1580.cloud_infrastructure_discovery
+- source.cloudtrail

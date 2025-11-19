@@ -1,0 +1,14 @@
+name: GitHub Enterprise Audit Log Stream Destroyed Playbook
+description: Detects when a GitHub audit log stream is destroyed. An adversary may attempt to destroy audit logs to erase their tracks.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor for changes to audit log streaming configurations.
+- name: Triage
+  description: '1. Identify the user.
+
+    2. Verify if this was a planned infrastructure change.
+
+    3. Restore the stream immediately.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

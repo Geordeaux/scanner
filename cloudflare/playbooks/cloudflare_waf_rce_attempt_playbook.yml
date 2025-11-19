@@ -1,0 +1,14 @@
+name: Cloudflare WAF Remote Code Execution Attempt Playbook
+description: Detects Remote Code Execution (RCE) attempts blocked by Cloudflare WAF.
+severity: Critical
+steps:
+- name: Investigation
+  description: Monitor Cloudflare WAF logs for signatures of known RCE vulnerabilities (e.g., Log4j, Spring4Shell).
+- name: Triage
+  description: '1. Identify the payload and target.
+
+    2. Confirm the WAF blocked the request.
+
+    3. Investigate if any similar requests bypassed the WAF.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

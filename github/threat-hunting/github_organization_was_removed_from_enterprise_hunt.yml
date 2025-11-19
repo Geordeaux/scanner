@@ -1,0 +1,14 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: GitHub organization was removed from enterprise
+description: |-
+  Detect when a GitHub enterprise organization has been removed.
+query_text: |-
+  %ingest.source_type:github
+  action:business.remove_organization
+  | groupbycount(actor)
+  | where @q.count > 0
+tags:
+- techniques.t1565.data_manipulation
+- source.github-telemetry
+- tactics.ta0040.impact
+- source.github

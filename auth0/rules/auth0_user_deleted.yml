@@ -1,0 +1,36 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Auth0 User Deleted
+description: |-
+  ## Goal
+  Detects when a user is deleted in Auth0. While this can be a legitimate administrative
+  action, unauthorized deletion of users can disrupt operations or be used to cover
+  tracks after a compromise.
+
+  ## Strategy
+  1. Determine if this was authorized (e.g., GDPR request, offboarding).
+  2. Check if the deleted user was under investigation.
+
+  ## Triage and Response
+  1. Identify the user (`data.user_id`) who performed the deletion.
+  2. Identify the user who was deleted.
+  3. Check the timestamp.
+  1. If unauthorized, restore the user if possible.
+  2. Investigate the account that performed the deletion.
+  3. Review logs for activity by the deleted user prior to deletion.
+enabled: true
+severity: Medium
+query_text: |-
+  %ingest.source_type:auth0
+  data.type:sapi
+  data.description:"Delete a user"
+  data.details.request.path:/api/v2/users/*
+  | groupbycount(data.user_id)
+  | where @q.count > 0
+time_range_s: 300
+run_frequency_s: 60
+event_sink_keys:
+- medium_severity_alerts
+tags:
+- tactics.ta0040.impact
+- techniques.t1485.data_destruction
+- source.auth0

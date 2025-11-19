@@ -1,0 +1,16 @@
+name: Cloudflare WAF SQL Injection Attempt Playbook
+description: Detects SQL Injection (SQLi) attempts blocked by Cloudflare WAF.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor Cloudflare WAF logs for rule matches related to SQL injection. High volumes of these alerts from a single IP indicate a targeted attack.
+- name: Triage
+  description: '1. Identify the source IP and the targeted URL.
+
+    2. Verify if the request was blocked.
+
+    3. If not blocked (e.g., Log mode), check the backend logs for successful execution.
+
+    4. Block the IP permanently if confirmed malicious.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

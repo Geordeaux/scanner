@@ -1,0 +1,15 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: High Frequency of EC2 Multi-Region DescribeInstances API Calls
+description: |-
+  Identifies when a user makes multiple `DescribeInstances` API calls in multiple regions within a short window.
+  High frequency of `DescribeInstances` API calls across multiple regions may indicate an adversary attempting to discover the EC2 instances in the account or perform reconnaissance.
+query_text: |-
+  %ingest.source_type:aws:cloudtrail
+  eventName:DescribeInstances
+  eventSource:"ec2.amazonaws.com"
+  | stats count_distinct(awsRegion) as region_count by userIdentity.arn
+  | where region_count >= 10
+tags:
+- tactics.ta0007.discovery
+- techniques.t1580.cloud_infrastructure_discovery
+- source.aws.cloudtrail

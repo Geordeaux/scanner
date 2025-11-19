@@ -1,0 +1,17 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS Excessive Successful Discovery Events
+description: "Detects excessive successful discovery-style API calls (for example, `Describe`, `List`, `Get`) from a single IAM user within a short timeframe. This can indicate reconnaissance as part of an attacker\u2019s attempt to understand the cloud environment."
+query_text: |-
+  %ingest.source_type="aws:cloudtrail"
+  userIdentity.type:"IAMUser"
+  eventName:(Describe* List* Get*)
+  (not errorCode:*)
+  | groupbycount(userIdentity.arn)
+  | where @q.count > 10
+tags:
+- source.aws
+- domain.cloud
+- domain.discovery
+- tactics.ta0007.discovery
+- techniques.t1580.cloud_infrastructure_discovery
+- use_case.account_and_inventory_discovery

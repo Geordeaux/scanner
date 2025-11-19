@@ -1,0 +1,14 @@
+name: AWS GuardDuty RDS Brute Force Playbook
+description: Detects brute force attacks against an RDS database.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor GuardDuty findings for `CredentialAccess:RDS/AnomalousBehavior.BruteForce`.
+- name: Triage
+  description: '1. Identify the RDS instance and the source IP.
+
+    2. Block the IP.
+
+    3. Verify if any login was successful.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

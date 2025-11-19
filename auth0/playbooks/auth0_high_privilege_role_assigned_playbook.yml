@@ -1,0 +1,21 @@
+name: Auth0 High-Privilege Role Assigned Playbook
+description: |-
+  Response steps for when a high-privilege role is assigned to a user.
+  This could be an indicator of privilege escalation.
+severity: High
+steps:
+  - name: Triage
+    description: |-
+      1. Identify the user (`data.user_id`) who assigned the role and the user receiving it.
+      2. Identify the role(s) assigned.
+      3. Check if the role contains administrative permissions.
+  - name: Investigation
+    description: |-
+      1. Determine if this role assignment was authorized (e.g., promotion, new hire).
+      2. Verify if the user needs these permissions for their job function.
+      3. Check if the assigner has the authority to grant such roles.
+  - name: Remediation
+    description: |-
+      1. If unauthorized, remove the role from the user immediately.
+      2. Investigate the account of the user who assigned the role.
+      3. Audit other recent role assignments.

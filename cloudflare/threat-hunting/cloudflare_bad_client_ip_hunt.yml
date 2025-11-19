@@ -1,0 +1,15 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Cloudflare Bad Client IP
+description: |-
+  Detect requests from IP addresses that have been classified as having a bad reputation,
+  including unknown, badHost, greylist, securityScanner, scan, or tor classifications.
+query_text: |-
+  %ingest.source_type:cloudflare
+  ClientIPClass:(unknown badHost greylist securityScanner scan tor)
+  | groupbycount(ClientIP)
+  | where @q.count > 0
+tags:
+- tactics.ta0001.initial_access
+- techniques.t1190.exploit_public_facing_application
+- techniques.t1133.external_remote_services
+- source.cloudflare

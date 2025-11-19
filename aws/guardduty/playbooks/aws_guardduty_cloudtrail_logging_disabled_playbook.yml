@@ -1,0 +1,16 @@
+name: AWS GuardDuty CloudTrail Logging Disabled Playbook
+description: Detects attempts to disable CloudTrail logging.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor GuardDuty findings for `Stealth:IAMUser/CloudTrailLoggingDisabled`. Disabling logging is a common tactic used by attackers to hide their activities.
+- name: Triage
+  description: '1. Identify the user who disabled logging.
+
+    2. Re-enable CloudTrail logging immediately.
+
+    3. Investigate the time window where logging was disabled for any other suspicious activity.
+
+    4. Revoke credentials of the user if the action was unauthorized.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

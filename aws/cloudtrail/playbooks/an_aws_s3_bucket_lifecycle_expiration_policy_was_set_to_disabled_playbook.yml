@@ -1,0 +1,14 @@
+name: An AWS S3 bucket lifecycle expiration policy was set to disabled Playbook
+description: Detect if an AWS S3 lifecycle expiration policy is disabled in your CloudTrail
+  logs.
+severity: Informational
+steps:
+- name: Investigation
+  description: Check if the lifecycle configuration has fields indicating a disabled
+    status and an event name of PutBucketLifecycle. If these conditions are met, a
+    bucket's lifecycle configuration has been turned off.
+- name: Triage
+  description: '1. Determine if the event should have occurred on the specified bucket
+    by the identified user and account.
+
+    2. If the bucket should not be disabled, escalate to engineering for re-enablement.'

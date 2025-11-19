@@ -1,0 +1,39 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Auth0 Email Provider Updated
+description: |-
+  ## Goal
+  Detects when the email provider settings are updated in Auth0. Attackers may
+  modify these settings to intercept password reset emails or other sensitive
+  communications, leading to account takeover.
+
+  ## Strategy
+  1. Determine if this was a planned infrastructure change.
+  2. Verify the new email provider settings (e.g., SMTP server, credentials).
+  3. Check if any password reset requests were triggered shortly after the change.
+
+  ## Triage and Response
+  1. Identify the user (`data.user_id`) who performed the update.
+  2. Check the timestamp and source IP.
+  1. If unauthorized, revert the email provider settings immediately.
+  2. Rotate the credentials of the user who made the change.
+  3. Notify all users who requested password resets during the compromised window.
+enabled: true
+severity: High
+query_text: |-
+  %ingest.source_type:auth0
+  data.type:sapi
+  (
+  (data.description:"Update email provider") or
+  (data.description:"Delete email provider")
+  )
+  data.details.request.path:/api/v2/emails/provider
+  | groupbycount(data.user_id)
+  | where @q.count > 0
+time_range_s: 300
+run_frequency_s: 60
+event_sink_keys:
+- high_severity_alerts
+tags:
+- tactics.ta0003.persistence
+- techniques.t1556.modify_authentication_process
+- source.auth0

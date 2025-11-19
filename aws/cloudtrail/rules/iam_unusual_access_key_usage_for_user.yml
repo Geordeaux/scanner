@@ -1,0 +1,28 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: AWS IAM Unusual AWS Access Key Usage for User
+description: |-
+  ## Goal
+  Identifies unusual (infrequent) AWS access key usage for a user.
+  This helps identify potential misuse or abuse of AWS access keys, such as dormant keys being used for malicious activities.
+
+  ## Strategy
+  Identifies unusual (infrequent) AWS access key usage for a user.
+  This helps identify potential misuse or abuse of AWS access keys, such as dormant keys being used for malicious activities.
+
+  ## Triage and Response
+  Investigate and remediate as appropriate.
+enabled: true
+severity: Low
+query_text: |-
+  %ingest.source_type:aws:cloudtrail
+  userIdentity.accessKeyId:*
+  | stats count() as api_counts by userIdentity.arn, userIdentity.accessKeyId
+  | where api_counts < 2
+time_range_s: 86400
+run_frequency_s: 3600
+event_sink_keys:
+- low_severity_alerts
+tags:
+- tactics.ta0005.defense_evasion
+- techniques.t1078.004.cloud_accounts
+- source.aws.cloudtrail

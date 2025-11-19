@@ -1,0 +1,9 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Cloudflare Email Routing Catch-All Modified
+description: |-
+  Detects changes to the Email Routing catch-all address.
+query_text: "%ingest.source_type:cloudflare\nAction:email_routing_catch_all_update "
+tags:
+- cloudflare
+- email_routing
+- interception

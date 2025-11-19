@@ -1,0 +1,22 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS Unusual Number Of Failed Authentication Attempts From The Same IP
+description: |-
+  Detect when there are an unusual number (for example, more than 5) of failed authentication attempts from the same IP address for valid users within a 5-minute window. This can indicate a brute force attack or credential stuffing attempt.
+query_text: |-
+  %ingest.source_type="aws:cloudtrail"
+  eventSource:"signin.amazonaws.com"
+  eventName:ConsoleLogin
+  responseElements.ConsoleLogin:"Failure"
+  (not errorMessage:"No username found in supplied account")
+  | groupbycount(
+  sourceIPAddress,
+  recipientAccountId
+  )
+  | where @q.count > 5
+tags:
+- source.aws
+- domain.identity
+- domain.authentication
+- tactics.ta0006.credential_access
+- techniques.t1110.brute_force
+- use_case.aws_signin

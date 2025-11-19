@@ -1,0 +1,14 @@
+name: Google Workspace Suspicious App Script Created Playbook
+description: Detects the creation or modification of Google App Scripts.
+severity: Medium
+steps:
+- name: Investigation
+  description: Monitor Google Workspace Drive/Script audit logs for `create_script` or `edit_script`. App Scripts can be used to automate data theft, send phishing emails, or modify files.
+- name: Triage
+  description: '1. Identify the user and the script content.
+
+    2. Review the script''s permissions and code.
+
+    3. Delete the script and suspend the user if malicious.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

@@ -1,0 +1,36 @@
+name: AWS IAM Access Denied Discovery Events Playbook
+description: Detects excessive `AccessDenied` events within a one-hour timeframe from
+  a single IAM principal. This may indicate reconnaissance activity or permission
+  mapping by an adversary.
+severity: Low
+steps:
+- name: Investigation
+  description: 'Monitor AWS CloudTrail management events where:
+
+    * The action result is an explicit access denial, and
+
+    * The same IAM user or role generates multiple distinct denied actions within
+    a short window.
+
+
+    Group events by principal and source IP, and alert when the count of denied actions
+    exceeds a defined threshold (for example, five or more within one hour). This
+    pattern often appears during:
+
+    * Manual or scripted permission probing.
+
+    * Misconfigured tooling repeatedly calling unauthorised APIs.
+
+    * Early-stage discovery by an attacker testing controls.'
+- name: Triage
+  description: "* Identify the principal (user or role), source IP, and affected AWS\
+    \ services/APIs.\n* Check whether this activity aligns with:\n  * A known change\
+    \ window, or\n  * Recent deployment or automation changes.\n* Review recent successful\
+    \ actions by the same principal to determine whether any privileged operations\
+    \ succeeded.\n* If activity is not clearly legitimate:\n  * Temporarily restrict\
+    \ or revoke the principal\u2019s permissions where safe to do so.\n  * Investigate\
+    \ authentication history for the principal and IP (unusual geo, device, time-of-day).\n\
+    \  * Look for correlated detections (for example, console logins without MFA,\
+    \ new key creation, or policy changes).\n* If confirmed benign, consider:\n  *\
+    \ Tightening IAM policies to follow least privilege.\n  * Tuning this rule with\
+    \ allow-listed principals or known noisy workflows."

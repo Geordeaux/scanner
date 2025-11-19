@@ -1,0 +1,10 @@
+name: GCP Exempt Principals From Audit Log Playbook
+description: Detect when GCP Cloud Audit logs are exempted for principals in all services at the project or organization level. This can indicate an attempt to evade monitoring and auditing by disabling audit logging for specific users or groups.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor GCP Cloud Audit logs for events where the `SetIamPolicy` action is taken to exempt principals from audit logging in all services (`allServices`). Capture relevant details such as the principal IP, user, and target resource to assess potential threats. Increase the risk score if the exemption is at the organization level.
+- name: Triage
+  description: Investigate the detected event to determine if it was authorized. Review the principal IPs, users, and other details to ensure that no unauthorized actions have been taken. Ensure that all audit logging policies are compliant with company policies.
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

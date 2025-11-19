@@ -1,0 +1,14 @@
+name: AWS GuardDuty Lambda Cryptocurrency Mining Playbook
+description: Detects cryptocurrency mining activity within a Lambda function.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor GuardDuty findings for `CryptoCurrency:Lambda/BitcoinTool.B`.
+- name: Triage
+  description: '1. Identify the Lambda function.
+
+    2. Disable the function immediately to stop billing impact.
+
+    3. Investigate the source of the mining code.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

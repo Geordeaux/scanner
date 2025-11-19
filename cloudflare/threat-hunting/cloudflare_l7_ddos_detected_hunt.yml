@@ -1,0 +1,12 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Cloudflare L7 DDoS Detected
+description: |-
+  Detect a Layer 7 Distributed Denial of Service (DDoS) attack from Cloudflare firewall logs.
+query_text: |-
+  %ingest.source_type:cloudflare
+  Source:l7ddos
+tags:
+- tactics.ta0040.impact
+- techniques.t1499.endpoint_denial_of_service
+- techniques.t1498.network_denial_of_service
+- source.cloudflare

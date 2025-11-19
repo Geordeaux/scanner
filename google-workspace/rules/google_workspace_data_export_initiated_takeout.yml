@@ -1,0 +1,25 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Google Workspace Data Export Initiated (Takeout)
+description: |-
+  ## Goal
+  Detects when a user initiates a Google Takeout data export.
+
+  ## Strategy
+  Monitor Google Workspace audit logs for `takeout_initiated`. Takeout allows users to export their entire Google account data, representing a significant exfiltration risk.
+
+  ## Triage and Response
+  1. Identify the user.
+  2. Verify if the export is authorized (e.g., departing employee).
+  3. Suspend the user and cancel the export if unauthorized.
+enabled: true
+severity: High
+query_text: "%ingest.source_type:google_workspace\naction:takeout_initiated "
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- high_severity_alerts
+tags:
+- google_workspace
+- exfiltration
+- insider_threat

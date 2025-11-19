@@ -1,0 +1,15 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: An AWS S3 bucket lifecycle policy expiration is set to < 90 days
+description: |-
+  Detect when an S3 bucket has a lifecycle configuration with an expiration policy of less than 90 days.
+query_text: |-
+  eventName:PutBucketLifecycle
+  (not errorCode:*)
+  eventSource:s3.amazonaws.com
+  requestParameters.LifecycleConfiguration.Rule.Expiration.Days < 90
+  | groupbycount(requestParameters.bucketName)
+  | where @q.count > 0
+tags:
+- source.cloudtrail
+- techniques.t1562.impair_defenses
+- tactics.ta0005.defense_evasion

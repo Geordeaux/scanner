@@ -1,0 +1,14 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: GitHub personal access token (PAT) auto approve policy modified
+description: |-
+  Detect when a GitHub personal access token is set to auto approve.
+query_text: |-
+  %ingest.source_type:github
+  action:(auto_approve_personal_access_token_requests.disable auto_approve_personal_access_token_requests.enable forbid_auto_approve_personal_access_token_requests.disable forbid_auto_approve_personal_access_token_requests.enable)
+  | groupbycount(actor)
+  | where @q.count > 0
+tags:
+- source.github-telemetry
+- source.github
+- techniques.t1562.impair_defenses
+- tactics.ta0005.defense_evasion

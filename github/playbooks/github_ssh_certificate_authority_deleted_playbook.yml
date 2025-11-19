@@ -1,0 +1,17 @@
+name: GitHub SSH certificate authority deleted Playbook
+description: Detect when a GitHub SSH certificate authority has been deleted.
+severity: Low
+steps:
+- name: Investigation
+  description: 'This rule monitors GitHub audit logs for deletions of GitHub SSH certificate authorities. An SSH certificate authority allows an enterprise account to issue SSH certificates for access to its resources. Any deletions must be monitored and verified for authorization.
+
+
+    ## Triage and response
+
+    1. Determine if the change made by the GitHub actor is authorized.
+
+    2. If the change was not authorized or was unexpected, initiate your organization''s incident response process and investigate.'
+- name: Triage
+  description: ''
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

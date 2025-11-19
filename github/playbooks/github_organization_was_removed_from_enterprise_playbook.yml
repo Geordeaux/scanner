@@ -1,0 +1,17 @@
+name: GitHub organization was removed from enterprise Playbook
+description: Detect when a GitHub enterprise organization has been removed.
+severity: High
+steps:
+- name: Investigation
+  description: 'This rule monitors GitHub audit logs for removals of organizations from an enterprise account, which could compromise security controls and the overall security posture.
+
+
+    ## Triage and response
+
+    1. Determine if the change made by the actor is authorized.
+
+    2. If the change was unauthorized or unexpected, initiate the incident response process and investigate.'
+- name: Triage
+  description: ''
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

@@ -1,0 +1,17 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Auth0 MFA Policy Enabled
+description: |-
+  Detect when MFA policies are enabled in Auth0. This is typically
+  a positive security event that strengthens authentication controls.
+query_text: |-
+  %ingest.source_type:auth0
+  data.description:'Set the Multi-factor Authentication policies'
+  data.details.request.path:/api/v2/guardian/policies
+  (not data.details.request.body:"[]")
+  data.details.request.channel:'https://manage.auth0.com'
+  | groupbycount(data.user_id)
+  | where @q.count > 0
+tags:
+- tactics.ta0005.defense_evasion
+- techniques.t1556.modify_authentication_process
+- source.auth0

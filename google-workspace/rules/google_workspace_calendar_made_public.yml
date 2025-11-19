@@ -1,0 +1,25 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Google Workspace Calendar Made Public
+description: |-
+  ## Goal
+  Detects when a user's primary calendar is shared publicly.
+
+  ## Strategy
+  Monitor Google Workspace Calendar audit logs for `change_calendar_setting` where visibility is set to public.
+
+  ## Triage and Response
+  1. Identify the user and the calendar.
+  2. Verify if public sharing is necessary.
+  3. Restrict visibility if unauthorized.
+enabled: true
+severity: Medium
+query_text: "%ingest.source_type:google_workspace\naction:change_calendar_setting "
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- medium_severity_alerts
+tags:
+- google_workspace
+- calendar
+- exposure

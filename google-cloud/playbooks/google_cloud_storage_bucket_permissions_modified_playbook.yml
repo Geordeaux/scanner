@@ -1,0 +1,17 @@
+name: Google Cloud Storage Bucket permissions modified Playbook
+description: Detect changes in permissions on a GCS Bucket.
+severity: Informational
+steps:
+- name: Investigation
+  description: 'Monitor GCS bucket admin activity logs for the invocation of the method:
+
+    * storage.setIamPermissions
+
+
+    ## Triage and response
+
+    Review the bucket permissions to ensure they are not overly permissive.'
+- name: Triage
+  description: ''
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

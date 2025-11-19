@@ -1,0 +1,20 @@
+name: Cloudflare Unexpected POST Requests Playbook
+description: 'Detect POST or PUT requests to URIs that typically don''t accept
+
+  POST/PUT requests, which may indicate file upload attempts, web
+
+  shell activity, or other malicious file operations.'
+severity: Medium
+steps:
+- name: Investigation
+  description: Monitor Cloudflare logs for this specific threat type. Correlate with origin server logs.
+- name: Triage
+  description: '1. Validate the finding in the Cloudflare dashboard.
+
+    2. Identify the source IP and user agent.
+
+    3. Check if the request was blocked or allowed.
+
+    4. If allowed and malicious, update WAF rules to block.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

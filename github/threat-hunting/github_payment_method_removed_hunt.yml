@@ -1,0 +1,14 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: GitHub payment method removed
+description: |-
+  Detect when a GitHub payment method has been removed.
+query_text: |-
+  %ingest.source_type:github
+  action:payment_method.remove
+  | groupbycount(actor)
+  | where @q.count > 0
+tags:
+- source.github-telemetry
+- techniques.t1098.account_manipulation
+- source.github
+- tactics.ta0003.persistence

@@ -1,0 +1,32 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS Console GetSigninToken Potential Abuse
+description: |-
+  Detects potentially suspicious events involving "GetSigninToken".
+  An adversary using the "aws_consoler" tool can leverage this console API to create temporary federated credential that help obfuscate which AWS credential is compromised (the original access key) and enables the adversary to pivot from the AWS CLI to console sessions without the need for MFA using the new access key issued in this request.
+
+
+  References:
+  * https://github.com/NetSPI/aws_consoler
+  * https://www.crowdstrike.com/blog/analysis-of-intrusion-campaign-targeting-telecom-and-bpo-companies/
+
+  False Positives:
+  * GetSigninToken events will occur when using AWS SSO portal to login and will generate false positives if you do not filter for the expected user agent(s), see filter. Non-SSO configured roles would be abnormal and should be investigated.
+query_text: |-
+  %ingest.source_type="aws:cloudtrail"
+  eventSource="signin.amazonaws.com"
+  eventName="GetSigninToken"
+  (not userAgent:"Jersey/*")
+  | stats
+  min(@scnr.datetime) as firstTime,
+  max(@scnr.datetime) as lastTime,
+  count() as eventCount
+  by
+  userIdentity.arn,
+  eventSource,
+  eventName,
+  awsRegion,
+  userAgent
+tags:
+- tactics.ta0006.credential_access
+- techniques.t1550.use_alternate_authentication_material
+- source.cloudtrail

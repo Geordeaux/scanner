@@ -1,0 +1,18 @@
+name: Atlassian Authentication Policy Updated Playbook
+description: |-
+  Response steps for when authentication policies are updated.
+  Weakening policies (e.g., disabling MFA/IP allowlist) is a critical security risk.
+severity: Critical
+steps:
+  - name: Triage
+    description: |-
+      1. Identify the user (`attributes.actor.email`) who updated the policy.
+      2. Identify what changed (e.g., `ip_allowlist_disabled`).
+  - name: Investigation
+    description: |-
+      1. Determine if this was authorized.
+      2. Check if any logins occurred from previously blocked IPs.
+  - name: Remediation
+    description: |-
+      1. If unauthorized, revert the policy change immediately.
+      2. Investigate the actor's account.

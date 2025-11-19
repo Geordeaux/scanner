@@ -1,0 +1,10 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Google Workspace User Ou Changed
+description: |-
+  Identifies when a Google Workspace user account is moved between Organizational Units.
+query_text: |-
+  %ingest.source_type:google_workspace
+  action:MOVE_USER_TO_ORG_UNIT
+tags:
+- google_workspace
+- converted_yaral

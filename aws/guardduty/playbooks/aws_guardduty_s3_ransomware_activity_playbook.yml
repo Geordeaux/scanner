@@ -1,0 +1,16 @@
+name: AWS GuardDuty S3 Ransomware Activity Playbook
+description: Detects potential ransomware activity targeting S3 buckets.
+severity: Critical
+steps:
+- name: Investigation
+  description: Monitor GuardDuty findings for `Impact:S3/ObjectDelete.HighVolume` or `Impact:S3/ObjectEncrypt.HighVolume`. These indicate a high volume of object deletions or encryptions, which is characteristic of ransomware.
+- name: Triage
+  description: '1. Identify the principal performing the actions.
+
+    2. Check if this is a legitimate data lifecycle operation.
+
+    3. If unauthorized, revoke credentials immediately.
+
+    4. Assess the extent of data loss and initiate recovery from backups.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

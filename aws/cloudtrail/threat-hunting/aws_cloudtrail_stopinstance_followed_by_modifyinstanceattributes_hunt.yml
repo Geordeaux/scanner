@@ -1,0 +1,9 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: StopInstance FOLLOWED BY ModifyInstanceAttributes
+description: |-
+  Identifies when StopInstance and ModifyInstanceAttributes CloudTrail events occur in a short period of time. Since EC2 startup scripts cannot be modified without first stopping the instance, StopInstances should be a signal.
+query_text: |-
+  %ingest.source_type:aws:cloudtrail
+  eventName:StopInstances OR eventName:ModifyInstanceAttribute
+tags:
+- panther_migration

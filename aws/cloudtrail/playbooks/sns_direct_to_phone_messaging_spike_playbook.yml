@@ -1,0 +1,12 @@
+name: SNS Direct-to-Phone Messaging Spike Playbook
+description: This hunting query gathers evidence of potential abuse of the SNS service
+  to send direct-to-phone text messages. Adversaries may use this technique to send
+  smishing messages or deliver other types of malicious content directly to users'
+  phones.
+severity: Medium
+steps:
+- name: Investigation
+  description: This hunting query gathers evidence of potential abuse of the SNS service
+    to send direct-to-phone text messages. Adversaries may use this technique to send
+    smishing messages or deliver other types of malicious content directly to users'
+    phones.

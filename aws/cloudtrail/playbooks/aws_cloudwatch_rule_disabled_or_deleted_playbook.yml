@@ -1,0 +1,17 @@
+name: AWS CloudWatch rule disabled or deleted Playbook
+description: Detect when a CloudWatch rule has been disabled or deleted.
+severity: Informational
+steps:
+- name: Investigation
+  description: Monitor CloudTrail for `DisableRule` or `DeleteRule` API calls, as
+    attackers may remove rules to evade defenses.
+- name: Triage
+  description: "1. Verify if the user making the API call should have done so.\n2.\
+    \ If the API call was not legitimate:\n   * Rotate user credentials.\n   * Investigate\
+    \ other API activities by the user.\n   * Re-enable or create a rule using the\
+    \ AWS CLI commands `enable-rule` or `put-rule`, or refer to AWS documentation\
+    \ to revert to the last known good state.\n3. If the API call was legitimate:\n\
+    \   * Check if the user was authorized for this change.\n   * If authorized, consider\
+    \ adding the event bus name to a suppression list.\n   * If not authorized, re-enable\
+    \ or create a rule as previously mentioned and initiate your incident response\
+    \ process to investigate."

@@ -1,0 +1,59 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: AWS Security Group Open To The World
+enabled: true
+severity: High
+description: |-
+  ## Goal
+  Detect when an AWS security group is opened to the world (`0.0.0.0/0` or `::/0`). This can indicate potential security issues related to unauthorized access and exposure of resources.
+
+  ## Strategy
+  Monitor AWS CloudTrail management events for the `AuthorizeSecurityGroupIngress` API call from `ec2.amazonaws.com`. Flag events where the requested ingress rule includes a CIDR of `0.0.0.0/0` (IPv4) or `::/0` (IPv6).
+
+  ## Triage and Response
+  * Confirm whether opening the security group to the internet is part of an approved change.
+  * Review the affected security group, ports, and associated instances for exposure of sensitive services.
+  * If unapproved, restrict the rule to required CIDRs or remove it entirely.
+  * Review other recent actions by the same principal for additional risky changes.
+query_text: |-
+  %ingest.source_type="aws:cloudtrail"
+  eventSource:"ec2.amazonaws.com"
+  eventName:AuthorizeSecurityGroupIngress
+  not errorCode:*
+  (
+  requestParameters.ipPermissions.items.ipRanges.items.cidrIp:"0.0.0.0/0"
+  or requestParameters.ipPermissions.items.ipv6Ranges.items.cidrIpv6:"::/0"
+  )
+  | groupbycount(
+  recipientAccountId,
+  requestParameters.groupId,
+  userIdentity.arn,
+  awsRegion
+  )
+  | where @q.count > 0
+time_range_s: 3600
+run_frequency_s: 3600
+event_sink_keys:
+- high_severity_alerts
+tags:
+- source.aws
+- domain.cloud
+- domain.network
+- domain.ec2
+- tactics.ta0005.defense_evasion
+- techniques.t1562.impair_defenses
+- use_case.aws_security_group
+- exposure.open_to_internet
+context_fields:
+- recipientAccountId
+- awsRegion
+- eventSource
+- eventName
+- eventTime
+- sourceIPAddress
+- userAgent
+- userIdentity.type
+- userIdentity.arn
+- userIdentity.accountId
+- requestParameters.groupId
+- requestParameters.ipPermissions
+- additionalEventData

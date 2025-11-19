@@ -1,0 +1,30 @@
+name: AWS Console Login Without MFA Playbook
+description: Detect AWS Management Console logins where Multi-Factor Authentication
+  (MFA) was not used. This highlights interactive access relying solely on username
+  and password, increasing the risk of unauthorised access.
+severity: Low
+steps:
+- name: Investigation
+  description: 'Monitor AWS CloudTrail management events from `signin.amazonaws.com`
+    with:
+
+    * `eventName="ConsoleLogin"`
+
+    * `responseElements.ConsoleLogin="Success"`
+
+    * `additionalEventData.MFAUsed="No"`
+
+
+    This captures successful console logins that did not use MFA (for both IAM users
+    and, critically, the root account).'
+- name: Triage
+  description: "* Confirm whether the account is expected to be able to log in without\
+    \ MFA (for most organisations this should be \u201Cno\u201D, especially for root\
+    \ and privileged users).\n* Review the user\u2019s role and privileges; prioritise\
+    \ investigation of administrative or break-glass accounts.\n* Correlate with recent\
+    \ activity from the same principal and source IP for signs of suspicious behaviour\
+    \ (policy changes, key creation, logging changes, etc.).\n* If the login is not\
+    \ explicitly approved, require MFA enrolment or disable console access for the\
+    \ user, depending on policy.\n* For root logins without MFA, treat as a high-priority\
+    \ issue and enforce immediate hardening (MFA, access key review, password rotation,\
+    \ and broader compromise assessment)."

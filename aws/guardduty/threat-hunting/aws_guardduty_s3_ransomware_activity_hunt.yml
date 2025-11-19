@@ -1,0 +1,14 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS GuardDuty S3 Ransomware Activity
+description: |-
+  Detects potential ransomware activity targeting S3 buckets.
+query_text: |-
+  %ingest.source_type:aws_guardduty
+  metadata.product_event_type:(
+  "Impact:S3/ObjectDelete.HighVolume"
+  "Impact:S3/ObjectEncrypt.HighVolume"
+  )
+tags:
+- guardduty
+- aws
+- ransomware

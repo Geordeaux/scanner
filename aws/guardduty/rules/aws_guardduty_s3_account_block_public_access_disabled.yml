@@ -1,0 +1,26 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: AWS GuardDuty S3 Account Block Public Access Disabled
+description: |-
+  ## Goal
+  Detects when the S3 Block Public Access setting is disabled at the account level.
+
+  ## Strategy
+  Monitor GuardDuty findings for `Policy:S3/AccountPublicAccessBlock`. Disabling this setting removes the centralized guardrail against public buckets, potentially exposing all buckets in the account.
+
+  ## Triage and Response
+  1. Identify the user who modified the account setting.
+  2. Re-enable Block Public Access immediately.
+  3. Investigate why the setting was disabled and if any buckets were made public during the exposure window.
+enabled: true
+severity: Critical
+query_text: "%ingest.source_type:aws_guardduty\nmetadata.product_event_type:\"Policy:S3/AccountPublicAccessBlock\" "
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- critical_severity_alerts
+tags:
+- guardduty
+- aws
+- s3
+- misconfiguration

@@ -1,0 +1,16 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS Lambda function resource-based policy modified by IAM user
+description: |-
+  Detect when an AWS Lambda function's resource-based policy is modified by an IAM user, which could indicate an attempt to maintain persistence or allow invocation from an external account.
+query_text: |-
+  %ingest.source_type:"aws:cloudtrail"
+  eventSource:lambda.amazonaws.com
+  eventName:AddPermission*
+  userIdentity.type:IAMUser
+  (not userIdentity.invokedBy:(cloudformation.amazonaws.com "AWS Internal"))
+  | stats countdistinct(requestParameters.functionName) as num_distinct_values by userIdentity.arn
+  | where num_distinct_values > 0
+tags:
+- techniques.t1098.account_manipulation
+- source.cloudtrail
+- tactics.ta0003.persistence

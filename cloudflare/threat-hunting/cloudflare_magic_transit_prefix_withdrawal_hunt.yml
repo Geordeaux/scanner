@@ -1,0 +1,9 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Cloudflare Magic Transit Prefix Withdrawal
+description: |-
+  Detects when a BGP prefix is withdrawn from Magic Transit.
+query_text: "%ingest.source_type:cloudflare\nAction:magic_transit_prefix_withdraw "
+tags:
+- cloudflare
+- magic_transit
+- network_security

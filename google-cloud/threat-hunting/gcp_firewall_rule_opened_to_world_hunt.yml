@@ -1,0 +1,22 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: GCP Firewall Rule Opened To The World
+description: |-
+  Detect when a GCP Firewall rule is opened to the world (`0.0.0.0/0`) on all protocols. This can indicate an attempt to expose resources to the internet without proper restrictions, which increases the risk of unauthorized access.
+query_text: |-
+  %ingest.source_type:gcp_audit
+  metadata.event_type:RESOURCE_CREATION
+  metadata.log_type:GCP_CLOUDAUDIT
+  metadata.product_event_type:compute.firewalls.insert
+  metadata.product_name:"Google Compute Engine"
+  security_result.action:ALLOW
+  target.resource.attribute.labels.source_ranges:"0.0.0.0/0"
+  security_result.detection_fields.allowed_ipprotocol:all
+  target.resource.attribute.labels.response_status:RUNNING
+tags:
+- gcp_audit
+- firewall_open_to_world
+- gcp
+- network
+- source.gcp
+- techniques.t1562.impair_defenses
+- tactics.ta0005.defense_evasion

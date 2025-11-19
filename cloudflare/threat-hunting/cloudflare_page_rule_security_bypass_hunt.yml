@@ -1,0 +1,9 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Cloudflare Page Rule Security Bypass
+description: |-
+  Detects the creation or modification of a Page Rule that bypasses security controls.
+query_text: "%ingest.source_type:cloudflare\nAction:pagerule_create OR Action:pagerule_update\nNewValue:*disable_security* OR NewValue:*disable_waf* "
+tags:
+- cloudflare
+- configuration
+- waf

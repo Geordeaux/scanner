@@ -1,0 +1,17 @@
+name: GitHub payment method removed Playbook
+description: Detect when a GitHub payment method has been removed.
+severity: Informational
+steps:
+- name: Investigation
+  description: 'This rule monitors GitHub audit logs for the removal of a payment method.
+
+
+    ## Triage and response
+
+    1. Determine if the change taken by the actor is authorized.
+
+    2. If the change was not authorized or unexpected, begin your organization''s incident response process and investigate.'
+- name: Triage
+  description: ''
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

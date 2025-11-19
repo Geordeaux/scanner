@@ -1,0 +1,15 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Google Cloud Storage Bucket contents downloaded without authentication
+description: |-
+  Detect unauthenticated access to an object in a GCS bucket.
+query_text: |-
+  %ingest.source_type:gcp
+  (not protoPayload.authenticationInfo.principalEmail:*)
+  protoPayload.methodName:storage.objects.get
+  severity:info
+  | groupbycount(project_id, bucket_name)
+  | where @q.count > 0
+tags:
+- source.gcp
+- tactics.ta0009.collection
+- techniques.t1530.data_from_cloud_storage_object

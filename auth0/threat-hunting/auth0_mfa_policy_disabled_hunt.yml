@@ -1,0 +1,17 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Auth0 MFA Policy Disabled
+description: |-
+  Detect when MFA policies are disabled in Auth0. This can weaken
+  security controls and should be monitored closely.
+query_text: |-
+  %ingest.source_type:auth0
+  data.description:'Set the Multi-factor Authentication policies'
+  data.details.request.path:/api/v2/guardian/policies
+  data.details.request.body:"[]"
+  data.details.request.channel:'https://manage.auth0.com'
+  | groupbycount(data.user_id)
+  | where @q.count > 0
+tags:
+- tactics.ta0005.defense_evasion
+- techniques.t1562.impair_defenses
+- source.auth0

@@ -1,0 +1,9 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS Backdoor Administrative IAM Role Created
+description: |-
+  Identifies when CreateRole and AttachAdminRolePolicy CloudTrail events occur in a short period of time. This sequence could indicate a potential security breach.
+query_text: |-
+  %ingest.source_type:aws:cloudtrail
+  eventName:CreateRole OR eventName:AttachRolePolicy
+tags:
+- panther_migration

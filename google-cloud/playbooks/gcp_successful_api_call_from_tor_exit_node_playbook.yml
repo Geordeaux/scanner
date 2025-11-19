@@ -1,0 +1,16 @@
+name: GCP Successful API Call From Tor Exit Node Playbook
+description: Detect successful Google Cloud API executions originating from Tor exit nodes. This behavior may indicate an attempt to hide malicious activities or unauthorized access.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor Google Cloud Audit Logs for successful API calls where the caller IP address is identified as a Tor exit node via a threat-intelligence feed enrichment. Trigger an alert whenever such activity is observed.
+- name: Triage
+  description: '1. Confirm whether the activity was expected (e.g., red-team exercise or legitimate scanning).
+
+    2. Review the principal identity, service account, and API methods invoked.
+
+    3. Examine other activity involving the same Tor IP or identity.
+
+    4. If unauthorized, initiate incident response actions and consider blocking Tor exit traffic.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

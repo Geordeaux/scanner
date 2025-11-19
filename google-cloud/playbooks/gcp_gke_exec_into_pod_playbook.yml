@@ -1,0 +1,14 @@
+name: GCP GKE Exec into Pod Playbook
+description: Detects execution of commands inside a GKE pod.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor Kubernetes audit logs (via Cloud Audit Logs) for `pods/exec` calls. Attackers may use `kubectl exec` to run malicious commands inside containers.
+- name: Triage
+  description: '1. Identify the user and the pod.
+
+    2. Review the command executed.
+
+    3. Terminate the pod and investigate the user if malicious.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

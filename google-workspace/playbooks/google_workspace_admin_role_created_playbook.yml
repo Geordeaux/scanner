@@ -1,0 +1,12 @@
+name: Google Workspace admin role created Playbook
+description: Create a signal when Google Workspace detects a new administrative role.
+severity: Low
+steps:
+- name: Investigation
+  description: Monitor Google Workspace logs for `CREATE_ROLE` events.
+- name: Triage
+  description: '1. Determine if there is a legitimate reason for the new administrator role.
+
+    2. If not, investigate the activity from the Google Workspace administrator and the IP that created the role.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

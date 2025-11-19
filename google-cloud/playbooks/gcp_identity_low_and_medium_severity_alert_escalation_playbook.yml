@@ -1,0 +1,10 @@
+name: GCP Identity Low And Medium Severity Alert Escalation Playbook
+description: Detect when a Google Cloud identity experiences a low severity event followed by a medium severity event within 24 hours. This can indicate potential security escalation attempts, such as an attacker first probing the system and then escalating their access.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor Security Command Center Threat logs for sequences of events where a user triggers both low and medium severity alerts within a 24-hour window. Capture relevant details such as the principal IP, user, and event timestamps to assess potential threats. Set a high risk score to indicate the severity of this event.
+- name: Triage
+  description: Investigate the detected sequence of events to determine if they were authorized. Review the principal IPs, users, and other details to ensure that no unauthorized actions have been taken. Ensure that all identities are compliant with company policies and monitor for further suspicious activities.
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

@@ -1,0 +1,32 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Atlassian API Token Activity
+description: |-
+  ## Goal
+  Detect when an API token is created or revoked. An attacker may create or revoke an
+  API token to persist within the Atlassian environment, to degrade security controls,
+  or to disrupt operations.
+
+  ## Strategy
+  1. Verify if the user authorized this token creation.
+  2. Check if the token is being used from unusual IPs.
+
+  ## Triage and Response
+  1. Identify the user (`attributes.actor.email`) who performed the action.
+  2. Check if a token was created or revoked.
+  1. If unauthorized, revoke the token immediately.
+  2. Rotate the user's credentials.
+enabled: true
+severity: Medium
+query_text: |-
+  %ingest.source_type:atlassian
+  attributes.action:(api_token_created api_token_revoked)
+  | groupbycount(attributes.actor.email)
+  | where @q.count > 0
+time_range_s: 300
+run_frequency_s: 60
+event_sink_keys:
+- medium_severity_alerts
+tags:
+- tactics.ta0003.persistence
+- techniques.t1098.account_manipulation
+- source.atlassian

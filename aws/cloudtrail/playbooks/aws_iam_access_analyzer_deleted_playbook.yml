@@ -1,0 +1,26 @@
+name: AWS IAM Access Analyzer Deleted Playbook
+description: Detects when an AWS IAM Access Analyzer is deleted. This may indicate
+  an attempt to impair defences by disabling or weakening cloud visibility.
+severity: Low
+steps:
+- name: Investigation
+  description: 'Monitor AWS CloudTrail management events from:
+
+    * `eventSource: "access-analyzer.amazonaws.com"`
+
+    * `eventName: "DeleteAnalyzer"`
+
+
+    Any successful `DeleteAnalyzer` call should be treated as a notable event, as
+    it removes an analyser that can surface cross-account and external access risks.'
+- name: Triage
+  description: "* Identify which account and region the analyser belonged to, and\
+    \ which principal performed the deletion.\n* Confirm whether there is an approved\
+    \ change request or maintenance activity covering the deletion.\n* Check whether\
+    \ other security or logging controls (for example, GuardDuty, Config, CloudTrail)\
+    \ have also been modified in the same time window.\n* If the action is not clearly\
+    \ authorised:\n  * Treat as a potential defence-evasion attempt.\n  * Review recent\
+    \ IAM activity by the same principal and IP address (role changes, policy updates,\
+    \ key creation, and so on).\n  * Consider restoring or recreating the analyser\
+    \ and tightening permissions around `access-analyzer.amazonaws.com`.\n  * Escalate\
+    \ to incident response for further investigation."

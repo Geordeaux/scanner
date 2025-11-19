@@ -1,0 +1,14 @@
+name: Cloudflare Worker Script Modified Playbook
+description: Detects modifications to a Cloudflare Worker script.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor Cloudflare Audit Logs for `worker_script_update`. Malicious changes to workers can intercept traffic, steal data, or serve malware.
+- name: Triage
+  description: '1. Identify the worker and the user.
+
+    2. Review the code changes.
+
+    3. Revert to a previous version if malicious code is found.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

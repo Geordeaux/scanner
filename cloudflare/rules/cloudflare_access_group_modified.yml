@@ -1,0 +1,25 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Cloudflare Access Group Modified
+description: |-
+  ## Goal
+  Detects modifications to Cloudflare Access groups.
+
+  ## Strategy
+  Monitor Cloudflare Audit Logs for `access_group_update`. Adding users to privileged groups grants them access to protected applications.
+
+  ## Triage and Response
+  1. Identify the group and the added members.
+  2. Verify authorization.
+  3. Remove unauthorized members.
+enabled: true
+severity: High
+query_text: "%ingest.source_type:cloudflare\nAction:access_group_update "
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- high_severity_alerts
+tags:
+- cloudflare
+- access
+- iam

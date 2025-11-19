@@ -1,0 +1,29 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS EKS Cluster Created or Deleted
+description: |-
+  Identifies when an EKS cluster is created or deleted.
+
+  References:
+  * https://any-api.com/amazonaws_com/eks/docs/API_Description
+
+  False Positives:
+  * EKS Cluster being created or deleted may be performed by a system administrator.
+  * Verify whether the user identity, user agent, and/or hostname should be making changes in your environment.
+  * EKS Cluster created or deleted from unfamiliar users should be investigated. If known behavior is causing false positives, it can be exempted from the rule.
+query_text: |-
+  %ingest.source_type="aws:cloudtrail"
+  eventSource="eks.amazonaws.com"
+  eventName=(CreateCluster DeleteCluster)
+  | stats
+  min(@scnr.datetime) as firstTime,
+  max(@scnr.datetime) as lastTime,
+  count() as eventCount
+  by
+  userIdentity.arn,
+  eventSource,
+  eventName,
+  awsRegion
+tags:
+- tactics.ta0040.impact
+- techniques.t1485.data_destruction
+- source.cloudtrail

@@ -1,0 +1,10 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: GitHub Outgoing Organization Transfer Initiated
+description: |-
+  Detects when a GitHub organization is transferred to another enterprise account. An adversary may attempt to transfer a GitHub organization to an enterprise account they control in order to steal data.
+query_text: |-
+  %ingest.source_type:github
+  action:org.transfer_outgoing
+tags:
+- github
+- converted_yaral

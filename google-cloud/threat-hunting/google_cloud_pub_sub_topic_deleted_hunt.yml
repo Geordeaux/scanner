@@ -1,0 +1,13 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Google Cloud Pub/Sub topic deleted
+description: |-
+  Detect deletion of Google Cloud Pub/Sub subscriptions, which can prevent audit logs from being sent.
+query_text: |-
+  %ingest.source_type:gcp
+  protoPayload.methodName:google.pubsub.v1.Publisher.DeleteTopic
+  | groupbycount(protoPayload.authenticationInfo.principalEmail, data.protoPayload.resourceName)
+  | where @q.count > 0
+tags:
+- source.gcp
+- techniques.t1562.impair_defenses
+- tactics.ta0005.defense_evasion

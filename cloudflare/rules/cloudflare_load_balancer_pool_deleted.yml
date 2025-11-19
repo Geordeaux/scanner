@@ -1,0 +1,25 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Cloudflare Load Balancer Pool Deleted
+description: |-
+  ## Goal
+  Detects the deletion of a Load Balancer pool.
+
+  ## Strategy
+  Monitor Cloudflare Audit Logs for `lb_pool_delete`.
+
+  ## Triage and Response
+  1. Identify the pool.
+  2. Verify if it was in use.
+  3. Restore the pool to prevent outage.
+enabled: true
+severity: High
+query_text: "%ingest.source_type:cloudflare\nAction:lb_pool_delete "
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- high_severity_alerts
+tags:
+- cloudflare
+- load_balancing
+- availability

@@ -1,0 +1,10 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: GitHub High Number Of Non Public GitHub Repositories Cloned
+description: |-
+  Detects when a user clones a high number of non-public GitHub repositories. An adversary may attempt to steal the contents of several GitHub repositories after compromising a user account.
+query_text: |-
+  %ingest.source_type:github
+  action:git.clone
+tags:
+- github
+- converted_yaral

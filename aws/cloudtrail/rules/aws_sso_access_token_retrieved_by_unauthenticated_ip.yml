@@ -1,0 +1,16 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: AWS SSO Access Token Retrieved by Unauthenticated IP
+description: "## Goal\nWhen using AWS in an enterprise environment, best practices dictate to use a single sign-on service for identity and access management. AWS SSO is a popular solution, integrating with third-party providers such as Okta and allowing to centrally manage roles and permissions in multiple AWS accounts.\n\nIn this post, we demonstrate that AWS SSO is vulnerable by design to device code authentication phishing \u2013 just like any identity provider implementing OpenID Connect device code authentication. This technique was first demonstrated by Dr. Nestori Syynimaa for Azure AD. The feature provides a powerful phishing vector for attackers, rendering ineffective controls such as MFA (including Yubikeys) or IP allow-listing at the IdP level.\n\n## Strategy\nMonitor logs for the specific sequence of events described.\n\n## Triage and Response\n1. Identify the user and the sequence of actions.\n2. Verify if the actions are authorized and business-justified.\n3. If unauthorized,\
+  \ revert changes and suspend the user."
+enabled: true
+severity: Medium
+query_text: |-
+  %ingest.source_type:aws:cloudtrail
+  eventSource:sso.amazonaws.com
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- medium_severity_alerts
+tags:
+- panther_migration

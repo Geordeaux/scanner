@@ -1,0 +1,34 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS SES Service Modification
+description: |-
+  Detect when the Amazon Simple Email Service (SES) has been modified in ways that could allow an attacker to propagate phishing email campaigns. This includes actions like creating, deleting, and verifying identities, as well as enabling or configuring SES sending.
+query_text: |-
+  %ingest.source_type="aws:cloudtrail"
+  eventSource:"ses.amazonaws.com"
+  eventName:(
+  CreateEmailIdentity
+  DeleteEmailIdentity
+  VerifyEmailIdentity
+  VerifyDomainIdentity
+  VerifyDomainDkim
+  UpdateAccountSendingEnabled
+  UpdateConfigurationSetSendingEnabled
+  PutAccountSendingAttributes
+  PutConfigurationSetSendingOptions
+  )
+  not errorCode:*
+  | groupbycount(
+  recipientAccountId,
+  userIdentity.arn,
+  awsRegion
+  )
+  | where @q.count > 0
+tags:
+- source.aws
+- domain.cloud
+- domain.email
+- domain.ses
+- tactics.ta0040.impact
+- techniques.t1496.resource_hijacking
+- use_case.aws_ses
+- use_case.phishing_infrastructure

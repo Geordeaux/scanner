@@ -1,0 +1,26 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: AWS GuardDuty S3 Bucket Made Public
+description: |-
+  ## Goal
+  Detects when an S3 bucket's permissions are modified to make it publicly accessible.
+
+  ## Strategy
+  Monitor GuardDuty findings for `Impact:S3/PermissionsModification.Public`.
+
+  ## Triage and Response
+  1. Identify the bucket.
+  2. Revert the permissions immediately to private.
+  3. Investigate who made the change and why.
+enabled: true
+severity: High
+query_text: "%ingest.source_type:aws_guardduty\nmetadata.product_event_type:\"Impact:S3/PermissionsModification.Public\" "
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- high_severity_alerts
+tags:
+- guardduty
+- aws
+- s3
+- misconfiguration

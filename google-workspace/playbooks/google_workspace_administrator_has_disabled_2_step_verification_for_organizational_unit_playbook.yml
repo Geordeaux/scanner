@@ -1,0 +1,10 @@
+name: Google Workspace administrator has disabled 2-step verification for organizational unit Playbook
+description: Detect when a Google Workspace administrator disables 2-step verification (2SV) for an organizational unit.
+severity: Medium
+steps:
+- name: Investigation
+  description: "Monitor Google Workspace logs for instances of administrators disabling 2SV. An attacker with initial access may disable 2SV to weaken security controls.\n\n## Triage and response\n1. Check for other signals and logs related to the impacted user, looking for deviations in the following properties:\n    - Application\n    - Device\n    - Geolocation\n    - IP address\n2. Reach out to the user to confirm if they recognize the activity.\n3. If the activity is not legitimate, block the user from signing in and initiate your Incident Response process."
+- name: Triage
+  description: ''
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

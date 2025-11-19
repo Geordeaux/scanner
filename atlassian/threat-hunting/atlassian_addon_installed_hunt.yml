@@ -1,0 +1,10 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Hunt - Atlassian Addon Installations
+description: |-
+  Hunt for addon installations.
+query_text: |-
+  %ingest.source_type:atlassian
+  attributes.action:addon_installed
+tags:
+- hunt
+- source.atlassian

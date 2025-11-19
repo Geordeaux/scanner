@@ -1,0 +1,23 @@
+name: An AWS account attempted to leave the AWS Organization Playbook
+description: Detect an AWS account attempting to leave an AWS organization.
+severity: High
+steps:
+- name: Investigation
+  description: 'Monitor CloudTrail for attempts to have an AWS account leave an organization
+    using the LeaveOrganization API call. An attacker may attempt this for reasons
+    such as:
+
+
+    * Targeting security configurations defined at the organization level, disrupting
+    or disabling these controls.
+
+    * Executing a denial of service (DoS) attack that prevents access to the victim''s
+    account.'
+- name: Triage
+  description: "1. Determine if the user identity should have made the event name\
+    \ API call.\n2. If the API call was not made by the user:\n   * Rotate user credentials.\n\
+    \   * Review other API calls made by the user.\n   * Initiate your company's incident\
+    \ response process.\n3. If the API call was made legitimately by the user:\n \
+    \  * Communicate with the user to confirm if this was a planned action.\n   *\
+    \ If not planned, review other API calls by the user for further investigation.\n\
+    \   * Initiate your company's incident response process."

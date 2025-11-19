@@ -1,0 +1,33 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Attempt to create Xlarge EC2 instances in multiple AWS regions
+description: |-
+  ## Goal
+  Detect attempts to create Xlarge EC2 instances across multiple AWS regions.
+
+  ## Strategy
+  Monitor CloudTrail for any attempts to create Xlarge EC2 instances in various regions. This behavior may indicate an attacker trying to establish scalable resources for cryptocurrency mining while evading detection and service quotas.
+
+  ## Triage and Response
+  1. Verify if the user identity should have performed the operation.
+  2. If the API calls were unauthorized:
+    * Rotate user credentials.
+    * Terminate the newly created instances if the API call was successful.
+    * Delete any associated EC2 security groups or key pairs.
+    * Review other API calls made by the user.
+    * Initiate the organization's incident response process and conduct an investigation.
+enabled: true
+severity: High
+query_text: |-
+  %ingest.source_type:"aws:cloudtrail"
+  eventName:(CreateInstance RunInstances)
+  requestParameters.instanceType:*xlarge*
+  | stats countdistinct(awsRegion) as num_distinct_values by userIdentity.arn
+  | where num_distinct_values > 7
+time_range_s: 300
+run_frequency_s: 60
+event_sink_keys:
+- high_severity_alerts
+tags:
+- source.cloudtrail
+- techniques.t1535.unused_unsupported_cloud_regions
+- tactics.ta0005.defense_evasion

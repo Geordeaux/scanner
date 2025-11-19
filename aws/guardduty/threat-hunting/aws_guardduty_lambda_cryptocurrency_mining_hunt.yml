@@ -1,0 +1,10 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS GuardDuty Lambda Cryptocurrency Mining
+description: |-
+  Detects cryptocurrency mining activity within a Lambda function.
+query_text: "%ingest.source_type:aws_guardduty\nmetadata.product_event_type:\"CryptoCurrency:Lambda/BitcoinTool.B\" "
+tags:
+- guardduty
+- aws
+- lambda
+- crypto_mining

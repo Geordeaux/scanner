@@ -1,0 +1,10 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Google Workspace Multiple Files Sent As Email Attachments From Google Drive
+description: |-
+  Identifies when a user sends multiple files from Google Drive as an email attachment to a free email domain, which may indicate data exfiltration.
+query_text: |-
+  %ingest.source_type:google_workspace
+  action:email_as_attachment
+tags:
+- google_workspace
+- converted_yaral

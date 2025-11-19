@@ -1,0 +1,12 @@
+name: S3 Public Bucket Rapid Object Access Attempts Playbook
+description: 'Identifies when an anonymous user makes multiple `GetObject` requests
+  to a public S3 bucket.
+
+  Rapid access may indicate data exfiltration or reconnaissance.'
+severity: Medium
+steps:
+- name: Investigation
+  description: 'Identifies when an anonymous user makes multiple `GetObject` requests
+    to a public S3 bucket.
+
+    Rapid access may indicate data exfiltration or reconnaissance.'

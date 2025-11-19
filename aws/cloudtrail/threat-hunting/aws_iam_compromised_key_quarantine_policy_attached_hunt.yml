@@ -1,0 +1,22 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS IAM Compromised Key Quarantine Policy Attached
+description: |-
+  Detects when the AWS managed policy `AWSCompromisedKeyQuarantine` is attached to a user, role, or group. This policy is typically applied by AWS when the credentials of an IAM user have been compromised or publicly exposed.
+query_text: |-
+  %ingest.source_type="aws:cloudtrail"
+  eventSource:"iam.amazonaws.com"
+  eventName:(
+  "AttachUserPolicy"
+  "AttachGroupPolicy"
+  "AttachRolePolicy"
+  )
+  requestParameters.policyArn:"AWSCompromisedKeyQuarantine"
+tags:
+- source.aws
+- domain.cloud
+- domain.identity_and_access
+- domain.iam
+- tactics.ta0006.credential_access
+- techniques.t1552.unsecured_credentials
+- use_case.compromised_credentials
+- use_case.aws_managed_quarantine_policy

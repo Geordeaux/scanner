@@ -1,0 +1,14 @@
+name: AWS New MFA Method Registered For User Playbook
+description: Detects the registration of a new Multi-Factor Authentication (MFA) method
+  for an AWS IAM user, which could indicate an attempt to add unauthorized or unexpected
+  MFA methods.
+severity: Medium
+steps:
+- name: Investigation
+  description: Monitor AWS CloudTrail events for actions that register new MFA methods,
+    such as `CreateVirtualMFADevice` and `EnableMFADevice`.
+- name: Triage
+  description: Investigate further to confirm whether the actions were authorized
+    by checking with relevant stakeholders. Verify that no unauthorized changes have
+    been made to IAM user settings. Consider reviewing access controls and logging
+    to ensure no unauthorized modifications have occurred.

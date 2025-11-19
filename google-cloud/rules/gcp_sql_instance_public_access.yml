@@ -1,0 +1,25 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: GCP SQL Instance Public Access
+description: |-
+  ## Goal
+  Detects when a Cloud SQL instance is configured with a public IP.
+
+  ## Strategy
+  Monitor Google Cloud audit logs for `cloudsql.instances.update` where `ipConfiguration.ipv4Enabled` is set to true or authorized networks are modified to allow `0.0.0.0/0`.
+
+  ## Triage and Response
+  1. Identify the user and the SQL instance.
+  2. Verify if public access is required.
+  3. Disable public IP or restrict authorized networks immediately.
+enabled: true
+severity: High
+query_text: "%ingest.source_type:google_cloud_audit\nprotoPayload.methodName:\"cloudsql.instances.update\"\nprotoPayload.request.body.settings.ipConfiguration.ipv4Enabled:true "
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- high_severity_alerts
+tags:
+- google_cloud
+- sql
+- exposure

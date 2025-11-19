@@ -1,0 +1,14 @@
+name: GitHub Repository Branch Protection Rules Disabled Playbook
+description: Detects when branch protection rules are disabled for a GitHub repository.
+severity: Medium
+steps:
+- name: Investigation
+  description: Monitor GitHub audit logs for specific event types.
+- name: Triage
+  description: '1. Identify the actor and the target resource.
+
+    2. Verify if the action was authorized.
+
+    3. If unauthorized, revert the change and rotate credentials.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

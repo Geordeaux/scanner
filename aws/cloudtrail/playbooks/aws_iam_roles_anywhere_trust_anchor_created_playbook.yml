@@ -1,0 +1,16 @@
+name: AWS IAM Roles Anywhere trust anchor created Playbook
+description: Detect when a trust anchor for IAM Roles Anywhere is created.
+severity: High
+steps:
+- name: Investigation
+  description: This rule monitors CloudTrail logs for CreateTrustAnchor API calls.
+    An attacker may establish persistence by creating a trust anchor, which allows
+    non-AWS workloads to assume roles by presenting a client-side X.509 certificate
+    signed by a trusted certificate authority.
+- name: Triage
+  description: "1. Verify if the API call should have been performed by the user:\n\
+    \   * Contact the user to confirm their involvement.\n2. If the API call was unauthorized:\n\
+    \   * Rotate the user's credentials.\n   * Investigate the user's actions and\
+    \ any new access keys created.\n   * Initiate your organization's incident response\
+    \ process.\n3. If the API call was legitimate:\n   * Ensure that using an IAM\
+    \ Roles Anywhere trust anchor is appropriate for the resource."

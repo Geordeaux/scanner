@@ -1,0 +1,28 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: AWS GuardDuty EKS Malicious IP Caller
+description: |-
+  ## Goal
+  Detects when a Kubernetes pod or node is communicating with a known malicious IP address.
+
+  ## Strategy
+  Monitor GuardDuty findings for `UnauthorizedAccess:Kubernetes/MaliciousIPCaller`. This indicates that a pod in your EKS cluster is communicating with an IP address included in a threat intelligence list.
+
+  ## Triage and Response
+  1. Identify the affected pod and node.
+  2. Check the direction of traffic.
+  3. Isolate the pod/node.
+  4. Investigate the container image for vulnerabilities or malware.
+enabled: true
+severity: Critical
+query_text: "%ingest.source_type:aws_guardduty\nmetadata.product_event_type:\"UnauthorizedAccess:Kubernetes/MaliciousIPCaller\" "
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- critical_severity_alerts
+tags:
+- guardduty
+- aws
+- eks
+- kubernetes
+- compromise

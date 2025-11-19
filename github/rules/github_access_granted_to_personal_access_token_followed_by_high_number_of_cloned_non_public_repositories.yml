@@ -1,0 +1,26 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: GitHub Access Granted To Personal Access Token Followed By High Number Of Cloned Non Public Repositories
+description: |-
+  ## Goal
+  Detects when a user grants access to a GitHub Personal Access Token prior to cloning several GitHub non-public GitHub repositories. An adversary may grant access to a Personal Access Token before attempting to steal the contents of several GitHub repositories using a an automated script or offensive tool.
+
+  ## Strategy
+  Monitor GitHub audit logs for specific event types.
+
+  ## Triage and Response
+  1. Identify the actor and the target resource.
+  2. Verify if the action was authorized.
+  3. If unauthorized, revert the change and rotate credentials.
+enabled: true
+severity: High
+query_text: |-
+  %ingest.source_type:github
+  action:git.clone OR action:personal_access_token.access_granted
+time_range_s: 1800
+run_frequency_s: 300
+event_sink_keys:
+- high_severity_alerts
+tags:
+- github
+- converted_yaral

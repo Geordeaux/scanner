@@ -1,0 +1,25 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: GCP Custom Role Created
+description: |-
+  ## Goal
+  Detects the creation of a custom IAM role.
+
+  ## Strategy
+  Monitor Google Cloud audit logs for `google.iam.admin.v1.CreateRole`. Attackers may create custom roles with specific, sensitive permissions to maintain persistence or evade detection.
+
+  ## Triage and Response
+  1. Identify the user and the permissions assigned to the new role.
+  2. Verify if the role creation is authorized.
+  3. Delete the role if unauthorized.
+enabled: true
+severity: Medium
+query_text: "%ingest.source_type:google_cloud_audit\nprotoPayload.methodName:\"google.iam.admin.v1.CreateRole\" "
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- medium_severity_alerts
+tags:
+- google_cloud
+- iam
+- persistence

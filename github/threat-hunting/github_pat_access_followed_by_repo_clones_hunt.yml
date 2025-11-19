@@ -1,0 +1,20 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: GitHub Access Granted To PAT Followed By Multiple Repo Clones
+description: |-
+  Detect when a user grants access to a GitHub Personal Access Token (PAT) and then clones multiple repositories in a short period. This can be indicative of an adversary attempting to steal repository contents using automated scripts or offensive tools.
+query_text: |-
+  %ingest.source_type:github_audit_log
+  metadata.vendor_name:GITHUB
+  metadata.product_event_type:(personal_access_token.access_granted git.clone)
+  | groupbycount(
+  principal.user.userid,
+  metadata.product_event_type
+  )
+  | where metadata.product_event_type:"git.clone" and @q.count > 5
+tags:
+- source.github
+- github_audit_log
+- pat
+- repo_clone
+- techniques.t1213.003.data_from_information_repositories_code_repositories
+- tactics.ta0009.collection

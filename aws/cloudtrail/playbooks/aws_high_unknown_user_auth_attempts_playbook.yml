@@ -1,0 +1,31 @@
+name: AWS High Number Of Unknown User Authentication Attempts Playbook
+description: Detects when a high number of failed authentication attempts occur for
+  unknown users. This may indicate credential stuffing or brute force activity against
+  the AWS Console.
+severity: Low
+steps:
+- name: Investigation
+  description: 'Monitor AWS CloudTrail `ConsoleLogin` events from `signin.amazonaws.com`
+    where:
+
+    * The login result is `Failure`, and
+
+    * The `errorMessage` is `No username found in supplied account`.
+
+
+    Aggregate failures by `sourceIPAddress` over a 10-minute window and alert when
+    the number of such failures from a single IP address exceeds a defined threshold
+    (for example, 10 events in 10 minutes).'
+- name: Triage
+  description: "* Identify the source IP, user agent, and target AWS account.\n* Check\
+    \ whether the source IP is associated with:\n  * Corporate egress, VPN endpoints,\
+    \ or known partners; or\n  * Suspicious or unknown infrastructure (cloud provider\
+    \ hosts, TOR, hosting, residential ranges in unexpected geographies).\n* Review\
+    \ whether this behaviour overlaps with any other authentication anomalies (valid\
+    \ logins, MFA prompts, password reset attempts).\n* If activity is not clearly\
+    \ attributable to a legitimate test or known misconfiguration:\n  * Treat as credential-stuffing\
+    \ / brute-force activity.\n  * Consider blocking or challenging the IP or IP range\
+    \ at the identity provider, WAF, or network edge.\n  * Review identity provider\
+    \ and application logs for any successful logins correlated with the same IP,\
+    \ user agent, or time window.\n  * Coordinate with incident response for wider\
+    \ investigation if attempts appear targeted or persistent."

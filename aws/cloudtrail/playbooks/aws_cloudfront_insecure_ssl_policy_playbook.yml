@@ -1,0 +1,40 @@
+name: AWS CloudFront Insecure SSL Policy Playbook
+description: Detect when an insecure SSL/TLS policy is configured for an AWS CloudFront
+  distribution.
+severity: Low
+steps:
+- name: Investigation
+  description: 'Monitor AWS CloudTrail management events from `cloudfront.amazonaws.com`
+    for:
+
+    * `CreateDistribution`
+
+    * `UpdateDistribution`
+
+
+    and identify distributions where `viewerCertificate.minimumProtocolVersion` is
+    set to an insecure or legacy value such as:
+
+    * `TLSv1`
+
+    * `SSLv3`
+
+    * `TLSv1_2016`
+
+    * `TLSv1.1_2016`
+
+
+    These configurations weaken transport security and may be used by an attacker
+    (or misinformed operator) to downgrade TLS protections.'
+- name: Triage
+  description: '* Validate whether the protocol downgrade aligns with an approved
+    change request or legacy compatibility requirement.
+
+    * Confirm the initiating principal is authorised to modify CloudFront distributions
+    for the affected account.
+
+    * If unapproved or unnecessary, plan remediation to move the distribution to a
+    modern TLS policy (for example `TLSv1.2_2018` or later).
+
+    * Review other recent changes by the same principal and to the same distribution
+    for additional misconfigurations or malicious activity.'

@@ -1,0 +1,25 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS CloudWatch Log Group Deleted
+description: |-
+  Detect deletion of Amazon CloudWatch log groups. This may indicate an attempt to tamper with or disable logging and monitoring, thereby impairing defensive mechanisms and forensic visibility.
+query_text: |-
+  %ingest.source_type="aws:cloudtrail"
+  eventSource="logs.amazonaws.com"
+  eventName="DeleteLogGroup"
+  | groupbycount(
+  recipientAccountId,
+  awsRegion,
+  userIdentity.type,
+  userIdentity.arn,
+  requestParameters.logGroupName,
+  sourceIPAddress
+  )
+  | where @q.count > 0
+tags:
+- source.aws
+- domain.cloud
+- domain.logging
+- tactics.ta0005.defence_evasion
+- techniques.t1562.008.impair_defences_disable_cloud_logs
+- use_case.aws_logging
+- use_case.cloudwatch_logs

@@ -1,0 +1,16 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Auth0 Post-Login Trigger Bindings Updated
+description: |-
+  Detect when post-login trigger bindings are updated in Auth0. This can affect
+  authentication behavior and should be monitored for security implications.
+query_text: |-
+  %ingest.source_type:auth0
+  data.description:'Update trigger bindings'
+  data.details.request.path:/api/v2/actions/triggers/post-login/bindings
+  data.details.request.channel:'https://manage.auth0.com'
+  | groupbycount(data.user_id)
+  | where @q.count > 0
+tags:
+- tactics.ta0005.defense_evasion
+- techniques.t1556.modify_authentication_process
+- source.auth0

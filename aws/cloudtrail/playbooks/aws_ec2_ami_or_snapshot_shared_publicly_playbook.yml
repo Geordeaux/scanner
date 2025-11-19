@@ -1,0 +1,28 @@
+name: AWS EC2 AMI Or Snapshot Shared Publicly Playbook
+description: Detect when an Amazon EC2 AMI or Snapshot is shared publicly. Public
+  sharing can lead to unauthorised access and potential data exfiltration.
+severity: High
+steps:
+- name: Investigation
+  description: 'Monitor AWS CloudTrail management events from `ec2.amazonaws.com`
+    with:
+
+    * `eventName="ModifyImageAttribute"` (AMI)
+
+    * `eventName="ModifySnapshotAttribute"` (EBS snapshot)
+
+
+    Focus specifically on changes where launch or volume permissions are modified
+    to include the `all` group, which makes the AMI or snapshot publicly accessible.'
+- name: Triage
+  description: '* Identify whether the AMI or snapshot contains sensitive data (production
+    images, database volumes, bastion images, etc.).
+
+    * Confirm whether the public sharing aligns with an approved change request or
+    documented publishing workflow.
+
+    * Review recent activity from the same principal and source IP for related configuration
+    changes (e.g. new snapshots, unusual copy or share operations).
+
+    * If unapproved, treat as a high-priority exfiltration risk: revoke public access,
+    preserve evidence, and assess for any access already made to the shared resource.'

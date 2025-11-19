@@ -1,0 +1,9 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Cloudflare Service Token Created
+description: |-
+  Detects the creation of a Cloudflare Access Service Token.
+query_text: "%ingest.source_type:cloudflare\nAction:service_token_create "
+tags:
+- cloudflare
+- access
+- iam

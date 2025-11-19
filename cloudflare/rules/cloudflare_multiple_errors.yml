@@ -1,0 +1,32 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Cloudflare Multiple Error Requests from Single IP
+description: |-
+  ## Goal
+  Detect when a single IP address generates a high volume of error responses,
+  which may indicate scanning, enumeration, or attack attempts.
+
+  ## Strategy
+  Monitor Cloudflare logs for this specific threat type. Correlate with origin server logs.
+
+  ## Triage and Response
+  1. Validate the finding in the Cloudflare dashboard.
+  2. Identify the source IP and user agent.
+  3. Check if the request was blocked or allowed.
+  4. If allowed and malicious, update WAF rules to block.
+enabled: true
+severity: Low
+query_text: |-
+  %ingest.source_type:cloudflare
+  ClientRequestMethod:GET
+  EdgeResponseStatus >= 400
+  | groupbycount(ClientIP)
+  | where @q.count > 100
+time_range_s: 300
+run_frequency_s: 60
+event_sink_keys:
+- low_severity_alerts
+tags:
+- tactics.ta0001.initial_access
+- techniques.t1190.exploit_public_facing_application
+- techniques.t1133.external_remote_services
+- source.cloudflare

@@ -1,0 +1,11 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS GuardDuty EKS Privileged Container Launched
+description: |-
+  Detects the launch of a privileged container within an EKS cluster.
+query_text: "%ingest.source_type:aws_guardduty\nmetadata.product_event_type:\"PrivilegeEscalation:Kubernetes/PrivilegedContainer\" "
+tags:
+- guardduty
+- aws
+- eks
+- kubernetes
+- privilege_escalation

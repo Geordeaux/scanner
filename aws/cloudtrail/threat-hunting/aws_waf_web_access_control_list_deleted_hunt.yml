@@ -1,0 +1,15 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS WAF web access control list deleted
+description: |-
+  Detect when an AWS Web Application Firewall (WAF) Access Control List (ACL) is deleted.
+query_text: |-
+  %ingest.source_type:"aws:cloudtrail"
+  eventSource:waf*.amazonaws.com
+  eventName:DeleteWebACL
+  (not userAgent:\\APN\\/*)
+  | groupbycount(userIdentity.arn)
+  | where @q.count > 0
+tags:
+- source.cloudtrail
+- techniques.t1562.impair_defenses
+- tactics.ta0005.defense_evasion

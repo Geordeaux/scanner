@@ -1,0 +1,25 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: GitHub Organization Owner Added
+description: |-
+  ## Goal
+  Detects when a new owner is added to a GitHub organization.
+
+  ## Strategy
+  Monitor GitHub audit logs for `org.add_member` with role `admin`. Owners have full control over the organization.
+
+  ## Triage and Response
+  1. Identify the new owner and the actor who added them.
+  2. Verify authorization.
+  3. Revoke access if unauthorized.
+enabled: true
+severity: Critical
+query_text: "%ingest.source_type:github\naction:org.add_member\npermission:admin "
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- critical_severity_alerts
+tags:
+- github
+- iam
+- privilege_escalation

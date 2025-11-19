@@ -1,0 +1,26 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: GitHub Repository Archived Or Deleted
+description: |-
+  ## Goal
+  Detects when a GitHub repository is archived or deleted.
+
+  ## Strategy
+  Monitor GitHub audit logs for specific event types.
+
+  ## Triage and Response
+  1. Identify the actor and the target resource.
+  2. Verify if the action was authorized.
+  3. If unauthorized, revert the change and rotate credentials.
+enabled: true
+severity: Low
+query_text: |-
+  %ingest.source_type:github
+  action:repo.archived OR action:repo.destroy
+time_range_s: 1800
+run_frequency_s: 300
+event_sink_keys:
+- low_severity_alerts
+tags:
+- github
+- converted_yaral

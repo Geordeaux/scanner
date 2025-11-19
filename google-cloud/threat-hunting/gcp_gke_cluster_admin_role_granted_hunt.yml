@@ -1,0 +1,9 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: GCP GKE Cluster Admin Role Granted
+description: |-
+  Detects granting of the Kubernetes Engine Admin role.
+query_text: "%ingest.source_type:google_cloud_audit\nprotoPayload.methodName:\"SetIamPolicy\"\nprotoPayload.serviceData.policyDelta.bindingDeltas.role:\"roles/container.admin\" "
+tags:
+- google_cloud
+- gke
+- privilege_escalation

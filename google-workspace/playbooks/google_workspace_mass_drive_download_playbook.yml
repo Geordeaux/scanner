@@ -1,0 +1,14 @@
+name: Google Workspace Mass Drive Download Playbook
+description: Detects a high volume of file downloads from Google Drive by a single user.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor Google Workspace Drive audit logs for `download` events. A sudden spike in downloads may indicate data exfiltration.
+- name: Triage
+  description: '1. Identify the user and the files downloaded.
+
+    2. Verify if the activity is business-justified (e.g., backup, migration).
+
+    3. Suspend the user and revoke access if exfiltration is suspected.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

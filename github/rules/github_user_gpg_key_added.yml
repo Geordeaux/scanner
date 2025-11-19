@@ -1,0 +1,25 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: GitHub User GPG Key Added
+description: |-
+  ## Goal
+  Detects when a GPG key is added to a user account.
+
+  ## Strategy
+  Monitor GitHub audit logs for `gpg_key.create`. GPG keys are used to sign commits; an attacker could use a stolen or unauthorized key to sign malicious commits.
+
+  ## Triage and Response
+  1. Identify the user and the key ID.
+  2. Verify if the user added this key.
+  3. Revoke the key immediately if unauthorized.
+enabled: true
+severity: High
+query_text: "%ingest.source_type:github\naction:gpg_key.create "
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- high_severity_alerts
+tags:
+- github
+- iam
+- integrity

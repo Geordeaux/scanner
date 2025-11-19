@@ -1,0 +1,11 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS GuardDuty EC2 WinRM Brute Force
+description: |-
+  Detects brute force attacks against the Windows Remote Management (WinRM) service on EC2 instances.
+query_text: "%ingest.source_type:aws_guardduty\nmetadata.product_event_type:\"UnauthorizedAccess:EC2/WinRMBruteForce\" "
+tags:
+- guardduty
+- aws
+- ec2
+- brute_force
+- windows

@@ -1,0 +1,9 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: GitHub User GPG Key Added
+description: |-
+  Detects when a GPG key is added to a user account.
+query_text: "%ingest.source_type:github\naction:gpg_key.create "
+tags:
+- github
+- iam
+- integrity

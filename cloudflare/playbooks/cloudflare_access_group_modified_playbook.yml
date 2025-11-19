@@ -1,0 +1,14 @@
+name: Cloudflare Access Group Modified Playbook
+description: Detects modifications to Cloudflare Access groups.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor Cloudflare Audit Logs for `access_group_update`. Adding users to privileged groups grants them access to protected applications.
+- name: Triage
+  description: '1. Identify the group and the added members.
+
+    2. Verify authorization.
+
+    3. Remove unauthorized members.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

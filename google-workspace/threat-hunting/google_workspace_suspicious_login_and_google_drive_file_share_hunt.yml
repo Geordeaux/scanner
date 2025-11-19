@@ -1,0 +1,10 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Google Workspace Suspicious Login and Google Drive File Share
+description: |-
+  Identifies when a Google Workspace user shares a file on Google Drive after a suspicious login event occurred.
+query_text: |-
+  %ingest.source_type:google_workspace
+  action:change_acl_editors OR action:change_document_access_scope OR action:change_document_visibility OR action:change_user_access OR action:login_success
+tags:
+- google_workspace
+- converted_yaral

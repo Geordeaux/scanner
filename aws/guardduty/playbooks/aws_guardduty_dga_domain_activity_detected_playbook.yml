@@ -1,0 +1,21 @@
+name: AWS GuardDuty DGA Domain Activity Detected Playbook
+description: Detects when Amazon GuardDuty identifies an EC2 instance or a container querying algorithmically generated domains (DGA). This could indicate the use of command and control mechanisms by malicious actors.
+severity: High
+steps:
+- name: Investigation
+  description: 'Monitor GuardDuty findings for the detection of DGA domain requests (finding types containing `DGADomainRequest`). Capture relevant details such as the principal IP, user, and location to assess potential threats.
+
+
+    ## Triage and response
+
+    * Investigate the detected DGA activity to determine if it was authorized or expected.
+
+    * Review the affected workload (EC2 instance, container, or pod) and associated IAM roles, network paths, and DNS logs.
+
+    * Correlate with other GuardDuty findings, VPC Flow Logs, DNS logs, and EDR telemetry for related suspicious activity.
+
+    * If malicious, isolate the workload, block the suspicious domains / IPs, rotate credentials, and perform full incident response.'
+- name: Triage
+  description: ''
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

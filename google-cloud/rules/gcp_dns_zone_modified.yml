@@ -1,0 +1,25 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: GCP DNS Zone Modified
+description: |-
+  ## Goal
+  Detects modifications to Cloud DNS managed zones.
+
+  ## Strategy
+  Monitor Google Cloud audit logs for `dns.managedZones.update` or `dns.managedZones.patch`. Attackers may modify DNS records to redirect traffic (DNS hijacking).
+
+  ## Triage and Response
+  1. Identify the user and the DNS zone.
+  2. Verify the changes to DNS records.
+  3. Revert changes immediately if malicious.
+enabled: true
+severity: Medium
+query_text: "%ingest.source_type:google_cloud_audit\nprotoPayload.methodName:(\"dns.managedZones.update\" OR \"dns.managedZones.patch\") "
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- medium_severity_alerts
+tags:
+- google_cloud
+- network
+- impact

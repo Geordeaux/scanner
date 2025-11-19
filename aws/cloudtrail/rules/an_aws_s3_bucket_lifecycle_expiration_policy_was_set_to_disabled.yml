@@ -1,0 +1,30 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: An AWS S3 bucket lifecycle expiration policy was set to disabled
+description: |-
+  ## Goal
+  Detect if an AWS S3 lifecycle expiration policy is disabled in your CloudTrail logs.
+
+  ## Strategy
+  Check if the lifecycle configuration has fields indicating a disabled status and an event name of PutBucketLifecycle. If these conditions are met, a bucket's lifecycle configuration has been turned off.
+
+  ## Triage and Response
+  1. Determine if the event should have occurred on the specified bucket by the identified user and account.
+  2. If the bucket should not be disabled, escalate to engineering for re-enablement.
+enabled: true
+severity: Informational
+query_text: |-
+  (not errorCode:*)
+  eventSource:s3.amazonaws.com
+  eventName:PutBucketLifecycle
+  requestParameters.LifecycleConfiguration.Rule.Expiration:*
+  requestParameters.LifecycleConfiguration.Rule.Status:Disabled
+  | groupbycount(requestParameters.bucketName)
+  | where @q.count > 0
+time_range_s: 300
+run_frequency_s: 60
+event_sink_keys:
+- informational_severity_alerts
+tags:
+- source.cloudtrail
+- techniques.t1562.impair_defenses
+- tactics.ta0005.defense_evasion

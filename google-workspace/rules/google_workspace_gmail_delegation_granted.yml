@@ -1,0 +1,25 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Google Workspace Gmail Delegation Granted
+description: |-
+  ## Goal
+  Detects when a user grants Gmail access delegation to another account.
+
+  ## Strategy
+  Monitor Google Workspace Gmail audit logs for `grant_delegated_access`. Attackers use delegation to access mailboxes without needing the victim's credentials for every login, often bypassing MFA checks during access.
+
+  ## Triage and Response
+  1. Identify the delegator and the delegate.
+  2. Verify if the delegation is business-justified (e.g., executive assistant).
+  3. Remove the delegation and investigate the delegate account if unauthorized.
+enabled: true
+severity: Critical
+query_text: "%ingest.source_type:google_workspace\naction:grant_delegated_access "
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- critical_severity_alerts
+tags:
+- google_workspace
+- gmail
+- persistence

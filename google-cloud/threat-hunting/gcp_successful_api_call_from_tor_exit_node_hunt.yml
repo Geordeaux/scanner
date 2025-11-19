@@ -1,0 +1,22 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: GCP Successful API Call From Tor Exit Node
+description: |-
+  Detect successful Google Cloud API executions originating from Tor exit nodes. This behavior may indicate an attempt to hide malicious activities or unauthorized access.
+query_text: |-
+  %ingest.source_type:gcp
+  protoPayload.requestMetadata.callerIp:*
+  protoPayload.serviceName:*
+  principal.ip_geo_artifact.threat_feed_name:"Tor Exit Nodes"
+  | groupbycount(
+      project_id,
+      protoPayload.authenticationInfo.principalEmail,
+      protoPayload.requestMetadata.callerIp
+    )
+  | where @q.count > 0
+tags:
+- source.gcp
+- gcp
+- gcp_audit
+- tor_exit_node
+- techniques.t1204.user_execution
+- tactics.ta0002.execution

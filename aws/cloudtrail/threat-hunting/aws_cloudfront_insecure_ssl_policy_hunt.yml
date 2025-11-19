@@ -1,0 +1,32 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS CloudFront Insecure SSL Policy
+description: |-
+  Detect when an insecure SSL/TLS policy is configured for an AWS CloudFront distribution.
+query_text: |-
+  %ingest.source_type="aws:cloudtrail"
+  eventSource:"cloudfront.amazonaws.com"
+  eventName:("CreateDistribution" "UpdateDistribution")
+  errorCode:*
+  not errorCode:AccessDenied*
+  requestParameters.distributionConfig.viewerCertificate.minimumProtocolVersion:(
+  "TLSv1"
+  "SSLv3"
+  "TLSv1_2016"
+  "TLSv1.1_2016"
+  )
+  | groupbycount(
+  recipientAccountId,
+  requestParameters.distributionConfig.callerReference,
+  userIdentity.arn,
+  awsRegion
+  )
+  | where @q.count > 0
+tags:
+- source.aws
+- domain.cloud
+- domain.network
+- domain.cloudfront
+- tactics.ta0005.defence_evasion
+- techniques.t1600.001.weaken_encryption
+- use_case.aws_cloudfront
+- use_case.tls_hardening

@@ -1,0 +1,10 @@
+name: GCP GCE Image Open To Public Playbook
+description: Detect when a GCP Compute Image is made publicly accessible by adding `allAuthenticatedUsers` to its IAM policy. This can indicate an attempt to exfiltrate data or make sensitive information available to unauthorized users.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor GCP Cloud Audit logs for events where the IAM policy of a Compute Image is updated to include `allAuthenticatedUsers`. Capture relevant details such as the principal IP, user, and target resource to assess potential threats. Set a high risk score to indicate the severity of this event.
+- name: Triage
+  description: Investigate the detected event to determine if it was authorized. Review the principal IPs, users, and other details to ensure that no unauthorized actions have been taken. Ensure that all IAM policies are compliant with company policies.
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

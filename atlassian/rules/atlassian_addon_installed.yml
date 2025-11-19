@@ -1,0 +1,29 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Atlassian Addon Installed
+description: '## Goal
+  Detects when a new addon (app) is installed in Jira or Confluence.
+  Malicious or vulnerable addons can be used for persistence or data exfiltration.
+
+  ## Strategy
+  1. Verify if this addon was approved by security/IT.
+  2. Check the permissions requested by the addon.
+
+  ## Triage and Response
+  1. Identify the user (`attributes.actor.email`) who installed the addon.
+  2. Identify the addon name and vendor.
+  1. If unauthorized or suspicious, uninstall the addon immediately.
+  2. Investigate if the addon accessed or exfiltrated data.'
+enabled: true
+severity: High
+query_text: '%ingest.source_type:atlassian
+  attributes.action:addon_installed
+  | groupbycount(attributes.actor.email)
+  | where @q.count > 0'
+time_range_s: 300
+run_frequency_s: 60
+event_sink_keys:
+- high_severity_alerts
+tags:
+- tactics.ta0003.persistence
+- techniques.t1136.create_account
+- source.atlassian

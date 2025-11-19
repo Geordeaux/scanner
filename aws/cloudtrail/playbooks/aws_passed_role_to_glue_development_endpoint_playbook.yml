@@ -1,0 +1,38 @@
+name: AWS Glue Development Endpoint Activity Playbook
+description: 'Detects possible suspicious glue development endpoint activity.
+
+
+  References:
+
+  * https://rhinosecuritylabs.com/aws/aws-privilege-escalation-methods-mitigation/
+
+  * https://docs.aws.amazon.com/glue/latest/webapi/API_CreateDevEndpoint.html
+
+
+  False Positives:
+
+  * Glue Development Endpoint Activity may be performed by a system administrator.
+  Verify whether the user identity, user agent, and/or hostname should be making changes
+  in your environment.
+
+  * If known behavior is causing false positives, it can be exempted from the rule.'
+severity: Low
+steps:
+- name: Investigation
+  description: 'Detects possible suspicious glue development endpoint activity.
+
+
+    References:
+
+    * https://rhinosecuritylabs.com/aws/aws-privilege-escalation-methods-mitigation/
+
+    * https://docs.aws.amazon.com/glue/latest/webapi/API_CreateDevEndpoint.html
+
+
+    False Positives:
+
+    * Glue Development Endpoint Activity may be performed by a system administrator.
+    Verify whether the user identity, user agent, and/or hostname should be making
+    changes in your environment.
+
+    * If known behavior is causing false positives, it can be exempted from the rule.'

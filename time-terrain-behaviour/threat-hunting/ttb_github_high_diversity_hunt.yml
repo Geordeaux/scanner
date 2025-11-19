@@ -1,0 +1,15 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: 'TTB Hunt: GitHub TTB High Diversity Anomaly'
+description: |-
+  Hunt for users with high diversity in Repositories and Actions.
+query_text: |-
+  %ingest.source_type="github"
+  | stats
+    distinct_count(repository.name) as terrain_score,
+    distinct_count(action) as behavior_score
+    by actor
+  | sort -terrain_score, -behavior_score
+tags:
+- source.github
+- ttb.anomaly
+- exfiltration

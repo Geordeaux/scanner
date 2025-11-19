@@ -1,0 +1,18 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: GCP Multiple Service APIs Disabled
+description: |-
+  Detect when multiple GCP Service APIs are disabled in a short period of time. This behavior may indicate an attempt to disrupt services or compromise the functionality of the cloud environment, which could be malicious.
+query_text: |-
+  %ingest.source_type:gcp
+  protoPayload.serviceName:serviceusage.googleapis.com
+  protoPayload.methodName:google.api.serviceusage.v1.ServiceUsage.DisableService
+  | groupbycount(project_id, protoPayload.authenticationInfo.principalEmail)
+  | where @q.count >= 5
+tags:
+- source.gcp
+- gcp
+- gcp_serviceusage
+- gcp_audit
+- multiple_service_apis_disabled
+- techniques.t1489.service_stop
+- tactics.ta0040.impact

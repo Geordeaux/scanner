@@ -1,0 +1,26 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: GitHub Enterprise Or Organization Recovery Codes Activity
+description: |-
+  ## Goal
+  Detects when the Single Sign-On (SSO) recovery codes are accessed for a GitHub enterprise or organization. An adversary may attempt to access or steal SSO recovery codes in order to maintain access to their target's GitHub environment.
+
+  ## Strategy
+  Monitor for generation or usage of recovery codes.
+
+  ## Triage and Response
+  1. Identify the user.
+  2. Verify if the user is locked out or if this is an account takeover.
+  3. Rotate credentials if suspicious.
+enabled: true
+severity: Medium
+query_text: |-
+  %ingest.source_type:github
+  action:business.recovery_codes_downloaded OR action:business.recovery_codes_generated OR action:business.recovery_codes_printed OR action:business.recovery_codes_viewed OR action:org.recovery_codes_downloaded OR action:org.recovery_codes_generated OR action:org.recovery_codes_printed OR action:org.recovery_codes_viewed
+time_range_s: 1800
+run_frequency_s: 300
+event_sink_keys:
+- medium_severity_alerts
+tags:
+- github
+- converted_yaral

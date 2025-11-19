@@ -1,0 +1,25 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Cloudflare Global API Key Viewed
+description: |-
+  ## Goal
+  Detects when a user views their Global API Key.
+
+  ## Strategy
+  Monitor Cloudflare Audit Logs for `user_view_api_key`. The Global API Key has full access to the account and should rarely be viewed or used.
+
+  ## Triage and Response
+  1. Identify the user.
+  2. Confirm if they needed the key for a legitimate integration.
+  3. Recommend using API Tokens with scoped permissions instead.
+enabled: true
+severity: Medium
+query_text: "%ingest.source_type:cloudflare\nAction:user_view_api_key "
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- medium_severity_alerts
+tags:
+- cloudflare
+- iam
+- api_key

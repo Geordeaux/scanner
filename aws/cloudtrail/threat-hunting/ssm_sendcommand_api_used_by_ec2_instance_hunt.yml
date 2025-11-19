@@ -1,0 +1,17 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: SSM SendCommand API Used by EC2 Instance
+description: |-
+  An attacker with compromised EC2 instance credentials, may use those credentials to attempt remote code execution against the EC2 instance from which the credentials were compromised via SSM SendCommand API.
+query_text: |-
+  %ingest.source_type="aws:cloudtrail"
+  eventSource="ssm.amazonaws.com"
+  eventName="SendCommand"
+  userIdentity.type="AssumedRole"
+  userIdentity.principalId like "*:i-*"
+  | groupbycount(userIdentity.arn)
+  | where @q.count > 0
+tags:
+- source.aws
+- domain.cloud
+- tactics.ta0002.execution
+- techniques.t1059.command_and_scripting_interpreter

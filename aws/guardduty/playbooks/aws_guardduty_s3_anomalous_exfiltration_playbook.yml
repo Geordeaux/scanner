@@ -1,0 +1,14 @@
+name: AWS GuardDuty S3 Anomalous Exfiltration Playbook
+description: Detects anomalous data exfiltration from an S3 bucket.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor GuardDuty findings for `Exfiltration:S3/AnomalousBehavior`. This finding is triggered by unusual patterns of GetObject calls.
+- name: Triage
+  description: '1. Identify the bucket and the user.
+
+    2. Verify if the data transfer volume is expected.
+
+    3. If unauthorized, revoke credentials and check where the data was sent.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

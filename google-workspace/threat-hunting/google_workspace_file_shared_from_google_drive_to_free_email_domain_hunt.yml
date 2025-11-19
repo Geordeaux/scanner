@@ -1,0 +1,10 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Google Workspace File Shared From Google Drive To Free Email Domain
+description: |-
+  Identifies when a user shares a file on Google Drive with a free email domain, which may indicate data exfiltration.
+query_text: |-
+  %ingest.source_type:google_workspace
+  action:change_acl_editors OR action:change_document_access_scope OR action:change_document_visibility OR action:change_user_access
+tags:
+- google_workspace
+- converted_yaral

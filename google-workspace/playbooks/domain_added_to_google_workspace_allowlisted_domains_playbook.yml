@@ -1,0 +1,16 @@
+name: Domain added to Google Workspace allowlisted domains Playbook
+description: Detect when a domain is added to Google Workspace's allowlisted domains.
+severity: Medium
+steps:
+- name: Investigation
+  description: This rule monitors Google Workspace logs to identify when a domain is added to the allowlisted domains. An attacker may add a trusted domain to lower security controls for data exfiltration or collection.
+- name: Triage
+  description: '1. Contact the user or service account owner to verify if this action is legitimate.
+
+    2. If legitimate, consider adding the user to a suppression list.
+
+    3. If not, use the user investigation dashboard to check if the user has taken other actions.
+
+    4. If the triage results suggest malicious intent, initiate your company''s incident response process and investigation.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

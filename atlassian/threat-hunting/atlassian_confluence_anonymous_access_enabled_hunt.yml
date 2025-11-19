@@ -1,0 +1,12 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Hunt - Atlassian Anonymous Access
+description: |-
+  Hunt for anonymous access enablement.
+query_text: |-
+  %ingest.source_type:atlassian
+  attributes.action:global_permission_added
+  attributes.context.attributes.permission:USE
+  attributes.context.attributes.groupName:null
+tags:
+- hunt
+- source.atlassian

@@ -1,0 +1,25 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS GuardDuty DGA Domain Activity Detected
+description: |-
+  Detects when Amazon GuardDuty identifies an EC2 instance or a container querying algorithmically generated domains (DGA). This could indicate the use of command and control mechanisms by malicious actors.
+query_text: |-
+  %ingest.source_type="aws:guardduty"
+  metadata.vendor_name:AMAZON
+  metadata.product_name:"AWS GuardDuty"
+  metadata.product_event_type:*DGADomainRequest*
+  not security_result.about.labels.Sample:"true"
+  | groupbycount(
+  recipientAccountId,
+  principal.ip,
+  target.resource.product_object_id
+  )
+  | where @q.count > 0
+tags:
+- source.aws
+- domain.cloud
+- domain.guardduty
+- domain.dns
+- tactics.ta0011.command_and_control
+- techniques.t1568.002.dynamic_resolution_domain_generation_algorithms
+- use_case.aws_guardduty
+- use_case.dga_domain_activity

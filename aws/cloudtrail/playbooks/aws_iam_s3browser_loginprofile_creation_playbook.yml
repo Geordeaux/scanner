@@ -1,0 +1,28 @@
+name: AWS IAM S3Browser LoginProfile Creation Playbook
+description: 'Detects S3 Browser utility performing reconnaissance looking for existing
+  IAM Users without a LoginProfile defined then (when found) creating a LoginProfile.
+
+
+  References:
+
+  * https://permiso.io/blog/s/unmasking-guivil-new-cloud-threat-actor
+
+
+  False Positives:
+
+  * Valid usage of S3 Browser for IAM LoginProfile listing and/or creation'
+severity: High
+steps:
+- name: Investigation
+  description: 'Detects S3 Browser utility performing reconnaissance looking for existing
+    IAM Users without a LoginProfile defined then (when found) creating a LoginProfile.
+
+
+    References:
+
+    * https://permiso.io/blog/s/unmasking-guivil-new-cloud-threat-actor
+
+
+    False Positives:
+
+    * Valid usage of S3 Browser for IAM LoginProfile listing and/or creation'

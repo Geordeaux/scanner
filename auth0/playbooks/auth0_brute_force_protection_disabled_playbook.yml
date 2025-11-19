@@ -1,0 +1,20 @@
+name: Auth0 Brute Force Protection Disabled Playbook
+description: |-
+  Response steps for when brute force protection is disabled.
+  This removes a critical defense against credential attacks.
+severity: Medium
+steps:
+  - name: Triage
+    description: |-
+      1. Identify the client ID (`data.client_id`) and user (`data.user_id`) responsible.
+      2. Check the timestamp and source IP.
+  - name: Investigation
+    description: |-
+      1. Determine if this was an authorized change.
+      2. Contact the application owner or tenant admin.
+      3. Check if other security settings were disabled.
+  - name: Remediation
+    description: |-
+      1. If unauthorized, re-enable brute force protection immediately.
+      2. Investigate the user account that performed the action.
+      3. Review logs for any brute force attacks that occurred while protection was disabled.

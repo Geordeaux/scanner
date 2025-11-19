@@ -1,0 +1,9 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Cloudflare API Token Created
+description: |-
+  Detects the creation of a new API Token.
+query_text: "%ingest.source_type:cloudflare\nAction:user_api_token_create "
+tags:
+- cloudflare
+- iam
+- api_token

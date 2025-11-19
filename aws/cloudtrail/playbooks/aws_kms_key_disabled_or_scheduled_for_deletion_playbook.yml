@@ -1,0 +1,23 @@
+name: AWS KMS Key Disabled Or Scheduled For Deletion Playbook
+description: Detects when an AWS KMS key is disabled or scheduled for deletion. This
+  can indicate an attempt to disrupt data availability or destroy sensitive information.
+severity: High
+steps:
+- name: Investigation
+  description: "Monitor AWS CloudTrail management events where:\n* The service is\
+    \ KMS (`kms.amazonaws.com`), and\n* The action is one of:\n  * `DisableKey`\n\
+    \  * `ScheduleKeyDeletion`\n\nThese actions may represent:\n* Legitimate key lifecycle\
+    \ operations as part of an approved change, or\n* Malicious or unsafe attempts\
+    \ to render encrypted data inaccessible or to destroy key material."
+- name: Triage
+  description: "* Validate:\n  * Whether the key operation aligns with an approved\
+    \ change request or key rotation plan.\n  * The initiating principal (userIdentity.arn,\
+    \ type, and assumed role), and whether they are authorised to manage KMS keys.\n\
+    \  * The business criticality of the key (for example, production data, backups,\
+    \ secrets encryption).\n* If suspicious or unapproved:\n  * Immediately engage\
+    \ the relevant service owners and security.\n  * Assess impact: which services,\
+    \ data stores, or backups rely on the key.\n  * Where possible, cancel scheduled\
+    \ deletion and restore key state according to your key management procedures.\n\
+    * Longer term:\n  * Review KMS key policies and IAM permissions for over-privileged\
+    \ principals.\n  * Ensure key management operations are tightly controlled and\
+    \ monitored."

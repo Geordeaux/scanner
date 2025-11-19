@@ -1,0 +1,10 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS GuardDuty EC2 Port Sweep
+description: |-
+  Detects a port sweep against an EC2 instance.
+query_text: "%ingest.source_type:aws_guardduty\nmetadata.product_event_type:\"Recon:EC2/Portsweep\" "
+tags:
+- guardduty
+- aws
+- ec2
+- reconnaissance

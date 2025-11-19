@@ -1,0 +1,25 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Cloudflare Service Token Created
+description: |-
+  ## Goal
+  Detects the creation of a Cloudflare Access Service Token.
+
+  ## Strategy
+  Monitor Cloudflare Audit Logs for `service_token_create`. Service tokens are used for machine-to-machine authentication and should be tightly controlled.
+
+  ## Triage and Response
+  1. Identify the creator and the token purpose.
+  2. Verify if the token is needed.
+  3. Ensure it is rotated and stored securely.
+enabled: true
+severity: High
+query_text: "%ingest.source_type:cloudflare\nAction:service_token_create "
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- high_severity_alerts
+tags:
+- cloudflare
+- access
+- iam

@@ -1,0 +1,20 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: GCP BigQuery Results Downloaded From Multiple Tables
+description: |-
+  Detect when a user downloads GCP BigQuery results from multiple tables, which might indicate data exfiltration activity. This can be a sign of unauthorized data access and potential exfiltration.
+query_text: |-
+  %ingest.source_type:gcp_audit
+  metadata.event_type:USER_RESOURCE_ACCESS
+  metadata.log_type:GCP_CLOUDAUDIT
+  metadata.vendor_name:"Google Cloud Platform"
+  metadata.product_name:BigQuery
+  metadata.product_event_type:jobservice.getqueryresults
+  security_result.action:ALLOW
+tags:
+- source.gcp
+- gcp_audit
+- bigquery_access
+- data_exfiltration
+- analytics
+- techniques.t1567.exfiltration_over_web_service
+- tactics.ta0010.exfiltration

@@ -1,0 +1,26 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: AWS GuardDuty CloudTrail Logging Disabled
+description: |-
+  ## Goal
+  Detects attempts to disable CloudTrail logging.
+
+  ## Strategy
+  Monitor GuardDuty findings for `Stealth:IAMUser/CloudTrailLoggingDisabled`. Disabling logging is a common tactic used by attackers to hide their activities.
+
+  ## Triage and Response
+  1. Identify the user who disabled logging.
+  2. Re-enable CloudTrail logging immediately.
+  3. Investigate the time window where logging was disabled for any other suspicious activity.
+  4. Revoke credentials of the user if the action was unauthorized.
+enabled: true
+severity: High
+query_text: "%ingest.source_type:aws_guardduty\nmetadata.product_event_type:\"Stealth:IAMUser/CloudTrailLoggingDisabled\" "
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- high_severity_alerts
+tags:
+- guardduty
+- aws
+- defense_evasion

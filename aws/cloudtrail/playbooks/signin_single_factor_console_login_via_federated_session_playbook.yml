@@ -1,0 +1,16 @@
+name: Signin Single Factor Console Login via Federated Session Playbook
+description: This hunting query identifies when a user signs in to the AWS Management
+  Console using a federated session and single-factor authentication. Federated sessions
+  are typically used by users who are not directly managed by AWS IAM or have temporary
+  credentials. Single-factor authentication without MFA may indicate a security risk,
+  as MFA adds an additional layer of security to the authentication process. This
+  could also indicate the abuse of STS tokens to bypass MFA requirements.
+severity: Medium
+steps:
+- name: Investigation
+  description: This hunting query identifies when a user signs in to the AWS Management
+    Console using a federated session and single-factor authentication. Federated
+    sessions are typically used by users who are not directly managed by AWS IAM or
+    have temporary credentials. Single-factor authentication without MFA may indicate
+    a security risk, as MFA adds an additional layer of security to the authentication
+    process. This could also indicate the abuse of STS tokens to bypass MFA requirements.

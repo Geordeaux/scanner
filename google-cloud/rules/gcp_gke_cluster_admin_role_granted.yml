@@ -1,0 +1,25 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: GCP GKE Cluster Admin Role Granted
+description: |-
+  ## Goal
+  Detects granting of the Kubernetes Engine Admin role.
+
+  ## Strategy
+  Monitor Google Cloud audit logs for IAM policy changes granting `roles/container.admin`. This role provides full control over GKE clusters.
+
+  ## Triage and Response
+  1. Identify the user and the principal receiving the role.
+  2. Verify if the role grant is authorized.
+  3. Revoke the role immediately if unauthorized.
+enabled: true
+severity: Critical
+query_text: "%ingest.source_type:google_cloud_audit\nprotoPayload.methodName:\"SetIamPolicy\"\nprotoPayload.serviceData.policyDelta.bindingDeltas.role:\"roles/container.admin\" "
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- critical_severity_alerts
+tags:
+- google_cloud
+- gke
+- privilege_escalation

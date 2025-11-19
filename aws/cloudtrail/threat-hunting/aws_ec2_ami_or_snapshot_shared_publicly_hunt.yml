@@ -1,0 +1,37 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS EC2 AMI Or Snapshot Shared Publicly
+description: |-
+  Detect when an Amazon EC2 AMI or Snapshot is shared publicly. Public sharing can lead to unauthorised access and potential data exfiltration.
+query_text: |-
+  %ingest.source_type="aws:cloudtrail"
+  eventSource="ec2.amazonaws.com"
+  eventName:(
+  "ModifyImageAttribute"
+  "ModifySnapshotAttribute"
+  )
+  (
+  requestParameters.launchPermission.add.items.group="all"
+  or requestParameters.createVolumePermission.add.items.group="all"
+  )
+  | groupbycount(
+  recipientAccountId,
+  awsRegion,
+  eventName,
+  requestParameters.imageId,
+  requestParameters.snapshotId,
+  userIdentity.type,
+  userIdentity.arn,
+  sourceIPAddress
+  )
+  | where @q.count > 0
+tags:
+- source.aws
+- domain.cloud
+- domain.compute
+- domain.storage
+- domain.access_control
+- tactics.ta0010.exfiltration
+- techniques.t1537.transfer_data_to_cloud_account
+- use_case.aws_ec2
+- use_case.data_exposure
+- use_case.public_sharing

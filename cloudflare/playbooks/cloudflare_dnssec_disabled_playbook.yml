@@ -1,0 +1,14 @@
+name: Cloudflare DNSSEC Disabled Playbook
+description: Detects when DNSSEC is disabled for a zone.
+severity: Critical
+steps:
+- name: Investigation
+  description: Monitor Cloudflare Audit Logs for `zone_setting_edit` where DNSSEC is turned off. This removes cryptographic integrity from DNS records.
+- name: Triage
+  description: '1. Identify the user.
+
+    2. Re-enable DNSSEC immediately.
+
+    3. Investigate why it was disabled.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

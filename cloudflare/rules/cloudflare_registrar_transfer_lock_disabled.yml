@@ -1,0 +1,25 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Cloudflare Registrar Transfer Lock Disabled
+description: |-
+  ## Goal
+  Detects when the domain transfer lock is disabled.
+
+  ## Strategy
+  Monitor Cloudflare Audit Logs. Disabling the lock allows the domain to be transferred to another registrar (hijacking).
+
+  ## Triage and Response
+  1. Identify the domain and the user.
+  2. Re-enable the lock immediately.
+  3. Investigate if a transfer code was requested.
+enabled: true
+severity: Critical
+query_text: "%ingest.source_type:cloudflare\nAction:registrar_domain_update\nSetting:\"transfer_lock\"\nNewValue:\"off\" "
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- critical_severity_alerts
+tags:
+- cloudflare
+- registrar
+- domain_hijacking

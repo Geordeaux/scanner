@@ -1,0 +1,9 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Cloudflare Access Group Modified
+description: |-
+  Detects modifications to Cloudflare Access groups.
+query_text: "%ingest.source_type:cloudflare\nAction:access_group_update "
+tags:
+- cloudflare
+- access
+- iam

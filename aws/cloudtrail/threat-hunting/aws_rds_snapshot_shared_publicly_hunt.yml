@@ -1,0 +1,29 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS RDS Snapshot Shared Publicly
+description: |-
+  Detect when an Amazon RDS snapshot (either DB snapshot or DB cluster snapshot) is shared publicly. This could indicate an attempt to exfiltrate data by making the snapshot accessible to all users.
+query_text: |-
+  %ingest.source_type="aws:cloudtrail"
+  eventSource:"rds.amazonaws.com"
+  eventName:(
+  "ModifyDBSnapshotAttribute"
+  "ModifyDBClusterSnapshotAttribute"
+  )
+  not errorCode:*
+  requestParameters.attributeName:"restore"
+  requestParameters.valuesToAdd.items:"all"
+  | groupbycount(
+  recipientAccountId,
+  requestParameters.dBSnapshotIdentifier,
+  userIdentity.arn,
+  awsRegion
+  )
+  | where @q.count > 0
+tags:
+- source.aws
+- domain.cloud
+- domain.rds
+- tactics.ta0010.exfiltration
+- techniques.t1537.transfer_data_to_cloud_account
+- use_case.aws_rds
+- use_case.data_exfiltration

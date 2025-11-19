@@ -1,0 +1,10 @@
+name: SSM SendCommand API Used by EC2 Instance Playbook
+description: An attacker with compromised EC2 instance credentials, may use those
+  credentials to attempt remote code execution against the EC2 instance from which
+  the credentials were compromised via SSM SendCommand API.
+severity: Medium
+steps:
+- name: Investigation
+  description: An attacker with compromised EC2 instance credentials, may use those
+    credentials to attempt remote code execution against the EC2 instance from which
+    the credentials were compromised via SSM SendCommand API.

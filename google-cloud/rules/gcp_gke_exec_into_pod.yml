@@ -1,0 +1,25 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: GCP GKE Exec into Pod
+description: |-
+  ## Goal
+  Detects execution of commands inside a GKE pod.
+
+  ## Strategy
+  Monitor Kubernetes audit logs (via Cloud Audit Logs) for `pods/exec` calls. Attackers may use `kubectl exec` to run malicious commands inside containers.
+
+  ## Triage and Response
+  1. Identify the user and the pod.
+  2. Review the command executed.
+  3. Terminate the pod and investigate the user if malicious.
+enabled: true
+severity: High
+query_text: "%ingest.source_type:google_cloud_audit\nprotoPayload.methodName:\"io.k8s.core.v1.pods.exec\" "
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- high_severity_alerts
+tags:
+- google_cloud
+- gke
+- execution

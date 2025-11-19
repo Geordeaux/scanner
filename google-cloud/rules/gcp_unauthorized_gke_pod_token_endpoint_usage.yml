@@ -1,0 +1,62 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+
+name: Unauthorized GKE Pod Token Endpoint Usage
+description: |-
+  ## Goal
+  Alert when an authorization token likely originating from GKE activity is subsequently used within a command line on an endpoint system, suggesting potential credential exfiltration and reuse.
+
+  ## Strategy
+  Monitor EDR/process telemetry for command lines that contain a Bearer token and appear to be accessing Kubernetes or GKE APIs (for example, kubernetes.default.svc or container.googleapis.com). This approximates the case where a GKE pod token is copied and then reused from an endpoint. Group by host, user, and command line to surface distinct uses.
+
+  ## Triage and Response
+  1. Identify the process, user, and host where the token was observed.
+  2. Confirm if this was an authorized administrative action (for example, a kubeconfig or token being tested locally).
+  3. If suspicious, search for related activity by the same user, host, and token (API calls, new credentials, privilege escalation).
+  4. Rotate the affected Kubernetes service account tokens and investigate for further compromise.
+
+enabled: true
+severity: Medium
+
+query_text: |-
+  %ingest.source_type:cs_edr
+  metadata.log_type:CS_EDR
+  metadata.event_type:PROCESS_LAUNCH
+  target.process.command_line:Bearer
+  target.process.command_line:(kubernetes.default.svc container.googleapis.com gke.)
+  | groupbycount(
+      principal.asset.hostname,
+      principal.user.userid,
+      target.process.command_line
+    )
+  | where @q.count > 0
+
+time_range_s: 3600      # Look back 1 hour
+run_frequency_s: 300     # Run every 5 minutes
+
+event_sink_keys:
+  - medium_severity_alerts
+
+tags:
+  - source.cs_edr
+  - cs_edr
+  - gcp
+  - gke
+  - kubernetes
+  - techniques.t1552.unsecured_credentials
+  - tactics.ta0006.credential_access
+
+context_fields:
+  - principal.asset.hostname
+  - principal.user.userid
+  - principal.user.display_name
+  - principal.ip
+  - principal.ip_geo_artifact.location.country_or_region
+  - principal.ip_geo_artifact.location.state
+  - target.process.command_line
+  - target.process.file.path
+  - target.process.file.sha256
+  - metadata.event_type
+  - metadata.log_type
+
+risk_score: 50
+event_count: count_distinct(metadata.id)

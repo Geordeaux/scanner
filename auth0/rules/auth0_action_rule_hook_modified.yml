@@ -1,0 +1,49 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Auth0 Action, Rule, or Hook Modified
+description: |-
+  ## Goal
+  Detects when an Auth0 Action, Rule, or Hook is created, updated, or deleted.
+  These components execute custom code during the authentication pipeline.
+  Unauthorized changes could introduce malicious code (code injection) or bypass
+  security controls.
+
+  ## Strategy
+  1. Review the code changes if available in the logs or by comparing with a known good state.
+  2. Check for any suspicious code patterns (e.g., data exfiltration, backdoors, hardcoded credentials).
+  3. Investigate other actions performed by the same user around the same time.
+  4. Contact the user to verify if the change was authorized and part of a planned deployment.
+
+  ## Triage and Response
+  1. Identify the user who performed the action (`data.user_id`).
+  2. Determine the component modified (Action, Rule, or Hook) and the specific operation (Create, Update, Delete).
+  3. Check the timestamp and source IP of the request.
+  1. If unauthorized, revert the change immediately.
+  2. Rotate the credentials of the user account used to make the change.
+  3. If the account is a service account (M2M), rotate the client secret.
+  4. Audit all other recent changes to ensure no other malicious modifications were made.
+enabled: true
+severity: Critical
+query_text: |-
+  %ingest.source_type:auth0
+  data.type:sapi
+  (
+  (data.description:"Create an action") or
+  (data.description:"Update an action") or
+  (data.description:"Delete an action") or
+  (data.description:"Create a rule") or
+  (data.description:"Update a rule") or
+  (data.description:"Delete a rule") or
+  (data.description:"Create a hook") or
+  (data.description:"Update a hook") or
+  (data.description:"Delete a hook")
+  )
+  | groupbycount(data.user_id)
+  | where @q.count > 0
+time_range_s: 300
+run_frequency_s: 60
+event_sink_keys:
+- critical_severity_alerts
+tags:
+- tactics.ta0003.persistence
+- techniques.t1556.modify_authentication_process
+- source.auth0

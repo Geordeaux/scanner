@@ -1,0 +1,12 @@
+name: High Frequency of Service Quotas Multi-Region GetServiceQuota API Calls Playbook
+description: 'Identifies when a user makes `GetServiceQuota` API calls for EC2 on-demand
+  instances in multiple regions.
+
+  This could indicate a threat actor attempting to discover quota limits for cryptomining.'
+severity: Medium
+steps:
+- name: Investigation
+  description: 'Identifies when a user makes `GetServiceQuota` API calls for EC2 on-demand
+    instances in multiple regions.
+
+    This could indicate a threat actor attempting to discover quota limits for cryptomining.'

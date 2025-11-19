@@ -1,0 +1,26 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Cloudflare WAF Java Deserialization Attempt
+description: |-
+  ## Goal
+  Detects Java Deserialization attempts blocked by Cloudflare WAF.
+
+  ## Strategy
+  Monitor Cloudflare WAF logs for serialized Java objects in payloads.
+
+  ## Triage and Response
+  1. Identify the source IP.
+  2. Confirm the block.
+  3. Ensure backend Java applications are patched.
+enabled: true
+severity: Critical
+query_text: "%ingest.source_type:cloudflare\nWAFAction:block\nRuleId:100045 OR RuleId:100046 "
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- critical_severity_alerts
+tags:
+- cloudflare
+- waf
+- rce
+- java

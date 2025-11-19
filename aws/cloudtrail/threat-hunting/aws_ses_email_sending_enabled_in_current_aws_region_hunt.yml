@@ -1,0 +1,15 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS SES email sending enabled in current AWS region
+description: |-
+  Detect when email sending is enabled in your Amazon SES account for the current AWS region.
+query_text: |-
+  %ingest.source_type:"aws:cloudtrail"
+  eventName:(UpdateAccountSendingEnabled PutAccountSendingAttributes)
+  (@requestParameters.enabled : true or requestParameters.sendingEnabled:true)
+  userIdentity.accessKeyId:AKIA*
+  | groupbycount(userIdentity.arn)
+  | where @q.count > 0
+tags:
+- tactics.ta0040.impact
+- source.cloudtrail
+- techniques.t1496.resource_hijacking

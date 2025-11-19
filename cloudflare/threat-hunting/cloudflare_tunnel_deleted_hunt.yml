@@ -1,0 +1,9 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Cloudflare Tunnel Deleted
+description: |-
+  Detects the deletion of a Cloudflare Tunnel.
+query_text: "%ingest.source_type:cloudflare\nAction:tunnel_delete "
+tags:
+- cloudflare
+- tunnel
+- availability

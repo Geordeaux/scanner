@@ -1,0 +1,25 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: GitHub IP Allow List Entry Created
+description: |-
+  ## Goal
+  Detects the addition of a new IP address to the allow list.
+
+  ## Strategy
+  Monitor GitHub audit logs for `ip_allow_list_entry.create`.
+
+  ## Triage and Response
+  1. Identify the new IP and the user.
+  2. Verify if the IP belongs to the organization.
+  3. Remove the entry if unauthorized.
+enabled: true
+severity: High
+query_text: "%ingest.source_type:github\naction:ip_allow_list_entry.create "
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- high_severity_alerts
+tags:
+- github
+- network_security
+- configuration

@@ -1,0 +1,20 @@
+name: AWS Security Group Open To The World Playbook
+description: Detect when an AWS security group is opened to the world (`0.0.0.0/0`
+  or `::/0`). This can indicate potential security issues related to unauthorized
+  access and exposure of resources.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor AWS CloudTrail management events for the `AuthorizeSecurityGroupIngress`
+    API call from `ec2.amazonaws.com`. Flag events where the requested ingress rule
+    includes a CIDR of `0.0.0.0/0` (IPv4) or `::/0` (IPv6).
+- name: Triage
+  description: '* Confirm whether opening the security group to the internet is part
+    of an approved change.
+
+    * Review the affected security group, ports, and associated instances for exposure
+    of sensitive services.
+
+    * If unapproved, restrict the rule to required CIDRs or remove it entirely.
+
+    * Review other recent actions by the same principal for additional risky changes.'

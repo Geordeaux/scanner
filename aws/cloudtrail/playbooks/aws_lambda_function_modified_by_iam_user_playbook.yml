@@ -1,0 +1,16 @@
+name: AWS Lambda function modified by IAM user Playbook
+description: Detect when an IAM user modifies an AWS Lambda function, which could
+  indicate an attempt to maintain persistence or exfiltrate data in an AWS environment.
+severity: Informational
+steps:
+- name: Investigation
+  description: Monitor the `UpdateFunctionCode` CloudTrail API call to identify modifications
+    to an AWS Lambda Function.
+- name: Triage
+  description: "1. Verify if the IAM user is expected to update the Lambda function\
+    \ specified by the function name.\n2. If the action is legitimate, consider adding\
+    \ the user to a suppression list.\n3. If the action is unauthorized:\n   * Contact\
+    \ the user to confirm if they made the API call.\n   * Check the User Investigation\
+    \ dashboard for other actions taken by the user.\n   * Review the IP Investigation\
+    \ dashboard for additional traffic from the client's IP.\n4. If an attack is suspected,\
+    \ initiate your organization's incident response process and investigation."

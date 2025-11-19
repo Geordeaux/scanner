@@ -1,0 +1,14 @@
+name: GitHub Outgoing Organization Transfer Initiated Playbook
+description: Detects when a GitHub organization is transferred to another enterprise account. An adversary may attempt to transfer a GitHub organization to an enterprise account they control in order to steal data.
+severity: Low
+steps:
+- name: Investigation
+  description: Monitor for organization or repository transfers.
+- name: Triage
+  description: '1. Identify the source and destination.
+
+    2. Verify authorization.
+
+    3. Contact GitHub support if malicious.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

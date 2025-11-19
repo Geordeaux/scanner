@@ -1,0 +1,14 @@
+name: Cloudflare Spectrum Application Deleted Playbook
+description: Detects the deletion of a Cloudflare Spectrum application.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor Cloudflare Audit Logs for `spectrum_app_delete`.
+- name: Triage
+  description: '1. Identify the application.
+
+    2. Verify authorization.
+
+    3. Restore the application configuration.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

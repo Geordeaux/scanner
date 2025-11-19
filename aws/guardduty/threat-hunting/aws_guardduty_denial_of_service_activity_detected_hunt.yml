@@ -1,0 +1,24 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS GuardDuty Denial Of Service Activity Detected
+description: |-
+  Detects when Amazon GuardDuty identifies denial-of-service (DoS) activities in an Amazon EC2 instance. This could indicate an attempt to disrupt the availability of services.
+query_text: |-
+  %ingest.source_type="aws:guardduty"
+  metadata.vendor_name:AMAZON
+  metadata.product_name:"AWS GuardDuty"
+  metadata.product_event_type:*DenialOfService*
+  not security_result.about.labels.Sample:"true"
+  | groupbycount(
+  recipientAccountId,
+  principal.ip,
+  target.resource.product_object_id
+  )
+  | where @q.count > 0
+tags:
+- source.aws
+- domain.cloud
+- domain.guardduty
+- tactics.ta0040.impact
+- techniques.t1498.network_denial_of_service
+- use_case.aws_guardduty
+- use_case.dos_activity

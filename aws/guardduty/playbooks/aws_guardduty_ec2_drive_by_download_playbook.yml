@@ -1,0 +1,14 @@
+name: AWS GuardDuty EC2 Drive-By Download Playbook
+description: Detects traffic indicating a drive-by download attempt.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor GuardDuty findings for `Trojan:EC2/DriveBySourceTraffic`. This indicates the instance visited a site hosting an exploit kit.
+- name: Triage
+  description: '1. Identify the instance.
+
+    2. Scan the instance for malware.
+
+    3. Check for successful exploitation (new processes, files).'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

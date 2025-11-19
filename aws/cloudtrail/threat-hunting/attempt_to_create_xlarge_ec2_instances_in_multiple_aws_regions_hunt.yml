@@ -1,0 +1,14 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Attempt to create Xlarge EC2 instances in multiple AWS regions
+description: |-
+  Detect attempts to create Xlarge EC2 instances across multiple AWS regions.
+query_text: |-
+  %ingest.source_type:"aws:cloudtrail"
+  eventName:(CreateInstance RunInstances)
+  requestParameters.instanceType:*xlarge*
+  | stats countdistinct(awsRegion) as num_distinct_values by userIdentity.arn
+  | where num_distinct_values > 7
+tags:
+- source.cloudtrail
+- techniques.t1535.unused_unsupported_cloud_regions
+- tactics.ta0005.defense_evasion

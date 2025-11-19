@@ -1,0 +1,25 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Cloudflare R2 Bucket Public Access Enabled
+description: |-
+  ## Goal
+  Detects when public access is enabled for an R2 bucket.
+
+  ## Strategy
+  Monitor Cloudflare Audit Logs for changes to R2 bucket permissions.
+
+  ## Triage and Response
+  1. Identify the bucket.
+  2. Verify if public access is intended.
+  3. If not, disable public access immediately.
+enabled: true
+severity: Critical
+query_text: "%ingest.source_type:cloudflare\nAction:r2_bucket_update\nNewValue:*public* "
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- critical_severity_alerts
+tags:
+- cloudflare
+- r2
+- data_leak

@@ -1,0 +1,10 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: GitHub Repository Deploy Key Created Or Modified
+description: |-
+  Detects when an SSH deploy key is added or modified in a GitHub repository. A compromised or unauthorized deploy key could allow malicious actors to push unauthorized changes into production environments, potentially bypassing code reviews and testing procedures. This could lead to the introduction of backdoors, malware, or the exfiltration of sensitive data.
+query_text: |-
+  %ingest.source_type:github
+  action:public_key.create OR action:public_key.update
+tags:
+- github
+- converted_yaral

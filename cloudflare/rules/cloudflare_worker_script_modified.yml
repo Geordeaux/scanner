@@ -1,0 +1,25 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Cloudflare Worker Script Modified
+description: |-
+  ## Goal
+  Detects modifications to a Cloudflare Worker script.
+
+  ## Strategy
+  Monitor Cloudflare Audit Logs for `worker_script_update`. Malicious changes to workers can intercept traffic, steal data, or serve malware.
+
+  ## Triage and Response
+  1. Identify the worker and the user.
+  2. Review the code changes.
+  3. Revert to a previous version if malicious code is found.
+enabled: true
+severity: High
+query_text: "%ingest.source_type:cloudflare\nAction:worker_script_update "
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- high_severity_alerts
+tags:
+- cloudflare
+- workers
+- supply_chain

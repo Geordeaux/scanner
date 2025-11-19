@@ -1,0 +1,10 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: GitHub Application Installed
+description: |-
+  Detects when a GitHub application is installed within an organization. An untrusted application can be installed and granted permissions to access data within a GitHub organization.
+query_text: |-
+  %ingest.source_type:github
+  action:integration_installation.create
+tags:
+- github
+- converted_yaral

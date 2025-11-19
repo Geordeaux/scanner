@@ -1,0 +1,14 @@
+name: GCP DNS Zone Modified Playbook
+description: Detects modifications to Cloud DNS managed zones.
+severity: Medium
+steps:
+- name: Investigation
+  description: Monitor Google Cloud audit logs for `dns.managedZones.update` or `dns.managedZones.patch`. Attackers may modify DNS records to redirect traffic (DNS hijacking).
+- name: Triage
+  description: '1. Identify the user and the DNS zone.
+
+    2. Verify the changes to DNS records.
+
+    3. Revert changes immediately if malicious.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

@@ -1,0 +1,14 @@
+name: AWS IAM Customer-Managed Policy Attachment to Existing Roles Playbook
+description: 'Identifies when customer-managed IAM policies are attached to existing
+  roles.
+
+  This could indicate a privilege escalation attempt by attaching policies with elevated
+  permissions.'
+severity: Medium
+steps:
+- name: Investigation
+  description: 'Identifies when customer-managed IAM policies are attached to existing
+    roles.
+
+    This could indicate a privilege escalation attempt by attaching policies with
+    elevated permissions.'

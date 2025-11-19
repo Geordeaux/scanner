@@ -1,0 +1,16 @@
+name: AWS GuardDuty EKS Exec in Container Playbook
+description: Detects the execution of commands inside a running container in an EKS cluster.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor GuardDuty findings for `Execution:Kubernetes/ExecInContainer`. This indicates that a user (or attacker) has gained interactive access to a pod and is executing commands.
+- name: Triage
+  description: '1. Identify the pod and the user.
+
+    2. Check the commands executed (if available in audit logs).
+
+    3. If unauthorized, revoke the user''s access and isolate the pod.
+
+    4. Check for any changes made to the container or data exfiltration.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

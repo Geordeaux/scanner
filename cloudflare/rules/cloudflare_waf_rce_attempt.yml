@@ -1,0 +1,25 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Cloudflare WAF Remote Code Execution Attempt
+description: |-
+  ## Goal
+  Detects Remote Code Execution (RCE) attempts blocked by Cloudflare WAF.
+
+  ## Strategy
+  Monitor Cloudflare WAF logs for signatures of known RCE vulnerabilities (e.g., Log4j, Spring4Shell).
+
+  ## Triage and Response
+  1. Identify the payload and target.
+  2. Confirm the WAF blocked the request.
+  3. Investigate if any similar requests bypassed the WAF.
+enabled: true
+severity: Critical
+query_text: "%ingest.source_type:cloudflare\nWAFAction:block\nRuleId:100001 OR RuleId:100002 "
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- critical_severity_alerts
+tags:
+- cloudflare
+- waf
+- rce

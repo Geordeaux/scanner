@@ -1,0 +1,19 @@
+name: Auth0 Integration Installed Playbook
+description: |-
+  Response steps for when a new integration is installed.
+  Integrations can access tenant data and perform actions.
+severity: Informational
+steps:
+  - name: Triage
+    description: |-
+      1. Identify the user (`data.user_id`) and the integration installed.
+      2. Check the timestamp and source IP.
+  - name: Investigation
+    description: |-
+      1. Determine if this installation was authorized.
+      2. Review the permissions requested by the integration.
+  - name: Remediation
+    description: |-
+      1. If unauthorized, remove the integration immediately.
+      2. Investigate the user account.
+      3. Revoke any API keys or tokens generated for the integration.

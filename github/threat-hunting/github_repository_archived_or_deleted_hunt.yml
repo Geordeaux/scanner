@@ -1,0 +1,10 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: GitHub Repository Archived Or Deleted
+description: |-
+  Detects when a GitHub repository is archived or deleted.
+query_text: |-
+  %ingest.source_type:github
+  action:repo.archived OR action:repo.destroy
+tags:
+- github
+- converted_yaral

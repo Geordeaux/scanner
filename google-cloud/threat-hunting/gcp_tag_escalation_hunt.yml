@@ -1,0 +1,15 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: GCP Privilege Escalation via TagBinding
+description: |-
+  Detects a sequence of events that could indicate a privilege escalation attempt via GCP's tag-based access control. The sequence includes: 1. Enumeration of IAM policies and tags 2. Creation of a tag binding 3. Performance of a privileged operation
+query_text: |-
+  %ingest.source_type:google_cloud_audit
+  protoPayload.methodName:"google.cloud.resourcemanager.v3.TagBindings.CreateTagBinding"
+tags:
+- attack.privilege_escalation
+- attack.t1548
+- gcp
+- iam
+- tagbinding
+- Beta
+- panther_migration

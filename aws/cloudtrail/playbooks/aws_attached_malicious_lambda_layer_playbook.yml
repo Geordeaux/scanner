@@ -1,0 +1,48 @@
+name: AWS Attached Malicious Lambda Layer Playbook
+description: 'Detects when an user attached a Lambda layer to an existing function
+  to override a library that is in use by the function, where their malicious code
+  could utilize the function''s IAM role for AWS API calls.
+
+  This would give an adversary access to the privileges associated with the Lambda
+  service role that is attached to that function.
+
+
+
+  References:
+
+  * https://docs.aws.amazon.com/lambda/latest/dg/API_UpdateFunctionConfiguration.html
+
+
+  False Positives:
+
+  * Lambda Layer being attached may be performed by a system administrator. Verify
+  whether the user identity, user agent, and/or hostname should be making changes
+  in your environment.
+
+  * Lambda Layer being attached from unfamiliar users should be investigated. If known
+  behavior is causing false positives, it can be exempted from the rule.'
+severity: Medium
+steps:
+- name: Investigation
+  description: 'Detects when an user attached a Lambda layer to an existing function
+    to override a library that is in use by the function, where their malicious code
+    could utilize the function''s IAM role for AWS API calls.
+
+    This would give an adversary access to the privileges associated with the Lambda
+    service role that is attached to that function.
+
+
+
+    References:
+
+    * https://docs.aws.amazon.com/lambda/latest/dg/API_UpdateFunctionConfiguration.html
+
+
+    False Positives:
+
+    * Lambda Layer being attached may be performed by a system administrator. Verify
+    whether the user identity, user agent, and/or hostname should be making changes
+    in your environment.
+
+    * Lambda Layer being attached from unfamiliar users should be investigated. If
+    known behavior is causing false positives, it can be exempted from the rule.'

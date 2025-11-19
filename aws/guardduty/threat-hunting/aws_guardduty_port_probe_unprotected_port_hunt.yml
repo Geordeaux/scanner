@@ -1,0 +1,9 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS GuardDuty Port Probe Unprotected Port
+description: |-
+  Detects when an EC2 instance is being probed on an unprotected port from a known malicious IP.
+query_text: "%ingest.source_type:aws_guardduty\nmetadata.product_event_type:\"Recon:EC2/PortProbeUnprotectedPort\" "
+tags:
+- guardduty
+- aws
+- reconnaissance

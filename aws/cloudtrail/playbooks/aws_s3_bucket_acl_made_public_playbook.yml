@@ -1,0 +1,17 @@
+name: AWS S3 Bucket ACL made public Playbook
+description: Detect when an S3 bucket ACL is made public.
+severity: High
+steps:
+- name: Investigation
+  description: "Monitor CloudTrail API calls to detect when an AWS S3 bucket ACL is\
+    \ made public via `PutBucketAcl`:\n\nInspect for either of the following conditions:\n\
+    1. AccessControlPolicy.AccessControlList.Grant.Grantee.URI contains:\n   * `http://acs.amazonaws.com/groups/global/AuthenticatedUsers`\n\
+    \   * `http://acs.amazonaws.com/groups/global/AllUsers`\n2. x-amz-acl parameter\
+    \ set to:\n   * `public-read`\n   * `public-read-write`\n\nA match with any of\
+    \ these conditions indicates the S3 bucket ACL is public."
+- name: Triage
+  description: "1. Determine if the user identity is expected to perform the PutBucketAcl\
+    \ API call.\n2. Contact the principal owner to confirm if this API call was made\
+    \ by the user.\n3. If the API call was unauthorized, rotate the user credentials\
+    \ and investigate other successful API accesses:\n   * Rotate the credentials.\n\
+    \   * Check for other unauthorized API calls with the same credentials."

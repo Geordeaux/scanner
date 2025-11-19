@@ -1,0 +1,16 @@
+name: AWS GuardDuty EKS Privileged Container Launched Playbook
+description: Detects the launch of a privileged container within an EKS cluster.
+severity: Critical
+steps:
+- name: Investigation
+  description: Monitor GuardDuty findings for `PrivilegeEscalation:Kubernetes/PrivilegedContainer`. Privileged containers have access to the host's devices and can bypass container isolation, posing a significant security risk.
+- name: Triage
+  description: '1. Identify the pod and the user who launched it.
+
+    2. Verify if the privileged mode is required for the workload.
+
+    3. If unauthorized, terminate the pod immediately.
+
+    4. Investigate the user''s intent and potential compromise.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

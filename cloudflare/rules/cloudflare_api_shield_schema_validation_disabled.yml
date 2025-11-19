@@ -1,0 +1,25 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Cloudflare API Shield Schema Validation Disabled
+description: |-
+  ## Goal
+  Detects when API Shield schema validation is disabled.
+
+  ## Strategy
+  Monitor Cloudflare Audit Logs. Disabling validation exposes APIs to malformed requests and potential exploits.
+
+  ## Triage and Response
+  1. Identify the API endpoint.
+  2. Re-enable validation.
+  3. Check for anomalous API traffic.
+enabled: true
+severity: High
+query_text: "%ingest.source_type:cloudflare\nAction:api_shield_schema_update\nNewValue:\"off\" "
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- high_severity_alerts
+tags:
+- cloudflare
+- api_shield
+- misconfiguration

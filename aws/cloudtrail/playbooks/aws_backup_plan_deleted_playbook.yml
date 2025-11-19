@@ -1,0 +1,28 @@
+name: AWS Backup Plan Deleted Playbook
+description: Detect deletions of AWS Backup Plans or Backup Selections.
+severity: Low
+steps:
+- name: Investigation
+  description: 'Monitor AWS CloudTrail management events from the AWS Backup service
+    for:
+
+    * `DeleteBackupPlan`
+
+    * `DeleteBackupSelection`
+
+
+    Deletion of backup plans or selections may:
+
+    * Be part of legitimate lifecycle or environment clean-up, or
+
+    * Represent attempts to inhibit system recovery and resilience.'
+- name: Triage
+  description: '* Confirm whether the deletion was requested and approved (change
+    ticket, runbook, or maintenance window).
+
+    * Validate that the initiating principal is authorised to manage backups for the
+    affected account or environment.
+
+    * If unapproved, treat as a potential attempt to weaken recovery capability, assess
+    blast radius, and consider restoring required plans or selections from infrastructure-as-code
+    or backups.'

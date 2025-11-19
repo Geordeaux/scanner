@@ -1,0 +1,9 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Cloudflare Load Balancer Pool Deleted
+description: |-
+  Detects the deletion of a Load Balancer pool.
+query_text: "%ingest.source_type:cloudflare\nAction:lb_pool_delete "
+tags:
+- cloudflare
+- load_balancing
+- availability

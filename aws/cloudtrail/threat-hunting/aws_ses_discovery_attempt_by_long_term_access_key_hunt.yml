@@ -1,0 +1,15 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS SES discovery attempt by long term access key
+description: |-
+  Detect attempts to check the status of an organization's Amazon SES account.
+query_text: |-
+  %ingest.source_type:"aws:cloudtrail"
+  eventName:(GetAccount ListServiceQuotas)
+  eventSource:ses.amazonaws.com
+  userIdentity.accessKeyId:AKIA*
+  | groupbycount(userIdentity.arn)
+  | where @q.count > 0
+tags:
+- source.cloudtrail
+- tactics.ta0007.discovery
+- techniques.t1526.cloud_service_discovery

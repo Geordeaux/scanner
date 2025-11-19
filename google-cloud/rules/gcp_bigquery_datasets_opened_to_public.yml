@@ -1,0 +1,77 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+
+name: Google Cloud BigQuery Datasets Opened To Public
+description: |-
+  ## Goal
+  Detect when Google Cloud BigQuery datasets are made publicly accessible by adding `allUsers` or `allAuthenticatedUsers` to the access policy. This can lead to unauthorized data exposure and is a significant security risk.
+
+  ## Strategy
+  Monitor GCP Cloud Audit logs for events where the `SetIamPolicy` action is taken on BigQuery datasets with members set to `allUsers` or `allAuthenticatedUsers`. Capture relevant details such as the principal IP, user, and target resource to assess potential threats.
+
+  ## Triage and Response
+  Investigate the detected event to determine if it was authorized. Review the principal IPs, users, and other details to ensure that no unauthorized data exposure has occurred. Ensure that all access policies comply with company policies.
+
+enabled: true
+severity: High
+
+query_text: |-
+  %ingest.source_type:gcp_audit
+  metadata.event_type:USER_RESOURCE_UPDATE_PERMISSIONS
+  metadata.log_type:GCP_CLOUDAUDIT
+  metadata.vendor_name:"Google Cloud Platform"
+  metadata.product_name:BigQuery
+  metadata.product_event_type:google.iam.v1.IAMPolicy.SetIamPolicy
+  target.application:bigquery.googleapis.com
+  security_result.action:ALLOW
+  target.resource.attribute.labels.dataset_change_binding_deltas_action:ADD
+  (
+    target.resource.attribute.labels.dataset_change_binding_deltas_member:allUsers or
+    target.resource.attribute.labels.dataset_change_binding_deltas_member:allAuthenticatedUsers
+  )
+  target.resource.attribute.labels.dataset_change_binding_deltas_role:"roles/bigquery"
+  target.resource.resource_subtype:bigquery_dataset
+  target.resource.resource_type:DATABASE
+
+time_range_s: 3600
+run_frequency_s: 300
+
+event_sink_keys:
+  - high_severity_alerts
+
+tags:
+  - source.gcp
+  - gcp_audit
+  - bigquery_access_policy
+  - data_exposure
+  - misconfiguration
+  - techniques.t1530.data_from_cloud_storage_object
+  - tactics.ta0009.collection
+
+# Additional context fields for enrichment + graph paths
+context_fields:
+  - network.http.user_agent
+  - principal.ip
+  - principal.ip_geo_artifact.location.country_or_region
+  - principal.ip_geo_artifact.location.state
+  - principal.user.user_display_name
+  - target.resource.name
+
+
+# Outcome variables
+risk_score: max(75)
+
+event_count: count_distinct(metadata.id)
+
+network_http_user_agent: array_distinct(network.http.user_agent)
+principal_ip: array_distinct(principal.ip)
+principal_ip_country: array_distinct(principal.ip_geo_artifact.location.country_or_region)
+principal_ip_state: array_distinct(principal.ip_geo_artifact.location.state)
+
+principal_user_id: principal.user.userid
+principal_user_display_name: principal.user.user_display_name
+
+target_resource_name: target.resource.name
+event_name: metadata.product_event_type
+
+# Detection condition (CEL)
+condition: event_count > 0

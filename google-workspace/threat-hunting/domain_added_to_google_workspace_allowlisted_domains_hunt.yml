@@ -1,0 +1,14 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Domain added to Google Workspace allowlisted domains
+description: |-
+  Detect when a domain is added to Google Workspace's allowlisted domains.
+query_text: |-
+  %ingest.source_type:gsuite
+  id.applicationName:admin
+  event.name:ADD_TRUSTED_DOMAINS
+  | groupbycount(actor.email)
+  | where @q.count > 0
+tags:
+- techniques.t1562.impair_defenses
+- source.gsuite
+- tactics.ta0005.defense_evasion

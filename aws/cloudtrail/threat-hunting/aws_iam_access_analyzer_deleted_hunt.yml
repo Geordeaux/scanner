@@ -1,0 +1,16 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS IAM Access Analyzer Deleted
+description: |-
+  Detects when an AWS IAM Access Analyzer is deleted. This may indicate an attempt to impair defences by disabling or weakening cloud visibility.
+query_text: |-
+  %ingest.source_type="aws:cloudtrail"
+  eventSource:"access-analyzer.amazonaws.com"
+  eventName:"DeleteAnalyzer"
+tags:
+- source.aws
+- domain.cloud
+- domain.identity_and_access
+- tactics.ta0005.defence_evasion
+- techniques.t1562.impair_defences
+- use_case.iam_access_analyzer
+- use_case.cloud_audit

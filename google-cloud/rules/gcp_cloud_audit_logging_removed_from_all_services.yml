@@ -1,0 +1,78 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+
+name: GCP Cloud Audit Logging Removed From All Services
+description: |-
+  ## Goal
+  Detect when GCP Cloud Audit logs are removed from all services at the project or organization level. Audit logging helps organizations maintain security and minimize risk.
+
+  ## Strategy
+  Monitor GCP Cloud Audit logs for events where the `SetIamPolicy` action is taken to remove audit logging from all services (`allServices`). Capture relevant details such as the principal IP, user, and target resource to assess potential threats.
+
+  ## Triage and Response
+  Investigate the detected event to determine if it was authorized. Review the principal IPs, users, and other details to ensure that no unauthorized actions have been taken. Ensure that all audit logging policies are compliant with company policies.
+
+enabled: true
+severity: High
+
+query_text: |-
+  %ingest.source_type:gcp_audit
+  metadata.event_type:USER_RESOURCE_UPDATE_PERMISSIONS
+  metadata.log_type:GCP_CLOUDAUDIT
+  metadata.product_event_type:SetIamPolicy
+  security_result.action:ALLOW
+  security_result.detection_fields.action:REMOVE
+  security_result.detection_fields.SERVICE:allServices
+  target.resource.attribute.labels.ser_type:"type.googleapis.com/google.iam.v1.logging.AuditData"
+  target.application:"cloudresourcemanager.googleapis.com"
+
+time_range_s: 3600
+run_frequency_s: 300
+
+event_sink_keys:
+  - high_severity_alerts
+
+tags:
+  - gcp_audit
+  - audit_logging
+  - gcp
+  - cloud_audit
+  - source.gcp
+  - techniques.t1562.impair_defenses
+  - tactics.ta0005.defense_evasion
+
+# Additional context fields for alert graph
+context_fields:
+  - network.http.user_agent
+  - principal.ip
+  - principal.ip_geo_artifact.location.country_or_region
+  - principal.ip_geo_artifact.location.state
+  - principal.user.user_display_name
+  - target.resource.name
+
+
+# Outcome variables
+risk_score: 75
+
+event_count: count_distinct(gcp.metadata.id)
+
+network_http_user_agent: array_distinct(gcp.network.http.user_agent)
+principal_ip: array_distinct(gcp.principal.ip)
+principal_ip_country: array_distinct(gcp.principal.ip_geo_artifact.location.country_or_region)
+principal_ip_state: array_distinct(gcp.principal.ip_geo_artifact.location.state)
+
+principal_user_id: gcp.principal.user.userid
+principal_user_display_name: gcp.principal.user.user_display_name
+
+target_resource_name: gcp.target.resource.name
+event_name: gcp.metadata.product_event_type
+
+# Condition
+condition:
+  - metadata.event_type = "USER_RESOURCE_UPDATE_PERMISSIONS"
+  - metadata.log_type = "GCP_CLOUDAUDIT"
+  - metadata.product_event_type = "SetIamPolicy"
+  - security_result.action = "ALLOW"
+  - security_result.detection_fields.action = "REMOVE"
+  - security_result.detection_fields.SERVICE = "allServices"
+  - target.resource.attribute.labels.ser_type = "type.googleapis.com/google.iam.v1.logging.AuditData"
+  - target.application = "cloudresourcemanager.googleapis.com"

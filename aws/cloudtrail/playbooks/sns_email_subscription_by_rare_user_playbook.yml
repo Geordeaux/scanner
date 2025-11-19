@@ -1,0 +1,12 @@
+name: SNS Topic Subscription with Email by Rare User Playbook
+description: This hunting query gathered evidence of an SNS topic subscribed to by
+  an email address of a user who does not typically perform this action. Adversaries
+  may subscribe to SNS topics to collect sensitive information or exfiltrate data
+  via an external email address.
+severity: Medium
+steps:
+- name: Investigation
+  description: This hunting query gathered evidence of an SNS topic subscribed to
+    by an email address of a user who does not typically perform this action. Adversaries
+    may subscribe to SNS topics to collect sensitive information or exfiltrate data
+    via an external email address.

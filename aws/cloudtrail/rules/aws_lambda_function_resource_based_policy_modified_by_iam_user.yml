@@ -1,0 +1,36 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: AWS Lambda function resource-based policy modified by IAM user
+description: |-
+  ## Goal
+  Detect when an AWS Lambda function's resource-based policy is modified by an IAM user, which could indicate an attempt to maintain persistence or allow invocation from an external account.
+
+  ## Strategy
+  Monitor the `AddPermission` CloudTrail API call to identify changes to the AWS Lambda function's resource-based policy.
+
+  ## Triage and Response
+  1. Determine if the IAM user is expected to update the Lambda function based on the function name provided.
+  2. Investigate the statement for details on the policy modification.
+  3. If the action is legitimate, consider adding the user to a suppression list.
+  4. If the action is unauthorized:
+     * Contact the IAM user to confirm if they made the API call.
+     * Check the User Investigation dashboard for other actions taken by the user.
+     * Check the IP Investigation dashboard for additional traffic from the client's IP.
+  5. If an attack is suspected, initiate the company's incident response process and conduct further investigation.
+enabled: true
+severity: Low
+query_text: |-
+  %ingest.source_type:"aws:cloudtrail"
+  eventSource:lambda.amazonaws.com
+  eventName:AddPermission*
+  userIdentity.type:IAMUser
+  (not userIdentity.invokedBy:(cloudformation.amazonaws.com "AWS Internal"))
+  | stats countdistinct(requestParameters.functionName) as num_distinct_values by userIdentity.arn
+  | where num_distinct_values > 0
+time_range_s: 300
+run_frequency_s: 60
+event_sink_keys:
+- low_severity_alerts
+tags:
+- techniques.t1098.account_manipulation
+- source.cloudtrail
+- tactics.ta0003.persistence

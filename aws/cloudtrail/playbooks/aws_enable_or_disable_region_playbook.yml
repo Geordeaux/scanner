@@ -1,0 +1,31 @@
+name: AWS Enable Or Disable Region Playbook
+description: Detects when an AWS region is enabled or disabled. This can indicate
+  infrastructure changes that might be used for defence evasion by enabling or disabling
+  regions without proper authorisation.
+severity: Medium
+steps:
+- name: Investigation
+  description: 'Monitor AWS CloudTrail management events from `account.amazonaws.com`
+    for:
+
+    * `EnableRegion`
+
+    * `DisableRegion`
+
+
+    Region state changes can:
+
+    * Introduce new, unmonitored attack surface (previously disabled regions).
+
+    * Disrupt services and monitoring if regions are disabled unexpectedly.
+
+    * Be used to route attacker activity into less visible regions.'
+- name: Triage
+  description: "* Identify who initiated the change (principal, role, source IP, console\
+    \ vs API).\n* Confirm there is an approved change (for example, change ticket,\
+    \ deployment plan, or documented regional expansion).\n* Validate whether the\
+    \ affected region is expected to be in use and that required controls (CloudTrail,\
+    \ Config, GuardDuty, security tooling) are enabled there.\n* If the action is\
+    \ unapproved or suspicious:\n  * Treat as potential account compromise.\n  * Verify\
+    \ controls in all active regions (logging, detection, guardrails).\n  * Escalate\
+    \ according to your incident response process."

@@ -1,0 +1,14 @@
+name: Cloudflare Access Application Deleted Playbook
+description: Detects the deletion of a Cloudflare Access application.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor Cloudflare Audit Logs for `access_app_delete`.
+- name: Triage
+  description: '1. Identify the application and the user.
+
+    2. Verify if this was planned.
+
+    3. Restore the application configuration if accidental.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

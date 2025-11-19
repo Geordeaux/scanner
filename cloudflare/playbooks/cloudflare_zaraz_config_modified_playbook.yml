@@ -1,0 +1,14 @@
+name: Cloudflare Zaraz Configuration Modified Playbook
+description: Detects modifications to Cloudflare Zaraz configuration.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor Cloudflare Audit Logs for `zaraz_config_update`. Zaraz loads third-party tools; malicious changes could inject scripts into the site.
+- name: Triage
+  description: '1. Identify the changes (new tools, triggers).
+
+    2. Verify authorization.
+
+    3. Revert if suspicious.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

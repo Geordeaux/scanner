@@ -1,0 +1,28 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: AWS GuardDuty EKS Exec in Container
+description: |-
+  ## Goal
+  Detects the execution of commands inside a running container in an EKS cluster.
+
+  ## Strategy
+  Monitor GuardDuty findings for `Execution:Kubernetes/ExecInContainer`. This indicates that a user (or attacker) has gained interactive access to a pod and is executing commands.
+
+  ## Triage and Response
+  1. Identify the pod and the user.
+  2. Check the commands executed (if available in audit logs).
+  3. If unauthorized, revoke the user's access and isolate the pod.
+  4. Check for any changes made to the container or data exfiltration.
+enabled: true
+severity: High
+query_text: "%ingest.source_type:aws_guardduty\nmetadata.product_event_type:\"Execution:Kubernetes/ExecInContainer\" "
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- high_severity_alerts
+tags:
+- guardduty
+- aws
+- eks
+- kubernetes
+- execution

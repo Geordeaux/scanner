@@ -1,0 +1,18 @@
+name: AWS EBS default encryption disabled Playbook
+description: Detect when EBS encryption is disabled by default.
+severity: Medium
+steps:
+- name: Investigation
+  description: Monitor CloudTrail for instances of EBS encryption being disabled by
+    default using the DisableEbsEncryptionByDefault API call.
+- name: Triage
+  description: '1. Identify the user in your organization who owns the API key that
+    executed this call.
+
+    2. Inform the user about the best practice of enabling EBS encryption by default.
+
+    3. Re-enable EBS encryption by default.
+
+
+    For more information about Amazon EBS Encryption, refer to the Amazon EBS Encryption
+    documentation.'

@@ -1,0 +1,14 @@
+name: GCP Compute SSH Key Added Playbook
+description: Detects the addition of SSH keys to project or instance metadata.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor Google Cloud audit logs for `compute.projects.setCommonInstanceMetadata` or `compute.instances.setMetadata` involving `ssh-keys`. Adding SSH keys allows direct access to VMs.
+- name: Triage
+  description: '1. Identify the user and the key added.
+
+    2. Verify if the key addition is authorized.
+
+    3. Remove the key immediately if unauthorized.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

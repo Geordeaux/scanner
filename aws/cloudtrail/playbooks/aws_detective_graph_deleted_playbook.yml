@@ -1,0 +1,12 @@
+name: AWS Detective Graph deleted Playbook
+description: Detect when a user deletes a behavior graph in Amazon Detective.
+severity: Medium
+steps:
+- name: Investigation
+  description: Monitor the DeleteGraph API call to identify when a behavior graph
+    is deleted.
+- name: Triage
+  description: "1. Verify if the behavior graph deletion was authorized.\n2. Identify\
+    \ which user deleted the behavior graph.\n3. If the deletion was unauthorized:\n\
+    \   * Rotate the credentials.\n   * Investigate for any other unauthorized API\
+    \ calls made with the same credentials."

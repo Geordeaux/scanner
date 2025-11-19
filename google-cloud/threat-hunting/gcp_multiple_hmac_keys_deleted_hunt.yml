@@ -1,0 +1,18 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: GCP Multiple HMAC Keys Deleted
+description: |-
+  Detect when multiple HMAC authentication keys are deleted from GCP Storage settings. This behavior may indicate an attempt to remove account access, which could be malicious.
+query_text: |-
+  %ingest.source_type:gcp
+  protoPayload.serviceName:storage.googleapis.com
+  protoPayload.methodName:storage.hmacKeys.delete
+  | groupbycount(project_id, protoPayload.authenticationInfo.principalEmail)
+  | where @q.count >= 2
+tags:
+- source.gcp
+- gcp
+- gcp_audit
+- gcp_storage
+- multiple_hmac_keys_deleted
+- techniques.t1531.account_access_removal
+- tactics.ta0040.impact

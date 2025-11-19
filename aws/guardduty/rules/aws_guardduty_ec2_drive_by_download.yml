@@ -1,0 +1,26 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: AWS GuardDuty EC2 Drive-By Download
+description: |-
+  ## Goal
+  Detects traffic indicating a drive-by download attempt.
+
+  ## Strategy
+  Monitor GuardDuty findings for `Trojan:EC2/DriveBySourceTraffic`. This indicates the instance visited a site hosting an exploit kit.
+
+  ## Triage and Response
+  1. Identify the instance.
+  2. Scan the instance for malware.
+  3. Check for successful exploitation (new processes, files).
+enabled: true
+severity: High
+query_text: "%ingest.source_type:aws_guardduty\nmetadata.product_event_type:\"Trojan:EC2/DriveBySourceTraffic\" "
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- high_severity_alerts
+tags:
+- guardduty
+- aws
+- ec2
+- malware

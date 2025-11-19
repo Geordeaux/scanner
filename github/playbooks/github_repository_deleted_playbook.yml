@@ -1,0 +1,14 @@
+name: GitHub Repository Deleted Playbook
+description: Detects the deletion of a GitHub repository.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor GitHub audit logs for `repo.destroy`.
+- name: Triage
+  description: '1. Identify the repository and the user.
+
+    2. Verify if this was a planned deletion.
+
+    3. Restore the repository within the grace period if accidental/malicious.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

@@ -1,0 +1,10 @@
+name: GCP IAM Organization Policy Updated Or Deleted Playbook
+description: Detect when a GCP IAM Organization Policy is updated or deleted. This can indicate an attempt to manipulate account permissions, which can lead to unauthorized access and privilege escalation.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor GCP Cloud Audit logs for events where an IAM Organization Policy is either updated or deleted. Capture relevant details such as the principal IP, user, and target resource to assess potential threats. Set a high risk score to indicate the severity of this event.
+- name: Triage
+  description: Investigate the detected event to determine if it was authorized. Review the principal IPs, users, and other details to ensure that no unauthorized actions have been taken. Ensure that all IAM policies are compliant with company policies.
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

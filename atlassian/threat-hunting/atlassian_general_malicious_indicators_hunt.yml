@@ -1,0 +1,15 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Hunt - General Malicious Indicators (Atlassian)
+description: |-
+  Hunt for any Atlassian events associated with known malicious IPs, domains, or user agents.
+  This query serves as a catch-all for threat intel matches.
+query_text: |-
+  %ingest.source_type:atlassian
+  (
+    attributes.location.ip in list:malicious_ips OR
+    attributes.http.userAgent in list:malicious_user_agents
+  )
+tags:
+- hunt
+- source.atlassian
+- threat_intel

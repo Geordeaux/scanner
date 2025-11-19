@@ -1,0 +1,30 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: SNS Topic Created by Rare User
+enabled: true
+severity: Medium
+description: |-
+  ## Goal
+  This hunting query gathers evidence of an SNS topic created by a user who does not typically perform this action. Adversaries may create SNS topics to stage capabilities for data exfiltration or other malicious activities.
+
+  ## Strategy
+  This hunting query gathers evidence of an SNS topic created by a user who does not typically perform this action. Adversaries may create SNS topics to stage capabilities for data exfiltration or other malicious activities.
+
+  ## Triage and Response
+  Investigate and remediate as appropriate.
+query_text: |-
+  %ingest.source_type="aws:cloudtrail"
+  eventSource="sns.amazonaws.com"
+  eventName="CreateTopic"
+  userIdentity.type="AssumedRole"
+  userIdentity.arn like "*:i-*"
+  | groupbycount(userIdentity.arn)
+  | where @q.count > 0
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- medium_severity_alerts
+tags:
+- source.aws
+- domain.cloud
+- tactics.ta0042.resource_development
+- techniques.t1588.obtain_capabilities

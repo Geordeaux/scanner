@@ -1,0 +1,33 @@
+name: AWS S3 Bucket Made Public By ACL Playbook
+description: Detect when an Amazon S3 bucket is made publicly accessible via Access
+  Control Lists (ACL). This could indicate an attempt to expose sensitive data or
+  impair defenses by making the bucket open to unauthorized users.
+severity: High
+steps:
+- name: Investigation
+  description: 'Monitor AWS CloudTrail management events from `s3.amazonaws.com` for:
+
+    * `PutBucketAcl`
+
+
+    and identify events where the ACL grants access to either of the global groups:
+
+    * `http://acs.amazonaws.com/groups/global/AuthenticatedUsers`
+
+    * `http://acs.amazonaws.com/groups/global/AllUsers`
+
+
+    These grant URIs indicate that the bucket ACL allows access to a broad or public
+    audience, which may expose sensitive data.'
+- name: Triage
+  description: '* Confirm whether the bucket was intentionally made public (for example,
+    a static website or public data set) or if this was accidental/malicious.
+
+    * Identify the affected bucket and review the data it contains for sensitivity
+    (PII, credentials, financial data, etc.).
+
+    * If unapproved, immediately remediate by tightening the ACL and/or using S3 Block
+    Public Access controls.
+
+    * Review other configuration changes and access patterns involving the same bucket
+    and principal for additional misconfiguration or data exposure.'

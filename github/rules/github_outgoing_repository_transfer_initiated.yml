@@ -1,0 +1,26 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: GitHub Outgoing Repository Transfer Initiated
+description: |-
+  ## Goal
+  Detects when a GitHub repository is transferred.
+
+  ## Strategy
+  Monitor for organization or repository transfers.
+
+  ## Triage and Response
+  1. Identify the source and destination.
+  2. Verify authorization.
+  3. Contact GitHub support if malicious.
+enabled: true
+severity: High
+query_text: |-
+  %ingest.source_type:github
+  action:repo.transfer_outgoing
+time_range_s: 1800
+run_frequency_s: 300
+event_sink_keys:
+- high_severity_alerts
+tags:
+- github
+- converted_yaral

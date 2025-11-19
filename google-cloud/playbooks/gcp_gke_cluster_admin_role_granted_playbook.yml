@@ -1,0 +1,14 @@
+name: GCP GKE Cluster Admin Role Granted Playbook
+description: Detects granting of the Kubernetes Engine Admin role.
+severity: Critical
+steps:
+- name: Investigation
+  description: Monitor Google Cloud audit logs for IAM policy changes granting `roles/container.admin`. This role provides full control over GKE clusters.
+- name: Triage
+  description: '1. Identify the user and the principal receiving the role.
+
+    2. Verify if the role grant is authorized.
+
+    3. Revoke the role immediately if unauthorized.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

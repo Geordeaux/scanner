@@ -1,0 +1,28 @@
+name: AWS Snapshot Backup Exfiltration Playbook
+description: 'Detects the modification of an EC2 snapshot''s permissions to enable
+  access from another account
+
+
+  References:
+
+  * https://www.justice.gov/file/1080281/download
+
+
+  False Positives:
+
+  * Valid change to a snapshot''s permissions'
+severity: Medium
+steps:
+- name: Investigation
+  description: 'Detects the modification of an EC2 snapshot''s permissions to enable
+    access from another account
+
+
+    References:
+
+    * https://www.justice.gov/file/1080281/download
+
+
+    False Positives:
+
+    * Valid change to a snapshot''s permissions'

@@ -1,0 +1,9 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: GCP Compute Startup Script Modified
+description: |-
+  Detects modifications to VM instance startup scripts.
+query_text: "%ingest.source_type:google_cloud_audit\nprotoPayload.methodName:\"v1.compute.instances.setMetadata\"\nprotoPayload.request.items.key:\"startup-script\" "
+tags:
+- google_cloud
+- compute
+- persistence

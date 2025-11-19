@@ -1,0 +1,31 @@
+name: AWS SecurityHub Findings Evasion Playbook
+description: 'Detects the modification of the findings on SecurityHub.
+
+
+  References:
+
+  * https://docs.aws.amazon.com/cli/latest/reference/securityhub/
+
+
+  False Positives:
+
+  * System or Network administrator behaviors
+
+  * DEV, UAT, SAT environment. You should apply this rule with PROD environment only.'
+severity: High
+steps:
+- name: Investigation
+  description: 'Detects the modification of the findings on SecurityHub.
+
+
+    References:
+
+    * https://docs.aws.amazon.com/cli/latest/reference/securityhub/
+
+
+    False Positives:
+
+    * System or Network administrator behaviors
+
+    * DEV, UAT, SAT environment. You should apply this rule with PROD environment
+    only.'

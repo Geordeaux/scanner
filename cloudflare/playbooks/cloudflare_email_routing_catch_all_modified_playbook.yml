@@ -1,0 +1,14 @@
+name: Cloudflare Email Routing Catch-All Modified Playbook
+description: Detects changes to the Email Routing catch-all address.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor Cloudflare Audit Logs. Attackers may change this to intercept sensitive emails sent to invalid addresses.
+- name: Triage
+  description: '1. Identify the new destination address.
+
+    2. Verify if it belongs to the organization.
+
+    3. Revert if unauthorized.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

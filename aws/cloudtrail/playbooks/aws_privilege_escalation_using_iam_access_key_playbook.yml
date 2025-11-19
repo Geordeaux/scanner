@@ -1,0 +1,24 @@
+name: AWS Privilege Escalation Using IAM Access Key Playbook
+description: Detect when a user creates a new IAM access key for another IAM user,
+  which can be used for privilege escalation by unauthorized users.
+severity: Low
+steps:
+- name: Investigation
+  description: 'Monitor AWS CloudTrail management events where:
+
+    * An IAM access key is created via `CreateAccessKey`, and
+
+    * The key is created for an explicit target IAM user (not the caller), as indicated
+    by a populated target user field.
+
+
+    Because direct cross-event joins are not supported, this rule focuses on the risky
+    pattern of a principal creating access keys for other users. These events are
+    often associated with delegated administration or potential abuse.'
+- name: Triage
+  description: "* Confirm:\n  * Who created the access key (`principal.user.user_display_name`).\n\
+    \  * Which IAM user the key was created for (`target.user.userid` or `target.resource.name`).\n\
+    * Validate:\n  * Whether this cross-user key creation is expected (e.g., break-glass,\
+    \ controlled admin workflow).\n* If suspicious:\n  * Disable or delete the access\
+    \ key.\n  * Review additional activity from the creator and the target user.\n\
+    \  * Assess for broader account compromise or privilege escalation."

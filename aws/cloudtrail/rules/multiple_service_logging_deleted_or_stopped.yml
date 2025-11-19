@@ -1,0 +1,27 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Multiple Service Logging Deleted or Stopped
+description: |-
+  ## Goal
+  Identifies the deletion or stopping of multiple service logging actions (CloudTrail, VPC Flow Logs, S3 Logging, Route53 Logging).
+  Adversaries may disable logging to evade detection.
+
+  ## Strategy
+  Identifies the deletion or stopping of multiple service logging actions (CloudTrail, VPC Flow Logs, S3 Logging, Route53 Logging).
+  Adversaries may disable logging to evade detection.
+
+  ## Triage and Response
+  Investigate and remediate as appropriate.
+enabled: true
+severity: High
+query_text: |-
+  %ingest.source_type:aws:cloudtrail
+  eventName:("DeleteFlowLogs" OR "DeleteResolverQueryLogConfig" OR "DeleteTrail" OR "StopLogging")
+  eventSource:("ec2.amazonaws.com" OR "route53resolver.amazonaws.com" OR "s3.amazonaws.com" OR "cloudtrail.amazonaws.com")
+time_range_s: 3600
+run_frequency_s: 60
+event_sink_keys:
+- high_severity_alerts
+tags:
+- tactics.ta0005.defense_evasion
+- techniques.t1562.008.disable_cloud_logs
+- source.aws.cloudtrail

@@ -1,0 +1,9 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: GitHub User SSH Key Added
+description: |-
+  Detects when an SSH key is added to a user account.
+query_text: "%ingest.source_type:github\naction:public_key.create "
+tags:
+- github
+- iam
+- persistence

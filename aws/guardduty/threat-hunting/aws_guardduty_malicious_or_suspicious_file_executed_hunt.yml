@@ -1,0 +1,28 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS GuardDuty Malicious Or Suspicious File Executed
+description: |-
+  Detects when Amazon GuardDuty identifies the execution of a malicious or suspicious file on an EC2 instance or a container workload. This could indicate that a threat actor has successfully executed harmful code within your environment.
+query_text: |-
+  %ingest.source_type="aws:guardduty"
+  metadata.vendor_name:AMAZON
+  metadata.product_name:"AWS GuardDuty"
+  (
+  metadata.product_event_type:*MaliciousFile*
+  or metadata.product_event_type:*SuspiciousFile*
+  )
+  not security_result.about.labels.Sample:"true"
+  | groupbycount(
+  recipientAccountId,
+  principal.ip,
+  target.resource.product_object_id
+  )
+  | where @q.count > 0
+tags:
+- source.aws
+- domain.cloud
+- domain.guardduty
+- domain.malware
+- tactics.ta0002.execution
+- techniques.t1204.002.user_execution_malicious_file
+- use_case.aws_guardduty
+- use_case.malicious_file_execution

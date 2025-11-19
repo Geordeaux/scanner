@@ -1,0 +1,20 @@
+name: Cloudflare Multiple User Agents from Single IP Playbook
+description: 'Detect when a single IP address uses different User-Agent strings,
+
+  which may indicate automated attacks, bot activity, or attempts
+
+  to evade detection.'
+severity: Medium
+steps:
+- name: Investigation
+  description: Monitor Cloudflare logs for this specific threat type. Correlate with origin server logs.
+- name: Triage
+  description: '1. Validate the finding in the Cloudflare dashboard.
+
+    2. Identify the source IP and user agent.
+
+    3. Check if the request was blocked or allowed.
+
+    4. If allowed and malicious, update WAF rules to block.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

@@ -1,0 +1,18 @@
+name: Atlassian Confluence Anonymous Access Enabled Playbook
+description: |-
+  Response steps for when anonymous access is enabled in Confluence.
+  This allows unauthenticated users to view content.
+severity: Critical
+steps:
+  - name: Triage
+    description: |-
+      1. Identify the user (`attributes.actor.email`) who enabled anonymous access.
+      2. Identify the space or global setting affected.
+  - name: Investigation
+    description: |-
+      1. Determine if this was authorized (e.g., for a public knowledge base).
+      2. Check if sensitive content is exposed.
+  - name: Remediation
+    description: |-
+      1. If unauthorized, disable anonymous access immediately.
+      2. Review access logs to see if external IPs accessed the content.

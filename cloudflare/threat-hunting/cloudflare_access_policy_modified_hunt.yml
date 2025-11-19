@@ -1,0 +1,9 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Cloudflare Access Policy Modified
+description: |-
+  Detects changes to Cloudflare Access policies (Zero Trust).
+query_text: "%ingest.source_type:cloudflare\nAction:access_policy_update OR Action:access_policy_create "
+tags:
+- cloudflare
+- access
+- zero_trust

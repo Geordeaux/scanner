@@ -1,0 +1,14 @@
+name: GitHub Personal Access Token Created from Tor IP Address Playbook
+description: Detects when a GitHub Personal Access Token is created from a known Tor exit node IP address. An adversary may create a Personal Access Token before carrying out follow up actions such as cloning GitHub repositories to steal data.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor GitHub audit logs for specific event types.
+- name: Triage
+  description: '1. Identify the actor and the target resource.
+
+    2. Verify if the action was authorized.
+
+    3. If unauthorized, revert the change and rotate credentials.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

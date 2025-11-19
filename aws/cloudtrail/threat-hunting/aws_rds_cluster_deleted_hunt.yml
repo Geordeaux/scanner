@@ -1,0 +1,14 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS RDS Cluster deleted
+description: |-
+  Detect when a user deletes a database cluster in RDS.
+query_text: |-
+  %ingest.source_type:"aws:cloudtrail"
+  (not errorCode:*)
+  eventName:DeleteDBCluster
+  | groupbycount(userIdentity.arn)
+  | where @q.count > 0
+tags:
+- techniques.t1485.data_destruction
+- tactics.ta0040.impact
+- source.cloudtrail

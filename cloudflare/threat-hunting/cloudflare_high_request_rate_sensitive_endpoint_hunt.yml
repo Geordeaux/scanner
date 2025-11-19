@@ -1,0 +1,9 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Cloudflare High Request Rate to Sensitive Endpoint
+description: |-
+  Detects high request rates to sensitive endpoints (e.g., admin panels).
+query_text: "%ingest.source_type:cloudflare\nClientRequestPath:\"/admin*\" OR ClientRequestPath:\"/dashboard*\"\n| count(ClientIP) > 100 "
+tags:
+- cloudflare
+- waf
+- brute_force

@@ -1,0 +1,25 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Cloudflare R2 Bucket Deleted
+description: |-
+  ## Goal
+  Detects the deletion of a Cloudflare R2 storage bucket.
+
+  ## Strategy
+  Monitor Cloudflare Audit Logs for `r2_bucket_delete`. Deleting a bucket causes permanent data loss.
+
+  ## Triage and Response
+  1. Identify the bucket and the user.
+  2. Verify if this was a planned action.
+  3. If malicious, attempt to recover data (if backups exist outside R2).
+enabled: true
+severity: High
+query_text: "%ingest.source_type:cloudflare\nAction:r2_bucket_delete "
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- high_severity_alerts
+tags:
+- cloudflare
+- r2
+- availability

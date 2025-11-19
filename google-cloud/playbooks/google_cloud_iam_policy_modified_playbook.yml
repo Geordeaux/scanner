@@ -1,0 +1,15 @@
+name: Google Cloud IAM policy modified Playbook
+description: Detect changes to the IAM policy.
+severity: Informational
+steps:
+- name: Investigation
+  description: 'Monitor Google Cloud Admin activity audit logs to identify when the SetIamPolicy method is invoked.
+
+
+    ## Triage and response
+
+    Review the log and inspect the policy deltas to ensure none of the actions are "REMOVE."'
+- name: Triage
+  description: ''
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

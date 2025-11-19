@@ -1,0 +1,33 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Cloudflare Multiple User Agents from Single IP
+description: |-
+  ## Goal
+  Detect when a single IP address uses different User-Agent strings,
+  which may indicate automated attacks, bot activity, or attempts
+  to evade detection.
+
+  ## Strategy
+  Monitor Cloudflare logs for this specific threat type. Correlate with origin server logs.
+
+  ## Triage and Response
+  1. Validate the finding in the Cloudflare dashboard.
+  2. Identify the source IP and user agent.
+  3. Check if the request was blocked or allowed.
+  4. If allowed and malicious, update WAF rules to block.
+enabled: true
+severity: Medium
+query_text: |-
+  %ingest.source_type:cloudflare
+  ClientRequestUserAgent:*
+  (not ClientRequestUserAgent:(""))
+  | stats countdistinct(ClientRequestUserAgent) as n_user_agents by ClientIP
+  | where n_user_agents > 10
+time_range_s: 300
+run_frequency_s: 60
+event_sink_keys:
+- medium_severity_alerts
+tags:
+- tactics.ta0001.initial_access
+- techniques.t1190.exploit_public_facing_application
+- techniques.t1133.external_remote_services
+- source.cloudflare

@@ -1,0 +1,51 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: GitHub Access Granted To PAT Followed By Multiple Repo Clones
+description: |-
+  ## Goal
+  Detect when a user grants access to a GitHub Personal Access Token (PAT) and then clones multiple repositories in a short period. This can be indicative of an adversary attempting to steal repository contents using automated scripts or offensive tools.
+
+  ## Strategy
+  Monitor GitHub audit logs for events related to granting a PAT and cloning repositories by the same user. Within the lookback window, flag users with a high number of clone events shortly after a PAT access grant.
+
+  ## Triage and Response
+  1. Identify the user and the repositories that were cloned.
+  2. Confirm whether the PAT grant and subsequent cloning activity were expected and authorized.
+  3. Review source IP, geo, and device information for anomalies.
+  4. If suspicious, revoke the PAT, rotate credentials, and review additional activity by the user.
+enabled: true
+severity: High
+query_text: |-
+  %ingest.source_type:github_audit_log
+  metadata.vendor_name:GITHUB
+  metadata.product_event_type:(personal_access_token.access_granted git.clone)
+  | groupbycount(
+  principal.user.userid,
+  metadata.product_event_type
+  )
+  | where metadata.product_event_type:"git.clone" and @q.count > 5
+time_range_s: 1800
+run_frequency_s: 300
+event_sink_keys:
+- high_severity_alerts
+tags:
+- source.github
+- github_audit_log
+- pat
+- repo_clone
+- techniques.t1213.003.data_from_information_repositories_code_repositories
+- tactics.ta0009.collection
+context_fields:
+- metadata.product_event_type
+- metadata.log_type
+- metadata.vendor_name
+- principal.user.userid
+- principal.user.user_display_name
+- principal.ip
+- principal.ip_geo_artifact.location.country_or_region
+- principal.ip_geo_artifact.location.state
+- network.http.user_agent
+- target.resource.name
+risk_score: 85
+event_count: count_distinct(metadata.id)
+condition:
+- true

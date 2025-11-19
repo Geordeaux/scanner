@@ -1,0 +1,14 @@
+name: AWS GuardDuty EKS Anonymous Access Granted Playbook
+description: Detects when anonymous access is granted to the Kubernetes API server.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor GuardDuty findings for `Policy:Kubernetes/AnonymousAccessGranted`. This configuration allows unauthenticated users to access the API, which is a major security risk.
+- name: Triage
+  description: '1. Identify the cluster and the role binding granting anonymous access.
+
+    2. Remove the role binding immediately.
+
+    3. Audit logs for any unauthenticated access during the exposure period.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

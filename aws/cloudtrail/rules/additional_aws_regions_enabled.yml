@@ -1,0 +1,33 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Additional AWS regions enabled
+description: |-
+  ## Goal
+  Detect when additional AWS regions have been enabled.
+
+  ## Strategy
+  Monitor CloudTrail for the enabling of additional AWS regions. Attackers may do this to create more resources, such as EC2 instances or ECS clusters, for cryptomining.
+
+  ## Triage and Response
+  1. Verify if the API call was legitimate based on the event name, user identity, and IP address.
+  2. If the action is legitimate, consider adding the user to a suppression list.
+  3. If the action is suspicious:
+     - Contact the user to confirm whether they made the API call.
+     - Check the user investigation dashboard for other actions taken by the user.
+     - Investigate the IP for any unusual traffic patterns.
+  4. If evidence suggests an attack, initiate the incident response process and conduct a thorough investigation.
+enabled: true
+severity: Medium
+query_text: |-
+  %ingest.source_type:"aws:cloudtrail"
+  eventName:EnableRegion
+  eventSource:account.amazonaws.com
+  | groupbycount(userIdentity.arn)
+  | where @q.count > 0
+time_range_s: 300
+run_frequency_s: 60
+event_sink_keys:
+- medium_severity_alerts
+tags:
+- source.cloudtrail
+- techniques.t1535.unused_unsupported_cloud_regions
+- tactics.ta0005.defense_evasion

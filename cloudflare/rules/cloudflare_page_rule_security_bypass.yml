@@ -1,0 +1,25 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Cloudflare Page Rule Security Bypass
+description: |-
+  ## Goal
+  Detects the creation or modification of a Page Rule that bypasses security controls.
+
+  ## Strategy
+  Monitor Cloudflare Audit Logs for `pagerule_create` or `pagerule_update` containing actions like `disable_security` or `disable_waf`.
+
+  ## Triage and Response
+  1. Identify the page rule and the user.
+  2. Verify if the bypass is necessary and scoped correctly.
+  3. If too broad, refine or remove the rule.
+enabled: true
+severity: High
+query_text: "%ingest.source_type:cloudflare\nAction:pagerule_create OR Action:pagerule_update\nNewValue:*disable_security* OR NewValue:*disable_waf* "
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- high_severity_alerts
+tags:
+- cloudflare
+- configuration
+- waf

@@ -1,0 +1,10 @@
+name: SNS Topic Created by Rare User Playbook
+description: This hunting query gathers evidence of an SNS topic created by a user
+  who does not typically perform this action. Adversaries may create SNS topics to
+  stage capabilities for data exfiltration or other malicious activities.
+severity: Medium
+steps:
+- name: Investigation
+  description: This hunting query gathers evidence of an SNS topic created by a user
+    who does not typically perform this action. Adversaries may create SNS topics
+    to stage capabilities for data exfiltration or other malicious activities.

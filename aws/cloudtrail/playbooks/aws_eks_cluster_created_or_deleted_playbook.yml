@@ -1,0 +1,38 @@
+name: AWS EKS Cluster Created or Deleted Playbook
+description: 'Identifies when an EKS cluster is created or deleted.
+
+
+  References:
+
+  * https://any-api.com/amazonaws_com/eks/docs/API_Description
+
+
+  False Positives:
+
+  * EKS Cluster being created or deleted may be performed by a system administrator.
+
+  * Verify whether the user identity, user agent, and/or hostname should be making
+  changes in your environment.
+
+  * EKS Cluster created or deleted from unfamiliar users should be investigated. If
+  known behavior is causing false positives, it can be exempted from the rule.'
+severity: Low
+steps:
+- name: Investigation
+  description: 'Identifies when an EKS cluster is created or deleted.
+
+
+    References:
+
+    * https://any-api.com/amazonaws_com/eks/docs/API_Description
+
+
+    False Positives:
+
+    * EKS Cluster being created or deleted may be performed by a system administrator.
+
+    * Verify whether the user identity, user agent, and/or hostname should be making
+    changes in your environment.
+
+    * EKS Cluster created or deleted from unfamiliar users should be investigated.
+    If known behavior is causing false positives, it can be exempted from the rule.'

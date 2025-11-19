@@ -1,0 +1,19 @@
+name: Auth0 MFA Risk Assessment Disabled Playbook
+description: |-
+  Response steps for when MFA risk assessment is disabled.
+  This reduces the tenant's ability to detect and block risky logins.
+severity: High
+steps:
+  - name: Triage
+    description: |-
+      1. Identify the user (`data.user_id`) who disabled the setting.
+      2. Check the timestamp and source IP.
+  - name: Investigation
+    description: |-
+      1. Determine if this was authorized.
+      2. Check if other security settings were modified.
+  - name: Remediation
+    description: |-
+      1. If unauthorized, re-enable risk assessment immediately.
+      2. Investigate the user account.
+      3. Review logins that occurred while the setting was disabled.

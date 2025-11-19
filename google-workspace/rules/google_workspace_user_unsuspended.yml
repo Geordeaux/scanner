@@ -1,0 +1,26 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Google Workspace User Unsuspended
+description: |-
+  ## Goal
+  Identifies when a user account is unsuspended in Google Workspace.
+
+  ## Strategy
+  Monitor Google Workspace audit logs for specific administrative or user actions.
+
+  ## Triage and Response
+  1. Identify the user and the action.
+  2. Verify if the action was authorized.
+  3. If unauthorized, revert the change and reset user credentials.
+enabled: true
+severity: Medium
+query_text: |-
+  %ingest.source_type:google_workspace
+  action:UNSUSPEND_USER
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- medium_severity_alerts
+tags:
+- google_workspace
+- converted_yaral

@@ -1,0 +1,14 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS Route 53 DNS query logging disabled
+description: |-
+  Detect when a user deletes a Route 53 query logging configuration.
+query_text: |-
+  %ingest.source_type:"aws:cloudtrail"
+  (not errorCode:*)
+  eventName:DeleteResolverQueryLogConfig
+  | groupbycount(userIdentity.arn)
+  | where @q.count > 0
+tags:
+- techniques.t1562.impair_defenses
+- source.cloudtrail
+- tactics.ta0005.defense_evasion

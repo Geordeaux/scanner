@@ -1,0 +1,25 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Google Workspace External Forwarding Rule Created
+description: |-
+  ## Goal
+  Detects the creation of email forwarding rules to external domains.
+
+  ## Strategy
+  Monitor Google Workspace Gmail audit logs for `create_forwarding_rule`. Attackers often set up forwarding rules to exfiltrate sensitive emails.
+
+  ## Triage and Response
+  1. Identify the user and the destination email.
+  2. Verify if the forwarding is authorized.
+  3. Remove the rule and investigate the user account if unauthorized.
+enabled: true
+severity: High
+query_text: "%ingest.source_type:google_workspace\naction:create_forwarding_rule "
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- high_severity_alerts
+tags:
+- google_workspace
+- gmail
+- exfiltration

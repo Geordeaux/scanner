@@ -1,0 +1,9 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: GitHub Repository Transferred
+description: |-
+  Detects the transfer of a repository to another user or organization.
+query_text: "%ingest.source_type:github\naction:repo.transfer "
+tags:
+- github
+- repository
+- exfiltration

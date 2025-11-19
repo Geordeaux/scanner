@@ -1,0 +1,10 @@
+name: GCP Security Command Center Service Disabled Playbook
+description: Detect when GCP Security Command Center services are disabled. This behavior may indicate an attempt to evade security monitoring and defense mechanisms, which could be malicious.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor Cloud Audit Logs for Update events related to Google Cloud Security Command Center settings where the service enablement state is set to DISABLED. Capture relevant details such as the event count, user information, and IP addresses involved, and set a high severity risk score to indicate the potential threat.
+- name: Triage
+  description: Investigate the detected disable attempts to determine if they were authorized. Review the user and IP addresses involved to ensure that no unauthorized disabling of security services has occurred. Monitor for further suspicious activities involving this user or IP address.
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

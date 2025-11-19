@@ -1,0 +1,14 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Possible privilege escalation via AWS login profile manipulation
+description: |-
+  Detect if a user or role attempts to create or update the password for a specific IAM user.
+query_text: |-
+  %ingest.source_type:"aws:cloudtrail"
+  (not errorCode:*)
+  eventName:(CreateLoginProfile UpdateLoginProfile)
+  | groupbycount(userIdentity.arn)
+  | where @q.count > 0
+tags:
+- techniques.t1098.account_manipulation
+- source.cloudtrail
+- tactics.ta0003.persistence

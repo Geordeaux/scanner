@@ -1,0 +1,10 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Hunt - Atlassian User Project Removals
+description: |-
+  Hunt for user project removals.
+query_text: |-
+  %ingest.source_type:atlassian
+  message.content:'User removed from project'
+tags:
+- hunt
+- source.atlassian

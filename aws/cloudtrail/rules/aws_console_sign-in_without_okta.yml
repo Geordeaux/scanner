@@ -1,0 +1,29 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: AWS Console Sign-In NOT PRECEDED BY Okta Redirect
+description: |-
+  ## Goal
+  A user has logged into the AWS console without authenticating via Okta.  This rule requires AWS SSO via Okta and both log sources configured.
+
+  ## Strategy
+  Monitor logs for the specific sequence of events described.
+
+  ## Triage and Response
+  1. Identify the user and the sequence of actions.
+  2. Verify if the actions are authorized and business-justified.
+  3. If unauthorized, revert changes and suspend the user.
+enabled: true
+severity: High
+query_text: |-
+  %ingest.source_type:aws:cloudtrail
+  eventName:ConsoleLogin AND NOT userIdentity.principalId:*Okta*
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- high_severity_alerts
+tags:
+- AWS
+- Configuration Required
+- Okta
+- Actor Profiles
+- panther_migration

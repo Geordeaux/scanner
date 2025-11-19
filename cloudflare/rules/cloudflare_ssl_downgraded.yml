@@ -1,0 +1,25 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Cloudflare SSL/TLS Encryption Mode Downgraded
+description: |-
+  ## Goal
+  Detects when the SSL/TLS encryption mode is downgraded (e.g., to Flexible or Off).
+
+  ## Strategy
+  Monitor Cloudflare Audit Logs for changes to the `ssl` setting. Downgrading exposes traffic between Cloudflare and the origin to interception.
+
+  ## Triage and Response
+  1. Identify the user and the new mode.
+  2. Revert to Full (Strict) immediately.
+  3. Investigate the change.
+enabled: true
+severity: High
+query_text: "%ingest.source_type:cloudflare\nAction:zone_setting_edit\nSetting:\"ssl\"\nNewValue:\"flexible\" OR NewValue:\"off\" "
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- high_severity_alerts
+tags:
+- cloudflare
+- ssl
+- misconfiguration

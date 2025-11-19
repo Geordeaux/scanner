@@ -1,0 +1,29 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: SSM Rare SendCommand Code Execution by EC2 Instance
+enabled: true
+severity: Medium
+description: |-
+  ## Goal
+  This hunting query identifies when a single `SendCommand` API call is made by an EC2 instance to execute a command via the AWS Systems Manager (SSM) service within the last 7 days. The `SendCommand` API call allows users to remotely execute commands on EC2 instances. Default documents like `AWS-RunPowerShellScript` and `AWS-RunShellScript` are commonly used for this purpose. Adversaries may abuse this API to execute arbitrary commands on compromised EC2 instances.
+
+  ## Strategy
+  This hunting query identifies when a single `SendCommand` API call is made by an EC2 instance to execute a command via the AWS Systems Manager (SSM) service within the last 7 days. The `SendCommand` API call allows users to remotely execute commands on EC2 instances. Default documents like `AWS-RunPowerShellScript` and `AWS-RunShellScript` are commonly used for this purpose. Adversaries may abuse this API to execute arbitrary commands on compromised EC2 instances.
+
+  ## Triage and Response
+  Investigate and remediate as appropriate.
+query_text: |-
+  %ingest.source_type="aws:cloudtrail"
+  eventSource="ssm.amazonaws.com"
+  eventName="SendCommand"
+  (requestParameters like "*AWS-RunPowerShellScript*" OR requestParameters like "*AWS-RunShellScript*")
+  | groupbycount(requestParameters)
+  | where @q.count = 1
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- medium_severity_alerts
+tags:
+- source.aws
+- domain.cloud
+- tactics.ta0002.execution
+- techniques.t1059.command_and_scripting_interpreter

@@ -1,0 +1,8 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS Privilege Escalation Via User Compromise
+description: ""
+query_text: |-
+  %ingest.source_type:aws:cloudtrail
+  eventName:UpdateLoginProfile OR eventName:CreateAccessKey
+tags:
+- panther_migration

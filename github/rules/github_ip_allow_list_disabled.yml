@@ -1,0 +1,25 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: GitHub IP Allow List Disabled
+description: |-
+  ## Goal
+  Detects when the IP allow list is disabled for an organization.
+
+  ## Strategy
+  Monitor GitHub audit logs for `org.disable_ip_allow_list`. This removes network restrictions, allowing access from any IP.
+
+  ## Triage and Response
+  1. Identify the user.
+  2. Re-enable the IP allow list immediately.
+  3. Investigate any access from unknown IPs during the exposure window.
+enabled: true
+severity: Critical
+query_text: "%ingest.source_type:github\naction:org.disable_ip_allow_list "
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- critical_severity_alerts
+tags:
+- github
+- network_security
+- defense_evasion

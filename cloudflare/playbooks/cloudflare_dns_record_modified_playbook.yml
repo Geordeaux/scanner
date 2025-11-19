@@ -1,0 +1,16 @@
+name: Cloudflare DNS Record Modified Playbook
+description: Detects modifications to DNS records in Cloudflare.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor Cloudflare Audit Logs for `rec_edit` or `rec_add` events. Unauthorized DNS changes can redirect traffic to malicious sites (subdomain takeover).
+- name: Triage
+  description: '1. Identify the user who made the change.
+
+    2. Verify if the change was authorized via change management.
+
+    3. If unauthorized, revert the change immediately.
+
+    4. Rotate the user''s API key/credentials.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

@@ -1,0 +1,16 @@
+name: AWS GuardDuty EC2 WinRM Brute Force Playbook
+description: Detects brute force attacks against the Windows Remote Management (WinRM) service on EC2 instances.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor GuardDuty findings for `UnauthorizedAccess:EC2/WinRMBruteForce`.
+- name: Triage
+  description: '1. Identify the instance and the source IP.
+
+    2. Block the attacking IP.
+
+    3. Check if any login was successful.
+
+    4. Ensure WinRM is not exposed to the public internet.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

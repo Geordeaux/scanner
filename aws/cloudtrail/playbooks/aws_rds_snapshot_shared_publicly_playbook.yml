@@ -1,0 +1,36 @@
+name: AWS RDS Snapshot Shared Publicly Playbook
+description: Detect when an Amazon RDS snapshot (either DB snapshot or DB cluster
+  snapshot) is shared publicly. This could indicate an attempt to exfiltrate data
+  by making the snapshot accessible to all users.
+severity: High
+steps:
+- name: Investigation
+  description: 'Monitor AWS CloudTrail events from `rds.amazonaws.com` for the following
+    API actions:
+
+    * `ModifyDBSnapshotAttribute`
+
+    * `ModifyDBClusterSnapshotAttribute`
+
+
+    Identify events where:
+
+    * `requestParameters.attributeName` is set to `restore`, and
+
+    * `requestParameters.valuesToAdd.items` contains `all`
+
+
+    This pattern indicates that the snapshot''s restore permissions were updated to
+    allow all AWS accounts (i.e. public sharing).'
+- name: Triage
+  description: '* Confirm whether the snapshot was intended to be shared publicly
+    (for example, a controlled data-sharing workflow) or if this was accidental/malicious.
+
+    * Identify which snapshot was shared and what data it may contain (PII, secrets,
+    financial data, etc.).
+
+    * If unapproved, immediately revoke public access, rotate affected credentials,
+    and review other RDS configuration changes performed by the same principal.
+
+    * Search for access activity against the shared snapshot to assess potential data
+    exfiltration.'

@@ -1,0 +1,9 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Google Workspace Mass Drive Download
+description: |-
+  Detects a high volume of file downloads from Google Drive by a single user.
+query_text: "%ingest.source_type:google_workspace\naction:download "
+tags:
+- google_workspace
+- drive
+- exfiltration

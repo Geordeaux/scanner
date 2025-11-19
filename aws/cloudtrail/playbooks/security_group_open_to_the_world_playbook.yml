@@ -1,0 +1,21 @@
+name: Security group open to the world Playbook
+description: Detect when an AWS security group is opened to the world.
+severity: Medium
+steps:
+- name: Investigation
+  description: 'Monitor for the creation or modification of an AWS security group
+    through specific API calls:
+
+    * AuthorizeSecurityGroupIngress
+
+
+    This rule checks the list of IP ranges to see if it includes:
+
+    * 0.0.0.0/0
+
+    * ::/0'
+- name: Triage
+  description: "1. Identify the user who made the API call.\n2. Verify with the user\
+    \ if they initiated this API call.\n3. If the API call was unauthorized:\n  *\
+    \ Rotate the user's credentials and investigate any other unauthorized API calls.\n\
+    \  * Review other API calls made by the user."

@@ -1,0 +1,77 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: AWS CloudTrail TTB High Diversity Anomaly
+enabled: true
+description: |-
+  ## Goal
+  Detects anomalous high-velocity behavior where a single principal interacts with a high number of distinct AWS Services (eventSource) and performs a high number of distinct API Actions (eventName) within a short time window.
+
+  ## Strategy
+  This rule utilizes the Time-Terrain-Behavior (TTB) framework:
+  - **Time**: Short 5-minute window to detect bursts of activity.
+  - **Terrain**: Diversity of AWS Services (eventSource) (eventSource).
+  - **Behavior**: Diversity of API Actions (eventName) (eventName).
+
+  High diversity across these dimensions is often indicative of automated tools, reconnaissance scripts, or frantic manual exploitation.
+
+  ## Time - Terrain - Behaviour
+  - **Time**:
+      - Lookback window: 300 seconds
+      - Run frequency: 300 seconds
+  - **Terrain**:
+      - Log source: aws:cloudtrail
+      - Key field: eventSource
+      - Threshold: > 4 distinct values
+  - **Behavior**:
+      - Key field: eventName
+      - Threshold: > 8 distinct values
+
+  ## Triage and Response
+  1. **Identify the Principal**: userIdentity.arn.
+  2. **Analyze the Activity**: Use the linked TTB Notebook to visualize the user's activity in 3D space.
+  3. **Contextualize**: Is this a service account running a scheduled job? (If so, tune the rule). Is this a user performing a bulk operation?
+  4. **Verify**: Check if the actions performed are sensitive (e.g., downloading data, modifying permissions).
+  5. **Remediate**: If malicious, suspend the user/revoke credentials.
+severity: Medium
+query_text: |-
+  %ingest.source_type="aws:cloudtrail"
+  | stats
+    distinct_count(eventSource) as terrain_score,
+    distinct_count(eventName) as behavior_score
+    by userIdentity.arn
+  | where terrain_score > 4 AND behavior_score > 8
+time_range_s: 300
+run_frequency_s: 300
+event_sink_keys:
+- medium_severity_alerts
+tags:
+- source.cloudtrail
+- ttb.anomaly
+- defense_evasion
+alert_template:
+  info:
+  - label: Detection
+    value: '{{@alert.name}}'
+  - label: Severity
+    value: '{{@alert.severity_id}}'
+  - label: Principal
+    value: '{{@alert.results_table.rows[0].userIdentity.arn}}'
+  - label: Terrain Score
+    value: '{{@alert.results_table.rows[0].terrain_score}}'
+  - label: Behavior Score
+    value: '{{@alert.results_table.rows[0].behavior_score}}'
+  actions:
+  - label: Open Detection
+    value: https://scanner.dev/detections/{{@alert.id}}
+  - label: Runbook
+    value: https://runbooks.scanner.dev/ttb-investigation
+tests:
+- name: Test positive case - High Diversity
+  now_timestamp: '2024-08-21T00:03:00.000Z'
+  dataset_inline: |-
+    {"userIdentity": {"arn": "arn:aws:iam::123:user/test"}, "eventSource": "ec2.amazonaws.com", "eventName": "RunInstances"}
+  expected_detection_result: true
+- name: Test negative case - Low Diversity
+  now_timestamp: '2024-08-21T00:03:00.000Z'
+  dataset_inline: |-
+    {"userIdentity": {"arn": "arn:aws:iam::123:user/test"}, "eventSource": "ec2.amazonaws.com", "eventName": "RunInstances"}
+  expected_detection_result: false

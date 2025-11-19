@@ -1,0 +1,10 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Hunt - Atlassian Global Permission Changes
+description: |-
+  Hunt for global permission additions.
+query_text: |-
+  %ingest.source_type:atlassian
+  message.content:'Global permission added'
+tags:
+- hunt
+- source.atlassian

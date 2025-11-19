@@ -1,0 +1,29 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS S3 Bucket Made Public By ACL
+description: |-
+  Detect when an Amazon S3 bucket is made publicly accessible via Access Control Lists (ACL). This could indicate an attempt to expose sensitive data or impair defenses by making the bucket open to unauthorized users.
+query_text: |-
+  %ingest.source_type="aws:cloudtrail"
+  eventSource:"s3.amazonaws.com"
+  eventName:"PutBucketAcl"
+  not errorCode:*
+  requestParameters.AccessControlPolicy.AccessControlList.Grant.Grantee.URI:(
+  "http://acs.amazonaws.com/groups/global/AuthenticatedUsers"
+  "http://acs.amazonaws.com/groups/global/AllUsers"
+  )
+  | groupbycount(
+  recipientAccountId,
+  requestParameters.bucketName,
+  userIdentity.arn,
+  awsRegion
+  )
+  | where @q.count > 0
+tags:
+- source.aws
+- domain.cloud
+- domain.s3
+- tactics.ta0005.defense_evasion
+- tactics.ta0009.collection
+- techniques.t1562.impair_defenses
+- use_case.aws_s3
+- use_case.public_bucket

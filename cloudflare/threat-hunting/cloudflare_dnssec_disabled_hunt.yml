@@ -1,0 +1,9 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Cloudflare DNSSEC Disabled
+description: |-
+  Detects when DNSSEC is disabled for a zone.
+query_text: "%ingest.source_type:cloudflare\nAction:zone_setting_edit\nNewValue:\"off\"\nSetting:\"dnssec\" "
+tags:
+- cloudflare
+- dns
+- misconfiguration

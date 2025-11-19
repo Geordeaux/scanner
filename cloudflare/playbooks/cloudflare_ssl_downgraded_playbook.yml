@@ -1,0 +1,14 @@
+name: Cloudflare SSL/TLS Encryption Mode Downgraded Playbook
+description: Detects when the SSL/TLS encryption mode is downgraded (e.g., to Flexible or Off).
+severity: High
+steps:
+- name: Investigation
+  description: Monitor Cloudflare Audit Logs for changes to the `ssl` setting. Downgrading exposes traffic between Cloudflare and the origin to interception.
+- name: Triage
+  description: '1. Identify the user and the new mode.
+
+    2. Revert to Full (Strict) immediately.
+
+    3. Investigate the change.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

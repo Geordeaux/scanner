@@ -1,0 +1,17 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Cloudflare Multiple User Agents from Single IP
+description: |-
+  Detect when a single IP address uses different User-Agent strings,
+  which may indicate automated attacks, bot activity, or attempts
+  to evade detection.
+query_text: |-
+  %ingest.source_type:cloudflare
+  ClientRequestUserAgent:*
+  (not ClientRequestUserAgent:(""))
+  | stats countdistinct(ClientRequestUserAgent) as n_user_agents by ClientIP
+  | where n_user_agents > 10
+tags:
+- tactics.ta0001.initial_access
+- techniques.t1190.exploit_public_facing_application
+- techniques.t1133.external_remote_services
+- source.cloudflare

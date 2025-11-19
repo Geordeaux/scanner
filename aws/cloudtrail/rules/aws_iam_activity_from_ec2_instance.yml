@@ -1,0 +1,80 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: AWS IAM Activity From EC2 Instance
+enabled: true
+severity: High
+description: |-
+  ## Goal
+  Detects AWS IAM activities performed by AWS EC2 instances, which can indicate an attempt to retain access or escalate privileges. This is a high-severity concern as it may indicate unauthorised actions being taken from EC2 instances.
+
+  ## Strategy
+  Monitor AWS CloudTrail management events where:
+  * The service is IAM (`iam.amazonaws.com`), and
+  * The action is one of:
+    * `CreateUser`
+    * `AttachUserPolicy`
+    * `CreateLoginProfile`
+    * `UpdateLoginProfile`
+    * `CreateAccessKey`
+    * `CreateGroup`
+    * `AttachGroupPolicy`
+    * `CreateRole`
+    * `AttachRolePolicy`
+  * The calling principal is an assumed role session whose ARN pattern indicates usage from an EC2 instance profile (for example, `arn:aws:sts::<account-id>:assumed-role/<role-name>/i-0123456789abcdef`).
+
+  A single matching event is sufficient to generate an alert, as IAM account creation and policy changes from EC2 instances are high-impact and often unexpected outside of tightly controlled automation.
+
+  ## Triage and Response
+  * Identify the instance ID (from `userIdentity.arn`), IAM role, and caller account.
+  * Confirm whether:
+    * The instance is part of an approved automation or control plane, and
+    * IAM-mutating actions from that instance are explicitly expected.
+  * If activity is not clearly expected:
+    * Treat as potentially malicious persistence or privilege escalation.
+    * Review recent activity for the same instance and role (new users, keys, policies, role assumptions).
+    * Consider:
+      * Revoking or restricting the instance role permissions.
+      * Stopping or isolating the instance.
+      * Rotating any newly created credentials.
+  * If confirmed legitimate, consider enforcing:
+    * Tighter IAM conditions (for example, `aws:SourceIp`, `aws:SourceAccount`, or `aws:PrincipalTag`).
+    * Guardrails that prevent interactive or ad-hoc IAM changes from EC2 instances.
+query_text: |-
+  %ingest.source_type="aws:cloudtrail"
+  eventSource:"iam.amazonaws.com"
+  eventName:(
+  "CreateUser"
+  "AttachUserPolicy"
+  "CreateLoginProfile"
+  "UpdateLoginProfile"
+  "CreateAccessKey"
+  "CreateGroup"
+  "AttachGroupPolicy"
+  "CreateRole"
+  "AttachRolePolicy"
+  )
+  userIdentity.type:"AssumedRole"
+  userIdentity.arn:/assumed-role\/.*\/i-[0-9a-f]+/
+time_range_s: 3600
+run_frequency_s: 3600
+event_sink_keys:
+- high_severity_alerts
+tags:
+- source.aws
+- domain.cloud
+- domain.identity_and_access
+- domain.iam
+- tactics.ta0003.persistence
+- techniques.t1098.account_manipulation
+- use_case.ec2_iam_activity
+- use_case.iam_anomaly
+context_fields:
+- userIdentity.type
+- userIdentity.arn
+- userIdentity.userName
+- sourceIPAddress
+- userAgent
+- awsRegion
+- eventTime
+- eventID
+- recipientAccountId
+- requestParameters

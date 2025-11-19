@@ -1,0 +1,28 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS GuardDuty Trusted Or Threat IP Lists Tampered
+description: |-
+  Detects when an Amazon GuardDuty detector's trusted IP sets or threat intelligence IP sets are deleted or deactivated. This may indicate an attempt to impair defences by weakening GuardDuty's detection capability.
+query_text: |-
+  %ingest.source_type="aws:cloudtrail"
+  eventSource:"guardduty.amazonaws.com"
+  (
+  eventName:"DeleteIPSet"
+  or eventName:"DeleteThreatIntelSet"
+  or (
+  (
+  eventName:"UpdateIPSet"
+  or eventName:"UpdateThreatIntelSet"
+  )
+  and requestParameters.activate:"false"
+  )
+  )
+  | where errorCode IS NULL
+tags:
+- source.aws
+- domain.cloud
+- domain.guardduty
+- domain.logging_and_monitoring
+- tactics.ta0005.defence_evasion
+- techniques.t1562.impair_defences
+- use_case.control_plane_hardening
+- use_case.guardduty_configuration

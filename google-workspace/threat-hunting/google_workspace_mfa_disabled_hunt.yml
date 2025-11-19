@@ -1,0 +1,10 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Google Workspace MFA Disabled
+description: |-
+  Identifies when multi-factor authentication (MFA) is disabled for a Google Workspace organization. Security teams can monitor for changes to MFA configuration that may weaken the organization's security posture.
+query_text: |-
+  %ingest.source_type:google_workspace
+  action:ALLOW_STRONG_AUTHENTICATION OR action:ENFORCE_STRONG_AUTHENTICATION
+tags:
+- google_workspace
+- converted_yaral

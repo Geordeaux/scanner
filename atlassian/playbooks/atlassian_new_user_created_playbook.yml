@@ -1,0 +1,18 @@
+name: Atlassian New User Created Playbook
+description: |-
+  Response steps for when a new user is created.
+  Monitor for unauthorized account creation.
+severity: Medium
+steps:
+  - name: Triage
+    description: |-
+      1. Identify the user (`attributes.actor.email`) who created the account.
+      2. Identify the new user account.
+  - name: Investigation
+    description: |-
+      1. Verify if this was an authorized onboarding request.
+      2. Check the email domain of the new user.
+  - name: Remediation
+    description: |-
+      1. If unauthorized, suspend the new account.
+      2. Investigate the creator's account.

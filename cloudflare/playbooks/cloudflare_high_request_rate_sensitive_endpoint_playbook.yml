@@ -1,0 +1,14 @@
+name: Cloudflare High Request Rate to Sensitive Endpoint Playbook
+description: Detects high request rates to sensitive endpoints (e.g., admin panels).
+severity: High
+steps:
+- name: Investigation
+  description: Monitor for spikes in traffic to paths like `/admin`, `/api/admin`, etc.
+- name: Triage
+  description: '1. Identify the source IP and path.
+
+    2. Verify if the traffic is legitimate (e.g., admin activity).
+
+    3. If not, block the IP and investigate intent.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

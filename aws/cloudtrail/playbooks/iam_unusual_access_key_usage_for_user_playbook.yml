@@ -1,0 +1,12 @@
+name: AWS IAM Unusual AWS Access Key Usage for User Playbook
+description: 'Identifies unusual (infrequent) AWS access key usage for a user.
+
+  This helps identify potential misuse or abuse of AWS access keys, such as dormant
+  keys being used for malicious activities.'
+severity: Low
+steps:
+- name: Investigation
+  description: 'Identifies unusual (infrequent) AWS access key usage for a user.
+
+    This helps identify potential misuse or abuse of AWS access keys, such as dormant
+    keys being used for malicious activities.'

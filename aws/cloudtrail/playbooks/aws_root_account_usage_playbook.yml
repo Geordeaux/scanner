@@ -1,0 +1,26 @@
+name: AWS Root Credentials Playbook
+description: 'Detects AWS root account usage
+
+
+  References:
+
+  * https://docs.aws.amazon.com/IAM/latest/UserGuide/id_root-user.html
+
+
+  False Positives:
+
+  * AWS Tasks That Require AWS Account Root User Credentials https://docs.aws.amazon.com/general/latest/gr/aws_tasks-that-require-root.html'
+severity: Medium
+steps:
+- name: Investigation
+  description: 'Detects AWS root account usage
+
+
+    References:
+
+    * https://docs.aws.amazon.com/IAM/latest/UserGuide/id_root-user.html
+
+
+    False Positives:
+
+    * AWS Tasks That Require AWS Account Root User Credentials https://docs.aws.amazon.com/general/latest/gr/aws_tasks-that-require-root.html'

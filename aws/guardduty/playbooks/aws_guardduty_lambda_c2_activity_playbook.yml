@@ -1,0 +1,14 @@
+name: AWS GuardDuty Lambda C&C Activity Playbook
+description: Detects when a Lambda function is communicating with a Command and Control (C&C) server.
+severity: Critical
+steps:
+- name: Investigation
+  description: Monitor GuardDuty findings for `Backdoor:Lambda/C&CActivity.B`.
+- name: Triage
+  description: '1. Identify the Lambda function.
+
+    2. Disable the function.
+
+    3. Investigate the code for backdoors or compromised dependencies.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

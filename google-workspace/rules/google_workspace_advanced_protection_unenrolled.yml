@@ -1,0 +1,25 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Google Workspace Advanced Protection Unenrolled
+description: |-
+  ## Goal
+  Detects when a user unenrolls from the Advanced Protection Program.
+
+  ## Strategy
+  Monitor Google Workspace User audit logs for `unenroll_advanced_protection`. High-risk users should remain enrolled to prevent targeted attacks.
+
+  ## Triage and Response
+  1. Identify the user.
+  2. Verify if the unenrollment was intentional and authorized.
+  3. Re-enroll the user if necessary.
+enabled: true
+severity: High
+query_text: "%ingest.source_type:google_workspace\naction:unenroll_advanced_protection "
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- high_severity_alerts
+tags:
+- google_workspace
+- security
+- defense_evasion

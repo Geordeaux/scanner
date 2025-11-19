@@ -1,0 +1,32 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Atlassian Admin Login As User
+description: |-
+  ## Goal
+  Detect when an Atlassian administrator logs in as another user.
+  This feature allows administrators to impersonate users, which
+  should be monitored for potential abuse or unauthorized access.
+
+  ## Strategy
+  1. Confirm if this was a requested support action.
+  2. Verify if the impersonated user has sensitive access.
+
+  ## Triage and Response
+  1. Identify the administrator (`attributes.actor.email`) and the impersonated user.
+  2. Check the timestamp and reason (if logged).
+  1. If unauthorized, revoke the administrator's session.
+  2. Investigate the administrator's account for compromise.
+enabled: true
+severity: High
+query_text: |-
+  %ingest.source_type:atlassian
+  attributes.action:user_logged_in_as_user
+  | groupbycount(attributes.actor.email)
+  | where @q.count > 0
+time_range_s: 300
+run_frequency_s: 60
+event_sink_keys:
+- high_severity_alerts
+tags:
+- tactics.ta0004.privilege_escalation
+- techniques.t1078.valid_accounts
+- source.atlassian

@@ -1,0 +1,36 @@
+name: Potential Bucket Enumeration on AWS Playbook
+description: 'Looks for potential enumeration of AWS buckets via ListBuckets.
+
+
+  References:
+
+  * https://github.com/Lifka/hacking-resources/blob/c2ae355d381bd0c9f0b32c4ead049f44e5b1573f/cloud-hacking-cheat-sheets.md
+
+  * https://jamesonhacking.blogspot.com/2020/12/pivoting-to-private-aws-s3-buckets.html
+
+  * https://securitycafe.ro/2022/12/14/aws-enumeration-part-ii-practical-enumeration/
+
+
+  False Positives:
+
+  * Administrators listing buckets, it may be necessary to filter out users who commonly
+  conduct this activity.'
+severity: Low
+steps:
+- name: Investigation
+  description: 'Looks for potential enumeration of AWS buckets via ListBuckets.
+
+
+    References:
+
+    * https://github.com/Lifka/hacking-resources/blob/c2ae355d381bd0c9f0b32c4ead049f44e5b1573f/cloud-hacking-cheat-sheets.md
+
+    * https://jamesonhacking.blogspot.com/2020/12/pivoting-to-private-aws-s3-buckets.html
+
+    * https://securitycafe.ro/2022/12/14/aws-enumeration-part-ii-practical-enumeration/
+
+
+    False Positives:
+
+    * Administrators listing buckets, it may be necessary to filter out users who
+    commonly conduct this activity.'

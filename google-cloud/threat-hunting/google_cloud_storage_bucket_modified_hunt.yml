@@ -1,0 +1,13 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Google Cloud Storage Bucket modified
+description: |-
+  Detect administrative changes to a GCS Bucket, such as updates to the retention policy or bucket lock.
+query_text: |-
+  %ingest.source_type:gcp
+  protoPayload.methodName:storage.buckets.update
+  | groupbycount(project_id, bucket_name, protoPayload.authenticationInfo.principalEmail)
+  | where @q.count > 0
+tags:
+- techniques.t1565.data_manipulation
+- source.gcp
+- tactics.ta0040.impact

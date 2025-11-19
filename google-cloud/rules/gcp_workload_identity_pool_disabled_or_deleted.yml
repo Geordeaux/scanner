@@ -1,0 +1,65 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+
+name: GCP Workload Identity Pool Disabled Or Deleted
+description: |-
+  ## Goal
+  Detect when GCP Workload Identity Pools are disabled or deleted. Disabling or deleting a pool will prevent any connected identities from accessing GCP resources.
+
+  ## Strategy
+  Monitor GCP Cloud Audit Logs for events related to deletion or modification of Workload Identity Pools. These actions can be indicative of an attempt to evade security controls, maintain persistence, escalate privileges, or gain unauthorized access.
+
+  ## Triage and Response
+  1. Identify who performed the action and from where (IP / geo).
+  2. Confirm whether the change (delete/modify/disable) was authorized and expected.
+  3. Review other recent actions by the same principal.
+  4. If suspicious, roll back the change and initiate incident response.
+
+enabled: true
+severity: High
+
+query_text: |-
+  %ingest.source_type:gcp_audit_log
+  metadata.log_type:GCP_CLOUDAUDIT
+  metadata.product_event_type:(google.iam.v1.WorkloadIdentityPools.DeleteWorkloadIdentityPool google.iam.v1.WorkloadIdentityPools.UpdateWorkloadIdentityPool)
+  target.application:iam.googleapis.com
+  security_result.action:ALLOW
+  | groupbycount(
+      metadata.product_event_type,
+      target.resource.name,
+      principal.user.userid
+    )
+  | where @q.count > 0
+
+time_range_s: 3600        # 1 hour lookback
+run_frequency_s: 300       # every 5 minutes
+
+event_sink_keys:
+- high_severity_alerts
+
+tags:
+- gcp_audit_log
+- workload_identity_pool
+- iam
+- techniques.t1078.valid_accounts
+- tactics.ta0005.defense_evasion
+- tactics.ta0003.persistence
+- tactics.ta0004.privilege_escalation
+- tactics.ta0001.initial_access
+
+context_fields:
+- metadata.log_type
+- metadata.product_event_type
+- target.application
+- target.resource.name
+- security_result.action
+- principal.user.userid
+- principal.user.user_display_name
+- principal.ip
+- principal.ip_geo_artifact.location.country_or_region
+- principal.ip_geo_artifact.location.state
+
+risk_score: 75
+event_count: count_distinct(metadata.id)
+
+condition:
+- true

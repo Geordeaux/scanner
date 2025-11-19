@@ -1,0 +1,21 @@
+name: AWS GuardDuty Denial Of Service Activity Detected Playbook
+description: Detects when Amazon GuardDuty identifies denial-of-service (DoS) activities in an Amazon EC2 instance. This could indicate an attempt to disrupt the availability of services.
+severity: High
+steps:
+- name: Investigation
+  description: 'Monitor GuardDuty findings for the detection of DoS activities (finding types containing `DenialOfService`). Capture relevant details such as the principal IP, user, and location to assess potential threats.
+
+
+    ## Triage and response
+
+    * Investigate the detected DoS activity to determine if it was authorized or expected (for example, controlled load testing).
+
+    * Review the affected instance, security groups, and network paths for evidence of abuse or misconfiguration.
+
+    * Correlate with other GuardDuty findings, VPC Flow Logs, and WAF / load balancer logs for related activity.
+
+    * If malicious, isolate the instance or workload, block offending IPs or ranges, and consider implementing rate limiting and additional protections.'
+- name: Triage
+  description: ''
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

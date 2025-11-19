@@ -1,0 +1,17 @@
+name: GitHub organization was transferred between enterprise accounts Playbook
+description: Detect when a GitHub organization is transferred between enterprise accounts.
+severity: High
+steps:
+- name: Investigation
+  description: 'This rule monitors GitHub audit logs for organization transfers between enterprise accounts. Only enterprise owners can perform these transfers.
+
+
+    ## Triage and response
+
+    1. Verify if the change made by the actor is authorized.
+
+    2. If the change was unauthorized or unexpected, initiate the incident response process and investigate.'
+- name: Triage
+  description: ''
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

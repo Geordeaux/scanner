@@ -1,0 +1,14 @@
+name: AWS GuardDuty S3 Bucket Made Public Playbook
+description: Detects when an S3 bucket's permissions are modified to make it publicly accessible.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor GuardDuty findings for `Impact:S3/PermissionsModification.Public`.
+- name: Triage
+  description: '1. Identify the bucket.
+
+    2. Revert the permissions immediately to private.
+
+    3. Investigate who made the change and why.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

@@ -1,0 +1,23 @@
+name: AWS Successful API From Tor Exit Node Playbook
+description: Detect successful AWS API executions originating from Tor exit nodes,
+  which may indicate attempts to execute malicious commands or access sensitive resources
+  from anonymized IP addresses.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor AWS CloudTrail management events and flag successful API calls
+    where the source IP has been enriched with threat intelligence identifying it
+    as a Tor exit node. Use the GCTI Feed enrichment fields on events to identify
+    Tor exit nodes.
+- name: Triage
+  description: '* Confirm whether the access from a Tor exit node is expected for
+    the user and application (in most environments, it is not).
+
+    * Review the API calls made from the Tor IP, including services, actions, and
+    resources accessed.
+
+    * Check user agent, authentication context (MFA, SSO, programmatic keys), and
+    recent activity by the same principal and IP.
+
+    * If suspicious, revoke or rotate credentials, tighten network/access controls,
+    and consider blocking Tor exit nodes at the perimeter.'

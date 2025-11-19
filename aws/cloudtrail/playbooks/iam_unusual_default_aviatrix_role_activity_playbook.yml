@@ -1,0 +1,10 @@
+name: IAM Unusual Default Aviatrix Role Activity Playbook
+description: 'Identifies unusual activity related to the default Aviatrix role.
+
+  Unusual activity may indicate unauthorized access or misuse of the Aviatrix role.'
+severity: Medium
+steps:
+- name: Investigation
+  description: 'Identifies unusual activity related to the default Aviatrix role.
+
+    Unusual activity may indicate unauthorized access or misuse of the Aviatrix role.'

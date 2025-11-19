@@ -1,0 +1,25 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Cloudflare Email Routing Catch-All Modified
+description: |-
+  ## Goal
+  Detects changes to the Email Routing catch-all address.
+
+  ## Strategy
+  Monitor Cloudflare Audit Logs. Attackers may change this to intercept sensitive emails sent to invalid addresses.
+
+  ## Triage and Response
+  1. Identify the new destination address.
+  2. Verify if it belongs to the organization.
+  3. Revert if unauthorized.
+enabled: true
+severity: High
+query_text: "%ingest.source_type:cloudflare\nAction:email_routing_catch_all_update "
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- high_severity_alerts
+tags:
+- cloudflare
+- email_routing
+- interception

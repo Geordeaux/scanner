@@ -1,0 +1,14 @@
+name: Cloudflare API Shield Schema Validation Disabled Playbook
+description: Detects when API Shield schema validation is disabled.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor Cloudflare Audit Logs. Disabling validation exposes APIs to malformed requests and potential exploits.
+- name: Triage
+  description: '1. Identify the API endpoint.
+
+    2. Re-enable validation.
+
+    3. Check for anomalous API traffic.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

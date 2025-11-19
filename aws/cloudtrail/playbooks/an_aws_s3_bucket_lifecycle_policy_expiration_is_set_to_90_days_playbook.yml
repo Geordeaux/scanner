@@ -1,0 +1,19 @@
+name: An AWS S3 bucket lifecycle policy expiration is set to < 90 days Playbook
+description: Detect when an S3 bucket has a lifecycle configuration with an expiration
+  policy of less than 90 days.
+severity: Low
+steps:
+- name: Investigation
+  description: 'Look for lifecycle configuration rules with expiration days set to
+    less than 90 in your logs.
+
+
+    **NOTE**: This rule should target the relevant logs. The expiration days key must
+    be used to perform the query.'
+- name: Triage
+  description: '1. Determine if the event should have occurred on the specified bucket
+    by the username, account ID, and type, and verify that the bucket has a file expiration
+    of less than 90 days.
+
+    2. If the bucket is the CloudTrail bucket, consider escalating to higher severity
+    and investigating further.'

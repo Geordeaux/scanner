@@ -1,0 +1,14 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: Google Cloud Storage Bucket enumerated
+description: |-
+  Detect when a service account lists GCS buckets.
+query_text: |-
+  %ingest.source_type:gcp
+  protoPayload.methodName:storage.buckets.list
+  protoPayload.authenticationInfo.principalEmail:*gserviceaccount.com
+  | groupbycount(project_id, protoPayload.authenticationInfo.principalEmail)
+  | where @q.count > 0
+tags:
+- techniques.t1083.file_and_directory_discovery
+- source.gcp
+- tactics.ta0007.discovery

@@ -1,0 +1,31 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS Glue Development Endpoint Activity
+description: |-
+  Detects possible suspicious glue development endpoint activity.
+
+  References:
+  * https://rhinosecuritylabs.com/aws/aws-privilege-escalation-methods-mitigation/
+  * https://docs.aws.amazon.com/glue/latest/webapi/API_CreateDevEndpoint.html
+
+  False Positives:
+  * Glue Development Endpoint Activity may be performed by a system administrator. Verify whether the user identity, user agent, and/or hostname should be making changes in your environment.
+  * If known behavior is causing false positives, it can be exempted from the rule.
+query_text: |-
+  %ingest.source_type="aws:cloudtrail"
+  eventSource="glue.amazonaws.com"
+  eventName=(CreateDevEndpoint DeleteDevEndpoint UpdateDevEndpoint)
+  | stats
+  min(@scnr.datetime) as firstTime,
+  max(@scnr.datetime) as lastTime,
+  count() as eventCount
+  by
+  userIdentity.arn,
+  eventSource,
+  eventName,
+  awsRegion
+tags:
+- source.cloudtrail
+- tactics.ta0004.privilege_escalation
+- tactics.ta0002.execution
+- techniques.t1548.abuse_elevation_control_mechanism
+- techniques.t1078.valid_accounts

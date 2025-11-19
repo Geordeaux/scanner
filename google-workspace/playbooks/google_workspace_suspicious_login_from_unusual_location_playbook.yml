@@ -1,0 +1,14 @@
+name: Google Workspace Suspicious Login from Unusual Location Playbook
+description: Detects login attempts from unusual geographic locations.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor Google Workspace login logs for `login_failure` or `login_success` events where the IP location is anomalous compared to the user's history.
+- name: Triage
+  description: '1. Identify the user and the login location.
+
+    2. Verify if the user is traveling.
+
+    3. Reset password and enforce MFA if the login is unauthorized.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

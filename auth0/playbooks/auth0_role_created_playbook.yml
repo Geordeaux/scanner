@@ -1,0 +1,20 @@
+name: Auth0 Role Created Playbook
+description: |-
+  Response steps for when a new role is created.
+  Roles define permissions and should be strictly controlled.
+severity: High
+steps:
+  - name: Triage
+    description: |-
+      1. Identify the user (`data.user_id`) who created the role.
+      2. Check the timestamp.
+  - name: Investigation
+    description: |-
+      1. Determine if this was authorized.
+      2. Review the permissions assigned to the new role.
+      3. Check who was assigned to this role (if anyone).
+  - name: Remediation
+    description: |-
+      1. If unauthorized, delete the role immediately.
+      2. Investigate the user account.
+      3. Audit other roles created by this user.

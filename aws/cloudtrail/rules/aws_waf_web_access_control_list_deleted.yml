@@ -1,0 +1,29 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: AWS WAF web access control list deleted
+description: |-
+  ## Goal
+  Detect when an AWS Web Application Firewall (WAF) Access Control List (ACL) is deleted.
+
+  ## Strategy
+  The rule monitors AWS WAF logs and detects when the event name is "DeleteWebACL."
+
+  ## Triage and Response
+  1. Determine if the user's identity is expected to perform the "DeleteWebACL" API call on the account.
+  2. If the API call was not made by the user, rotate the user credentials and investigate what other APIs were successfully accessed.
+enabled: true
+severity: Medium
+query_text: |-
+  %ingest.source_type:"aws:cloudtrail"
+  eventSource:waf*.amazonaws.com
+  eventName:DeleteWebACL
+  (not userAgent:\\APN\\/*)
+  | groupbycount(userIdentity.arn)
+  | where @q.count > 0
+time_range_s: 300
+run_frequency_s: 60
+event_sink_keys:
+- medium_severity_alerts
+tags:
+- source.cloudtrail
+- techniques.t1562.impair_defenses
+- tactics.ta0005.defense_evasion

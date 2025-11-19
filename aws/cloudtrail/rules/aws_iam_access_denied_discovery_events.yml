@@ -1,0 +1,38 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: AWS IAM Access Denied Discovery Events
+enabled: true
+severity: Low
+description: "## Goal\nDetects excessive `AccessDenied` events within a one-hour timeframe from a single IAM principal. This may indicate reconnaissance activity or permission mapping by an adversary.\n\n## Strategy\nMonitor AWS CloudTrail management events where:\n* The action result is an explicit access denial, and\n* The same IAM user or role generates multiple distinct denied actions within a short window.\n\nGroup events by principal and source IP, and alert when the count of denied actions exceeds a defined threshold (for example, five or more within one hour). This pattern often appears during:\n* Manual or scripted permission probing.\n* Misconfigured tooling repeatedly calling unauthorised APIs.\n* Early-stage discovery by an attacker testing controls.\n\n## Triage and Response\n* Identify the principal (user or role), source IP, and affected AWS services/APIs.\n* Check whether this activity aligns with:\n  * A known change window, or\n  * Recent deployment or automation changes.\n\
+  * Review recent successful actions by the same principal to determine whether any privileged operations succeeded.\n* If activity is not clearly legitimate:\n  * Temporarily restrict or revoke the principal\u2019s permissions where safe to do so.\n  * Investigate authentication history for the principal and IP (unusual geo, device, time-of-day).\n  * Look for correlated detections (for example, console logins without MFA, new key creation, or policy changes).\n* If confirmed benign, consider:\n  * Tightening IAM policies to follow least privilege.\n  * Tuning this rule with allow-listed principals or known noisy workflows."
+query_text: |-
+  %ingest.source_type="aws:cloudtrail"
+  errorCode:"AccessDenied*"
+  or errorCode:"*AccessDenied"
+  | groupbycount(userIdentity.arn, sourceIPAddress)
+  | where @q.count >= 5
+time_range_s: 3600
+run_frequency_s: 3600
+event_sink_keys:
+- low_severity_alerts
+tags:
+- source.aws
+- domain.cloud
+- domain.identity_and_access
+- tactics.ta0007.discovery
+- techniques.t1580.cloud_infrastructure_discovery
+- use_case.iam_anomaly
+- use_case.discovery_noise
+context_fields:
+- userIdentity.type
+- userIdentity.arn
+- userIdentity.userName
+- sourceIPAddress
+- userAgent
+- awsRegion
+- eventSource
+- eventName
+- errorCode
+- errorMessage
+- recipientAccountId
+- eventID
+- eventTime

@@ -1,0 +1,14 @@
+name: AWS VPC Flow Log deleted Playbook
+description: Detect when one or more AWS VPC Flow Logs are deleted.
+severity: Informational
+steps:
+- name: Investigation
+  description: Monitor CloudTrail for deletions of AWS VPC Flow Logs via the DeleteFlowLogs
+    API.
+- name: Triage
+  description: "1. Verify if the API call regarding the event name should have occurred.\n\
+    2. If the action was legitimate, consider allowing the invoking service or user\
+    \ through a suppression list.\n3. If the action was not legitimate:\n   - Contact\
+    \ the user to confirm if they made the API call.\n4. If the API call was unauthorized:\n\
+    \   - Rotate the user credentials.\n   - Investigate other API calls made with\
+    \ the old credentials that were not authorized by the user."

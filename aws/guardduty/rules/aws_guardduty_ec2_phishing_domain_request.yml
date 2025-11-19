@@ -1,0 +1,26 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: AWS GuardDuty EC2 Phishing Domain Request
+description: |-
+  ## Goal
+  Detects when an EC2 instance queries a domain associated with phishing.
+
+  ## Strategy
+  Monitor GuardDuty findings for `Trojan:EC2/PhishingDomainRequest`. This could indicate a user on the instance clicked a phishing link or a process is reaching out to a phishing site.
+
+  ## Triage and Response
+  1. Identify the instance and the domain.
+  2. Check if any credentials were entered or data submitted.
+  3. Reset credentials if necessary.
+enabled: true
+severity: High
+query_text: "%ingest.source_type:aws_guardduty\nmetadata.product_event_type:\"Trojan:EC2/PhishingDomainRequest\" "
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- high_severity_alerts
+tags:
+- guardduty
+- aws
+- ec2
+- phishing

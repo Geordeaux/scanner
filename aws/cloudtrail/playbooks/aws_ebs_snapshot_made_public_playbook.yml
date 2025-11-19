@@ -1,0 +1,14 @@
+name: AWS EBS Snapshot Made Public Playbook
+description: Detect when an EBS snapshot is made public.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor CloudTrail API calls for EBS snapshot modifications, specifically
+    with the `ModifySnapshotAttribute` call. This rule checks if the `createVolumePermission.add.items.group`
+    array includes the string "all," indicating the snapshot is public.
+- name: Triage
+  description: "1. Confirm if the EBS snapshot should be public.\n2. Identify which\
+    \ user made the snapshot public.\n3. Contact the user to confirm their intent.\n\
+    4. If the user did not authorize the change:\n    * Rotate the credentials.\n\
+    \    * Investigate other potential unauthorized API calls.\n    * Revert AMI permissions\
+    \ to the original state.\n    * Initiate the incident response process."

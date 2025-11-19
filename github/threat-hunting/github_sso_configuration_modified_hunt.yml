@@ -1,0 +1,10 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: GitHub SSO Configuration Modified
+description: |-
+  Detects when changes are made to a GitHub enterprise or organization's Single Sign-On (SSO) configuration.
+query_text: |-
+  %ingest.source_type:github
+  action:business.disable_oidc OR action:business.disable_saml OR action:business.update_saml_provider_settings OR action:org.disable_saml OR action:org.update_saml_provider_settings OR action:org_credential_authorization.deauthorize OR action:org_credential_authorization.grant OR action:org_credential_authorization.revoke OR action:sso_redirect.disable
+tags:
+- github
+- converted_yaral

@@ -1,0 +1,16 @@
+name: Cloudflare XSS Probing Pattern Playbook
+description: 'Detect XSS (Cross-Site Scripting) probing patterns in web requests,
+
+  which may indicate attack attempts against web applications.'
+severity: Medium
+steps:
+- name: Investigation
+  description: Monitor for XSS payloads in request parameters.
+- name: Triage
+  description: '1. Identify the target URL and parameter.
+
+    2. Check if the WAF blocked the request.
+
+    3. If not, patch the application vulnerability.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

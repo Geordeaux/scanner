@@ -1,0 +1,16 @@
+name: Attempt to create Xlarge EC2 instances in multiple AWS regions Playbook
+description: Detect attempts to create Xlarge EC2 instances across multiple AWS regions.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor CloudTrail for any attempts to create Xlarge EC2 instances
+    in various regions. This behavior may indicate an attacker trying to establish
+    scalable resources for cryptocurrency mining while evading detection and service
+    quotas.
+- name: Triage
+  description: "1. Verify if the user identity should have performed the operation.\n\
+    2. If the API calls were unauthorized:\n  * Rotate user credentials.\n  * Terminate\
+    \ the newly created instances if the API call was successful.\n  * Delete any\
+    \ associated EC2 security groups or key pairs.\n  * Review other API calls made\
+    \ by the user.\n  * Initiate the organization's incident response process and\
+    \ conduct an investigation."

@@ -1,0 +1,28 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: GitHub SAML/OIDC has been disabled
+description: |-
+  ## Goal
+  Detect when GitHub OIDC/SAML single sign-on (SSO) has been modified.
+
+  ## Strategy
+  This rule monitors GitHub audit logs for modifications to OIDC/SAML SSO. Disabling these settings could weaken the organization's security posture.
+
+  ## Triage and response
+  1. Determine if the change made by the actor is authorized.
+  2. If the change was unauthorized or unexpected, initiate the organization's incident response process and investigate.
+enabled: true
+severity: High
+query_text: |-
+  %ingest.source_type:github
+  action:(business.disable_saml org.disable_saml business.disable_oidc)
+  | groupbycount(actor)
+  | where @q.count > 0
+time_range_s: 300
+run_frequency_s: 60
+event_sink_keys:
+- high_severity_alerts
+tags:
+- source.github-telemetry
+- techniques.t1562.impair_defenses
+- source.github
+- tactics.ta0005.defense_evasion

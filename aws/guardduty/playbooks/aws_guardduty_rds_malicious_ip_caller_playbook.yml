@@ -1,0 +1,16 @@
+name: AWS GuardDuty RDS Malicious IP Caller Playbook
+description: Detects RDS API calls originating from known malicious IP addresses.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor GuardDuty findings for `UnauthorizedAccess:RDS/MaliciousIPCaller`. This indicates that an RDS database is being accessed by an IP address included in a threat intelligence list.
+- name: Triage
+  description: '1. Identify the affected RDS instance and the source IP.
+
+    2. Check if the database is publicly accessible.
+
+    3. Restrict access using Security Groups to only allowed IPs.
+
+    4. Investigate database logs for any unauthorized queries.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

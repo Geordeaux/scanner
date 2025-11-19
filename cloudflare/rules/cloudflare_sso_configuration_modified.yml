@@ -1,0 +1,25 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Cloudflare SSO Configuration Modified
+description: |-
+  ## Goal
+  Detects modifications to the Single Sign-On (SSO) configuration.
+
+  ## Strategy
+  Monitor Cloudflare Audit Logs for `sso_update`. Changes here could allow an attacker to bypass SSO or point to a malicious IdP.
+
+  ## Triage and Response
+  1. Identify the user and the changes.
+  2. Verify against change management.
+  3. Revert immediately if unauthorized.
+enabled: true
+severity: Critical
+query_text: "%ingest.source_type:cloudflare\nAction:sso_update OR Action:sso_delete "
+time_range_s: 3600
+run_frequency_s: 300
+event_sink_keys:
+- critical_severity_alerts
+tags:
+- cloudflare
+- iam
+- sso

@@ -1,0 +1,20 @@
+# schema: https://scanner.dev/schema/scanner-threat-hunting-query.v1.json
+name: AWS Account Leaving Or Removed From The Organisation
+description: |-
+  Detect when an AWS account attempts to leave, or is removed from, the AWS Organisation.
+query_text: |-
+  %ingest.source_type="aws:cloudtrail"
+  eventSource="organizations.amazonaws.com"
+  eventName:(
+  "LeaveOrganization"
+  "RemoveAccountFromOrganization"
+  )
+  | groupbycount(cloud.account.id, userIdentity.arn)
+  | where @q.count > 0
+tags:
+- source.aws
+- domain.cloud
+- tactics.ta0005.defense_evasion
+- techniques.t1562.impair_defenses
+- use_case.aws_organisations
+- use_case.governance

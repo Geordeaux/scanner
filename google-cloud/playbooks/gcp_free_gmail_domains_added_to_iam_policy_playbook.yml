@@ -1,0 +1,10 @@
+name: GCP Free Gmail Domains Added To IAM Policy Playbook
+description: Detect when free Google email addresses (e.g., gmail.com, googlemail.com, or googlegroups.com) are added to an IAM policy. This can indicate an attempt to gain unauthorized access by adding external, non-corporate accounts to the organization's IAM policies.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor GCP Cloud Audit logs for events where an IAM policy is updated to include members with email addresses from free Google domains. Capture relevant details such as the principal IP, user, and target resource to assess potential threats. Set a high risk score to indicate the severity of this event.
+- name: Triage
+  description: Investigate the detected event to determine if it was authorized. Review the principal IPs, users, and other details to ensure that no unauthorized actions have been taken. Ensure that all IAM policies are compliant with company policies.
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

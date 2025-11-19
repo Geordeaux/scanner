@@ -1,0 +1,77 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Cloudflare TTB High Diversity Anomaly
+enabled: true
+description: |-
+  ## Goal
+  Detects anomalous high-velocity behavior where a single principal interacts with a high number of distinct Zones and performs a high number of distinct URIs within a short time window.
+
+  ## Strategy
+  This rule utilizes the Time-Terrain-Behavior (TTB) framework:
+  - **Time**: Short 5-minute window to detect bursts of activity.
+  - **Terrain**: Diversity of Zones (ZoneName).
+  - **Behavior**: Diversity of URIs (ClientRequestURI).
+
+  High diversity across these dimensions is often indicative of automated tools, reconnaissance scripts, or frantic manual exploitation.
+
+  ## Time - Terrain - Behaviour
+  - **Time**:
+      - Lookback window: 300 seconds
+      - Run frequency: 300 seconds
+  - **Terrain**:
+      - Log source: cloudflare
+      - Key field: ZoneName
+      - Threshold: > 2 distinct values
+  - **Behavior**:
+      - Key field: ClientRequestURI
+      - Threshold: > 10 distinct values
+
+  ## Triage and Response
+  1. **Identify the Principal**: ClientIP.
+  2. **Analyze the Activity**: Use the linked TTB Notebook to visualize the user's activity in 3D space.
+  3. **Contextualize**: Is this a service account running a scheduled job? (If so, tune the rule). Is this a user performing a bulk operation?
+  4. **Verify**: Check if the actions performed are sensitive (e.g., downloading data, modifying permissions).
+  5. **Remediate**: If malicious, suspend the user/revoke credentials.
+severity: Medium
+query_text: |-
+  %ingest.source_type="cloudflare"
+  | stats
+    distinct_count(ZoneName) as terrain_score,
+    distinct_count(ClientRequestURI) as behavior_score
+    by ClientIP
+  | where terrain_score > 2 AND behavior_score > 10
+time_range_s: 300
+run_frequency_s: 300
+event_sink_keys:
+- medium_severity_alerts
+tags:
+- source.cloudflare
+- ttb.anomaly
+- discovery
+alert_template:
+  info:
+  - label: Detection
+    value: '{{@alert.name}}'
+  - label: Severity
+    value: '{{@alert.severity_id}}'
+  - label: Principal
+    value: '{{@alert.results_table.rows[0].ClientIP}}'
+  - label: Terrain Score
+    value: '{{@alert.results_table.rows[0].terrain_score}}'
+  - label: Behavior Score
+    value: '{{@alert.results_table.rows[0].behavior_score}}'
+  actions:
+  - label: Open Detection
+    value: https://scanner.dev/detections/{{@alert.id}}
+  - label: Runbook
+    value: https://runbooks.scanner.dev/ttb-investigation
+tests:
+- name: Test positive case - High Diversity
+  now_timestamp: '2024-08-21T00:03:00.000Z'
+  dataset_inline: |-
+    {"ClientIP": "1.2.3.4", "ZoneName": "example.com", "ClientRequestURI": "/admin"}
+  expected_detection_result: true
+- name: Test negative case - Low Diversity
+  now_timestamp: '2024-08-21T00:03:00.000Z'
+  dataset_inline: |-
+    {"ClientIP": "1.2.3.4", "ZoneName": "example.com", "ClientRequestURI": "/admin"}
+  expected_detection_result: false

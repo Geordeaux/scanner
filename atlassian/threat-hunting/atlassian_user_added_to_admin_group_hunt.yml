@@ -1,0 +1,11 @@
+# schema: https://scanner.dev/schema/scanner-detection-rule.v1.json
+name: Hunt - Atlassian Admin Group Additions
+description: |-
+  Hunt for users added to admin groups.
+query_text: |-
+  %ingest.source_type:atlassian
+  attributes.action:user_added_to_group
+  attributes.context.attributes.groupName:(admin* administrator*)
+tags:
+- hunt
+- source.atlassian

@@ -1,0 +1,28 @@
+name: Amazon S3 bucket policy modified Playbook
+description: Detect modifications to S3 Bucket policies.
+severity: Informational
+steps:
+- name: Investigation
+  description: 'Monitor CloudTrail for modifications to S3 policies via the following
+    API calls:
+
+    * PutBucketAcl
+
+    * PutBucketPolicy
+
+    * PutBucketCors
+
+    * PutBucketLifecycle
+
+    * PutBucketReplication
+
+    * DeleteBucketPolicy
+
+    * DeleteBucketCors
+
+    * DeleteBucketReplication'
+- name: Triage
+  description: "1. Identify the user who made the API call.\n2. Contact the user to\
+    \ confirm whether they initiated the API call.\n3. If the call was unauthorized:\n\
+    \   * Rotate the user's credentials and investigate other API calls they made.\n\
+    \   * Identify additional API calls made by the user that were not authorized."

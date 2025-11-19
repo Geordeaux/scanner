@@ -1,0 +1,14 @@
+name: AWS GuardDuty Port Probe Unprotected Port Playbook
+description: Detects when an EC2 instance is being probed on an unprotected port from a known malicious IP.
+severity: Medium
+steps:
+- name: Investigation
+  description: Monitor GuardDuty findings for `Recon:EC2/PortProbeUnprotectedPort`. This indicates that a known malicious actor is scanning your instance on ports that are not blocked by a security group.
+- name: Triage
+  description: '1. Identify the port and the source IP.
+
+    2. Verify your Security Group rules.
+
+    3. Ensure that only necessary ports are open and restricted to known IPs where possible.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.

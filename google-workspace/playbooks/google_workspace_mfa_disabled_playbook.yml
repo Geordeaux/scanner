@@ -1,0 +1,14 @@
+name: Google Workspace MFA Disabled Playbook
+description: Identifies when multi-factor authentication (MFA) is disabled for a Google Workspace organization. Security teams can monitor for changes to MFA configuration that may weaken the organization's security posture.
+severity: High
+steps:
+- name: Investigation
+  description: Monitor Google Workspace audit logs for specific administrative or user actions.
+- name: Triage
+  description: '1. Identify the user and the action.
+
+    2. Verify if the action was authorized.
+
+    3. If unauthorized, revert the change and reset user credentials.'
+- name: Remediation
+  description: Follow the Triage steps to contain and remediate.
